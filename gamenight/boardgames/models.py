@@ -5,14 +5,15 @@ from django.db import models
 class BoardGame(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=2000)
-    #pub_date is when the game was originally published, not added to our db
-    pub_date = models.DateTimeField('date published')
+    #pub_date is when the game was originally published, not when added to our db
+    pub_date = models.DateField('date published', null=True)
     #rating on bgg as of being pulled from bgg
-    bgg_rating = models.IntegerField(default=0)
-    bgg_weight = models.IntegerField()
+    bgg_rating = models.FloatField(default=0.0)
+    bgg_bayesrating = models.FloatField(default=0.0)
+    bgg_weight = models.FloatField(default=0.0)
     min_players = models.IntegerField(default=1)
     max_players = models.IntegerField()
-    best_player_count = models.IntegerField()
+    best_player_count = models.IntegerField(null=True)
     min_playtime = models.IntegerField()
     max_playtime = models.IntegerField()
     designed_by = models.ManyToManyField('Designer')
