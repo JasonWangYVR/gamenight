@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from polls.models import Question, Choice
 from django.contrib.auth.models import User,Group
 # Create your models here.
 class Event(models.Model):
@@ -13,6 +14,9 @@ class Event(models.Model):
     created_on = models.DateTimeField('Date Created')
     last_edited_date = models.DateTimeField('Last Edited')
     location = models.CharField(max_length=100)
+    def __str__(self):
+        return self.title
+
 
 class Message(models.Model):
     text = models.CharField(max_length=500)
@@ -21,3 +25,19 @@ class Message(models.Model):
     pub_date = models.DateTimeField('date published')
     message_number = models.IntegerField(default=0)
     #message_number will help us maintain order of messages in a given Event
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+    on_event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name='the related event')
+    def __str__(self):
+        return self.question_text
+
+
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=100)
+    votes = models.IntegerField(default=0)
+    def __str__(self):
+        return self.choice_text

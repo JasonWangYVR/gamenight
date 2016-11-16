@@ -1,0 +1,19 @@
+<p>Title: {{ event.title }}</p>
+<p>Group: {{ event.group }}<p>
+<p>Organizer: {{ event.organizer }}<p>
+<p>Date: {{ event.event_date }}</p>
+<p>Created: {{ event.created_on }}</p>
+<p>Edited: {{ event.last_edited_date }}</p>
+<p>Location: {{ event.location }}</p>
+<p>Questions: </p>
+{% if question_list %}
+    <ul>
+    {% for q in question_list %}
+        <li>{{ q.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No questions.</p>
+{% endif %}
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
