@@ -32,12 +32,12 @@ def index(request):
 		page_cutoff2 = page.find('=')
 		page = page[ page_cutoff2 + 1 : len(page)]
 		page_size = page_size[0 : 0 + page_cutoff]
-	elif ' ' in page:
+	elif ' ' in page:                                  #?page=page+per_page
 		print('in pages')
 		temp = page.split()
 		page = temp[0]
 		page_size = temp[1]
-	else:                                                  #?results=per_page+page
+	elif ' ' in page_size:                                                  #?results=per_page+page
 		page_size = request.GET.get('results', '20')
 		current_page = 1
 		if ' ' in page_size:
@@ -45,6 +45,9 @@ def index(request):
 			page_size = temp[0]
 			current_page = temp[1]
 			page = current_page
+	else:
+		page_size = 20
+		page = 1
 
 	if int(page_size) == -1:
 		page_size = boardgame_list.count()

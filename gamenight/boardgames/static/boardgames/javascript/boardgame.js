@@ -74,7 +74,7 @@ $(document).ready(function(){
 	if(result2 == null){
 		result2 = '';
 	}
-	$('.boardgames_page_submit').on('mouseup', function(){
+	$('.boardgames_page_submit').on('click', function(){
 		var value = $('#want_page').val();
 		if(result == '' && result2 != ''){
 			$('#want_page').attr('value', value+' '+result2);
