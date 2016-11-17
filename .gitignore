@@ -5,7 +5,9 @@
 *.egg-info
 *.pot
 *.py[co]
+*.pyc
 .tox/
+*.dmp
 __pycache__
 MANIFEST
 dist/

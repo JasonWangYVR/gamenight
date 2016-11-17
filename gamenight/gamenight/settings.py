@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'events.apps.EventsConfig',
     'polls.apps.PollsConfig',
     'home.apps.HomeConfig',
+    'authentication.apps.AuthConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -58,7 +59,9 @@ ROOT_URLCONF = 'gamenight.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [ os.path.join(os.path.dirname(BASE_DIR), 'authentication/templates'),
+                    os.path.join(os.path.dirname(BASE_DIR),'home/templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
