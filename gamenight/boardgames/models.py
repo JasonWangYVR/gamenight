@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.contrib.auth.models import User
+
 from django.db import models
 
 class BoardGame(models.Model):
@@ -19,7 +20,7 @@ class BoardGame(models.Model):
     designed_by = models.ManyToManyField('Designer')
     img_link = models.URLField()
     tags = models.ManyToManyField('Tag')
-    favoriters = models.ForeignKey(GNUser)
+    favoriters = models.ForeignKey(User)
 
 class Designer(models.Model):
     name = models.CharField(max_length=100)
