@@ -1,3 +1,4 @@
+{% if event %}
 <p>Title: {{ event.title }}</p>
 <p>Group: {{ event.group }}<p>
 <p>Organizer: {{ event.organizer }}<p>
@@ -5,11 +6,26 @@
 <p>Created: {{ event.created_on }}</p>
 <p>Edited: {{ event.last_edited_date }}</p>
 <p>Location: {{ event.location }}</p>
-<p>Questions: </p>
+{% else %}
+<p>Event Error</p>
+{% endif %}
+
 {% if question_list %}
+<p>Questions: </p>
     <ul>
     {% for q in question_list %}
         <li>{{ q.question_text }}</a></li>
+
+        {% if choices %}
+            <ul>
+            {% for c in choices %}
+                <li>{{ c.choice_text }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No choices.</p>
+        {% endif %}
+
     {% endfor %}
     </ul>
 {% else %}

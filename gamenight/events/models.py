@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from polls.models import Question, Choice
 from django.contrib.auth.models import User,Group
+
 # Create your models here.
 class Event(models.Model):
     title = models.CharField(max_length=140)
@@ -16,7 +16,6 @@ class Event(models.Model):
     location = models.CharField(max_length=100)
     def __str__(self):
         return self.title
-
 
 class Message(models.Model):
     text = models.CharField(max_length=500)
@@ -32,8 +31,6 @@ class Question(models.Model):
     on_event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name='the related event')
     def __str__(self):
         return self.question_text
-
-
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
