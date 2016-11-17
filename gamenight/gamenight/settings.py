@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'boardgames.apps.BoardgamesConfig',
     'events.apps.EventsConfig',
     'polls.apps.PollsConfig',
+    'home.apps.HomeConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
