@@ -1,3 +1,5 @@
+<h1>Event Details</h1>
+
 {% if event %}
 <p>Title: {{ event.title }}</p>
 <p>Group: {{ event.group }}<p>
@@ -9,6 +11,8 @@
 {% else %}
 <p>Event Error</p>
 {% endif %}
+
+<a href="{% url "events:editevent" pk=event.id %}">Edit Event</a>
 
 {% if question_list %}
 <p>Questions: </p>
@@ -33,3 +37,5 @@
 {% endif %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<a href="{% url "events:addquestion" pk=event.id %}">Add Question</a>

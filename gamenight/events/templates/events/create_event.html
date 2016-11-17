@@ -1,4 +1,8 @@
+{% if event.id %}
+<h1>Edit Contact</h1>
+{% else %}
 <h1>Create Event</h1>
+{% endif %}
 
 
 <form action="{{ action }}" method="POST">

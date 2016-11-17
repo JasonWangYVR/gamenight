@@ -48,3 +48,36 @@ class CreateEventView(generic.CreateView):
         context['action'] = reverse('events:create')
 
         return context
+
+class EditEventView(generic.UpdateView):
+
+    model = Event
+    template_name = 'events/create_event.html'
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse('events:index')
+
+    def get_context_data(self, **kwargs):
+
+        context = super(EditEventView, self).get_context_data(**kwargs)
+        context['action'] = reverse('events:editevent',
+                                    kwargs={'pk': self.get_object().id})
+
+        return context
+		
+class CreateQuestionView(generic.CreateView):
+
+    model = Question
+    template_name = 'events/create_question.html'
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse('events:index')
+
+    def get_context_data(self, **kwargs):
+
+        context = super(CreateQuestionView, self).get_context_data(**kwargs)
+        context['action'] = reverse('events:addquestion', kwargs={'pk': self.get_object().id})
+
+        return context

@@ -11,4 +11,8 @@ urlpatterns = [
 	#event creation
 	url(r'^new$', views.CreateEventView.as_view(),
     name='create',),
+	url(r'^edit/(?P<pk>\d+)/$', views.EditEventView.as_view(),
+    name='editevent',),
+	url(r'^addq/(?P<pk>\d+)/$', views.CreateQuestionView.as_view(),
+    name='addquestion',),
     ]
