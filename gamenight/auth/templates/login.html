@@ -1,0 +1,9 @@
+{% extends "auth/base.html" %}
+
+{% block content %}
+  {% if registered == False %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+  </form>
+{% endblock %}
