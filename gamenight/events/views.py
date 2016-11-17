@@ -32,3 +32,19 @@ def detail(request, event_id):
             }
     #return request, template, and dictionary to views (template)
     return render(request, 'events/event_detail.html', context)
+
+class CreateEventView(generic.CreateView):
+
+    model = Event
+    template_name = 'events/create_event.html'
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse('events:index')
+
+    def get_context_data(self, **kwargs):
+
+        context = super(CreateEventView, self).get_context_data(**kwargs)
+        context['action'] = reverse('events:create')
+
+        return context
