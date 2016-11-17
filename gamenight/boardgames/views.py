@@ -47,7 +47,7 @@ def index(request):
 			page = current_page
 	else:
 		page_size = 20
-		page = 1
+		page = page
 
 	if int(page_size) == -1:
 		page_size = boardgame_list.count()

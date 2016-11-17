@@ -45,7 +45,7 @@
 				<!-- TODO: Add infinite scroll -->
 				<div class="col-xs-12 col-md-offset-1">
 					        {% if boardgames.has_previous %}
-					            <a href="?page={{ boardgames.previous_page_number }}" class="btn btn-primary col-md-2">previous</a>
+					            <a href="?page={{ boardgames.previous_page_number }}" class="boardgames_prev_page btn btn-primary col-md-2">previous</a>
 					        {% else %}
 					        	<span class="col-md-2"></span>
 					        {% endif %}
@@ -58,7 +58,7 @@
     							<input type="submit" value="OK" class="boardgames_page_submit col-md-1">
 							</form>
 					        {% if boardgames.has_next %}
-					            <a href="?page={{ boardgames.next_page_number }}" class="btn btn-primary col-md-2">next</a>
+					            <a href="?page={{ boardgames.next_page_number }}" class="boardgames_next_page btn btn-primary col-md-2">next</a>
 					        {% endif %}
 				</div>
 			</div>

@@ -71,9 +71,6 @@ $(document).ready(function(){
 	if(result == null){
 		result = '';
 	}
-	if(result2 == null){
-		result2 = '';
-	}
 	$('.boardgames_page_submit').on('click', function(){
 		var value = $('#want_page').val();
 		if(result == '' && result2 != ''){
@@ -83,6 +80,24 @@ $(document).ready(function(){
 		if(result != '' && result2 == ''){
 			$('#want_page').attr('value', value+' '+result);
 			$('#want_page').val(value+' '+result);
+		}
+	});
+	$('.boardgames_next_page').on('click', function(){
+		var href = $('.boardgames_next_page').attr('href');
+		if(result == '' && result2 != ''){
+			$('.boardgames_next_page').attr('href', href+'?results='+result2);
+		}
+		if(result != '' && result2 == ''){
+			$('.boardgames_next_page').attr('href', href+'?results='+result);
+		}
+	});
+	$('.boardgames_prev_page').on('click', function(){
+		var href = $('.boardgames_prev_page').attr('href');
+		if(result == '' && result2 != ''){
+			$('.boardgames_prev_page').attr('href', href+'?results='+result2);
+		}
+		if(result != '' && result2 == ''){
+			$('.boardgames_prev_page').attr('href', href+'?results='+result);
 		}
 	});
 	// TODO add val update to prev and next button
