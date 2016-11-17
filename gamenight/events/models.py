@@ -13,6 +13,7 @@ class Event(models.Model):
     created_on = models.DateTimeField('Date Created')
     last_edited_date = models.DateTimeField('Last Edited')
     location = models.CharField(max_length=100)
+    
 
 class Message(models.Model):
     text = models.CharField(max_length=500)
