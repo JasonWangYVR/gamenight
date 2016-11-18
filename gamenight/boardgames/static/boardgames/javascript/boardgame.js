@@ -1,24 +1,29 @@
 $(document).ready(function(){
 
-		$.urlParam = function(name){
-		    var results = new RegExp('[\?&]' + name + '=([^&#+]*)').exec(window.location.href);
-		    if (results==null){
-		       return null;
-		    }
-		    else{
-		       return results[1] || 0;
-		    }
-		}
 
-		$.urlParam2 = function(name){
-		    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-		    if (results==null){
-		       return null;
-		    }
-		    else{
-		       return results[1] || 0;
-		    }
-		}
+	/* ----------------------------------------------------------------------------------
+	Boardgame index page
+	*/
+	$.urlParam = function(name){
+	    var results = new RegExp('[\?&]' + name + '=([^&#+]*)').exec(window.location.href);
+	    if (results==null){
+	       return null;
+	    }
+	    else{
+	       return results[1] || 0;
+	    }
+	}
+
+	$.urlParam2 = function(name){
+	    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	    if (results==null){
+	       return null;
+	    }
+	    else{
+	       return results[1] || 0;
+	    }
+	}
+
 	var boardgame_text_array = [];
 	// Puts nice unicode text into description
 	$('.boardgame_description').each(function(i, obj){
@@ -53,7 +58,6 @@ $(document).ready(function(){
 	});
 
 	// $('.boardgames_select').on('click', function(){
-	// 	// alert($(this).find('option.active').text());
 	// 	$(this).find('option.active').addClass('active')
 	// });
 
@@ -100,6 +104,12 @@ $(document).ready(function(){
 			$('.boardgames_prev_page').attr('href', href+'?results='+result);
 		}
 	});
-	// TODO add val update to prev and next button
+
+
+	/* ----------------------------------------------------------------------------------
+	Boardgame detail page
+	*/
+	var description_div = $('.description');
+	description_div.html(description_div.text());
 
 });

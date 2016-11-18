@@ -1,11 +1,13 @@
-from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render, redirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.views import generic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django import template
 import string
 from django.core.urlresolvers import resolve
+from django.core.exceptions import ObjectDoesNotExist
+from django.core import urlresolvers
 
 from .models import BoardGame, Designer, Tag
 from .forms import SearchForm, PerPageForm
@@ -89,8 +91,42 @@ def index(request):
 	context = {'boardgames': boardgames, 'title': title}
 	return render(request, 'boardgames/index.html', context)
 
-def detail(request, id):
-    boardgame = get_object_or_404(BoardGame, id=id)
-    obj = BoardGame.objects.get(id=id)
-    title = obj.name
-    return render(request, 'boardgames/detail.html', {'boardgame': boardgame, 'title': title})
+# Not currently being used
+# def next_detail(request, currBoardgameId, nextBoardgameId):
+# 	return HttpResponse('Your in the view to get the next/prev detail page and redirect to it')
+
+def detail(request, boardgameId):
+	if request.GET.get('next'):
+		# Quick way to go between detail pages. URL needs work
+		next_boardgame = request.GET.get('next')
+		prev_id = str(int(next_boardgame)-1)
+		next_id = str(int(next_boardgame)+1)
+		boardgame = get_object_or_404(BoardGame, id=next_boardgame)
+		title = boardgame.name
+		try:
+			boardgame_next = BoardGame.objects.get(id=next_id)
+		except BoardGame.DoesNotExist:
+			next_id = None
+		try:
+			boardgame_prev = BoardGame.objects.get(id=prev_id)
+		except BoardGame.DoesNotExist:
+			prev_id = None
+		context = {'boardgame': boardgame, 'title': title, 
+		'next_id': next_id, 'prev_id': prev_id}
+		return render(request, 'boardgames/detail.html/', context)
+	else:
+		prev_id = str(int(boardgameId)-1)
+		next_id = str(int(boardgameId)+1)
+		boardgame = get_object_or_404(BoardGame, id=boardgameId)
+		title = boardgame.name
+		try:
+			boardgame_next = BoardGame.objects.get(id=next_id)
+		except BoardGame.DoesNotExist:
+			next_id = None
+		try:
+			boardgame_prev = BoardGame.objects.get(id=prev_id)
+		except BoardGame.DoesNotExist:
+			prev_id = None
+		context = {'boardgame': boardgame, 'title': title, 
+		'next_id': next_id, 'prev_id': prev_id}
+		return render(request, 'boardgames/detail.html', context)

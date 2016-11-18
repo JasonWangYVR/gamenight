@@ -6908,3 +6908,86 @@ input:focus,
 .panel-default .panel-footer {
   color: #98978b;
 }
+
+.boardgame_detail_info {
+  background: #eee;
+  margin-bottom: 0;
+}
+.boardgame_detail_description{
+  background: #eee;
+  margin-bottom: 0;
+}
+.boardgame_detail_tags{
+  background: #eee;
+}
+
+.boardgame_detail_info_image {
+  width: 300px;
+  height: 300px;
+}
+
+.boardgame_detail_info_misc {
+  height: 300px;
+  padding-left: 20px;
+  margin-left: 0px;
+}
+
+.boardgame_detail_info_misc_header {
+  height: 100px;
+}
+
+
+.rating {
+  height: 100px;
+  width: 100px;
+  background-color: white;
+}
+#octagon {
+  width: 100px;
+  height: 100px;
+  background: #1cb7bf;
+  position: relative;
+}
+
+#octagon:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-bottom: 29px solid #1cb7bf;
+  border-left: 29px solid #eee;
+  border-right: 29px solid #eee;
+  width: 100px;
+  height: 0;
+}
+
+#octagon:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-top: 29px solid #1cb7bf;
+  border-left: 29px solid #eee;
+  border-right: 29px solid #eee;
+  width: 100px;
+  height: 0;
+}
+
+#bgg_bayesrating {
+  left: 23px;
+  top: 32px;
+  font-size: 200%;
+  color: white;
+  position: relative;
+}
+
+.boardgame_detail_info_misc_table {
+  margin-top: 10px;
+}
+
+.boardgame_detail_info_misc_other {
+}
+
+p {
+  margin-bottom: 0;
+}
