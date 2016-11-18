@@ -1,0 +1,18 @@
+{% if event.id %}
+<h1>Edit Contact</h1>
+{% else %}
+<h1>Create Event</h1>
+{% endif %}
+
+
+<form action="{{ action }}" method="POST">
+
+<form action="{% url 'events:create' %}" method="POST">
+  {% csrf_token %}
+  <ul>
+    {{ form.as_ul }}
+  </ul>
+  <input id="save_events" type="submit" value="Save Event" />
+</form>
+
+<a href="{% url 'events:index' %}">Back	</a>

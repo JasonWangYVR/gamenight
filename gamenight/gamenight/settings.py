@@ -33,7 +33,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'boardgames.apps.BoardgamesConfig',
     'events.apps.EventsConfig',
-    'polls.apps.PollsConfig',
     'home.apps.HomeConfig',
     'authentication.apps.AuthConfig',
     'django.contrib.admin',
@@ -61,6 +60,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [ os.path.join(os.path.dirname(BASE_DIR), 'authentication/templates'),
                     os.path.join(os.path.dirname(BASE_DIR),'home/templates'),
+                    os.path.join(os.path.dirname(BASE_DIR), 'events/templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
