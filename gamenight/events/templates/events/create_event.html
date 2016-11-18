@@ -1,9 +1,8 @@
 {% if event.id %}
-<h1>Edit Contact</h1>
+<h1>Edit Event</h1>
 {% else %}
 <h1>Create Event</h1>
 {% endif %}
-
 
 <form action="{{ action }}" method="POST">
 
@@ -15,4 +14,5 @@
   <input id="save_events" type="submit" value="Save Event" />
 </form>
 
-<a href="{% url 'events:index' %}">Back	</a>
+<p><a href="{% url 'events:detail' event.id %}">Back to {{ event.title }}</a></p>
+<p><a href="{% url 'events:index' %}">Back	to Event List</a></p>
