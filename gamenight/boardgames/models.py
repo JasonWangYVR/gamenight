@@ -20,7 +20,7 @@ class BoardGame(models.Model):
     designed_by = models.ManyToManyField('Designer')
     img_link = models.URLField()
     tags = models.ManyToManyField('Tag')
-    slug = models.SlugField(allow_unicode=True)
+    slug = models.SlugField(allow_unicode=True, null=True)
     def save(self, *args, **kwargs):
         # Newly created object, so set slug
         self.slug = slugify(self.name)
