@@ -13,14 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-
-from django.conf.urls import url, include
+from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    #requests for events app redirected to events' urls.py
-    url(r'^events/', include('events.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^$', include('home.urls',namespace="home")),
     url(r'^user/', include('authentication.urls', namespace="authentication")),
+    url(r'^boardgames/', include('boardgames.urls')),
+    url(r'^events/', include('events.urls')),
 ]

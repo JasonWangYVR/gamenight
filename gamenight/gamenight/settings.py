@@ -60,7 +60,8 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [ os.path.join(os.path.dirname(BASE_DIR), 'authentication/templates'),
                     os.path.join(os.path.dirname(BASE_DIR),'home/templates'),
-                    os.path.join(os.path.dirname(BASE_DIR), 'events/templates')
+                    os.path.join(os.path.dirname(BASE_DIR), 'events/templates'),
+                    os.path.join(os.path.dirname(BASE_DIR, 'boardgames/templates'))
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -112,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Vancouver'
 
 USE_I18N = True
 
@@ -125,3 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "static/boardgames"),
+]
