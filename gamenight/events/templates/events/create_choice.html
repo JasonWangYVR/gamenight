@@ -1,17 +1,14 @@
-{% if question.id %}
-<h1>Edit Question</h1>
-{% else %}
-<h1>Add New Question</h1>
-{% endif %}
+<h1>Add New Choice</h1>
+
 
 <form action="{{ action }}" method="POST">
 
-<form action="{% url 'events:create' %}" method="POST">
+<form action="{% url "events:create" %}" method="POST">
   {% csrf_token %}
   <ul>
     {{ form.as_ul }}
   </ul>
-  <input id="save_question" type="submit" value="Save Question" />
+  <input id="save_choice" type="submit" value="Add Choice" />
 </form>
 
 <p><a href="{% url 'events:index' %}">Back	to Event List</a></p>

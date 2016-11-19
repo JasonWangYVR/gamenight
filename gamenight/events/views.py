@@ -61,13 +61,14 @@ class EditEventView(generic.UpdateView):
     def get_context_data(self, **kwargs):
 
         context = super(EditEventView, self).get_context_data(**kwargs)
-        context['action'] = reverse('events:editevent',
-                                    kwargs={'pk': self.get_object().id})
+        context['action'] = reverse('events:editevent', kwargs={'pk': self.get_object().id})
 
         return context
-		
-class CreateQuestionView(generic.CreateView):
 
+class CreateQuestionView(generic.CreateView):
+    #Need to figure out a way to return from creating a question to the related event detail view
+    #at the moment this view only accepts one model, so we cannot return based on the event_id as the event model
+    #isn't available
     model = Question
     template_name = 'events/create_question.html'
     fields = '__all__'
@@ -79,5 +80,39 @@ class CreateQuestionView(generic.CreateView):
 
         context = super(CreateQuestionView, self).get_context_data(**kwargs)
         context['action'] = reverse('events:addquestion', kwargs={'pk': self.get_object().id})
+
+        return context
+
+class EditQuestionView(generic.UpdateView):
+
+    model = Question
+    template_name = 'events/create_question.html'
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse('events:index')
+
+    def get_context_data(self, **kwargs):
+
+        context = super(EditQuestionView, self).get_context_data(**kwargs)
+        context['action'] = reverse('events:editquestion', kwargs={'pk': self.get_object().id})
+
+        return context
+
+class CreateChoiceView(generic.CreateView):
+    #Need to figure out a way to return from creating a question to the related event detail view
+    #at the moment this view only accepts one model, so we cannot return based on the event_id as the event model
+    #isn't available
+    model = Choice
+    template_name = 'events/create_choice.html'
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse('events:index')
+
+    def get_context_data(self, **kwargs):
+
+        context = super(CreateChoiceView, self).get_context_data(**kwargs)
+        context['action'] = reverse('events:addchoice', kwargs={'pk': self.get_object().id})
 
         return context

@@ -17,6 +17,9 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
+    #url(r'^', include('events.urls', namespace="events")),
+    #requests for events app redirected to events' urls.py
+    url(r'^events/', include('events.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^$', include('home.urls',namespace="home")),
     url(r'^user/', include('authentication.urls', namespace="authentication")),

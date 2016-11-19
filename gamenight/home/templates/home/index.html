@@ -3,8 +3,17 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>title</title>
+<title>Gamenight</title>
 </head>
 <body>
+  <h1> Gamenight </h1>
+  <a href="{% url 'authentication:signup' %}">Sign up</a>
+  <a href="{% url 'authentication:login' %}">Log In</a>
+  <p>
+  <a href="{% url 'boardgames:index' %}">Board Games</a>
+</p>
+<p>
+  <a href="{% url 'events:index' %}">Event Index</a>
+</p>
 </body>
 </html>

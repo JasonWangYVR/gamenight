@@ -12,14 +12,15 @@
 <p>Event Error</p>
 {% endif %}
 
-<a href="{% url "events:editevent" pk=event.id %}">Edit Event</a>
+<p><a href="{% url 'events:editevent' pk=event.id %}">Edit Event</a></p>
 
 {% if question_list %}
 <p>Questions: </p>
     <ul>
     {% for q in question_list %}
-        <li>{{ q.question_text }}</a></li>
-
+        <li>{{ q.question_text }}
+          <a href="{% url 'events:editquestion' q.id %}"> Edit</a>
+        {#<a href="{% url 'events:questiondetails' q.id %}"> </a></li>#}Details
         {% if choices %}
             <ul>
             {% for c in choices %}
@@ -27,7 +28,7 @@
             {% endfor %}
             </ul>
         {% else %}
-            <p>No choices.</p>
+            <p>Choices will be displayed here eventually.</p>
         {% endif %}
 
     {% endfor %}
@@ -38,4 +39,5 @@
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<a href="{% url "events:addquestion" pk=event.id %}">Add Question</a>
+<p><a href="{% url "events:addquestion" pk=event.id %}">Add Question</a></p>
+<p><a href="{% url 'events:index' %}">Back to Event List</a></p>
