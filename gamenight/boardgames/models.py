@@ -21,18 +21,23 @@ class BoardGame(models.Model):
     designed_by = models.ManyToManyField('Designer')
     img_link = models.URLField()
     tags = models.ManyToManyField('Tag')
-    favoriters = models.ForeignKey(User)
     slug = models.SlugField(allow_unicode=True, null=True)
     def save(self, *args, **kwargs):
         # Newly created object, so set slug
         self.slug = slugify(self.name)
         super(BoardGame, self).save(*args, **kwargs)
+    def __str__(self):
+        return self.name
 
 class Designer(models.Model):
     name = models.CharField(max_length=100)
     game = models.ManyToManyField(BoardGame)
+    def __str__(self):
+        return self.name
 
 class Tag(models.Model):
     tag_name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
     games = models.ManyToManyField(BoardGame)
+    def __str__(self):
+        return self.tag_name

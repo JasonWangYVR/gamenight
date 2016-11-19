@@ -61,7 +61,7 @@ TEMPLATES = [
         'DIRS': [ os.path.join(os.path.dirname(BASE_DIR), 'authentication/templates'),
                     os.path.join(os.path.dirname(BASE_DIR),'home/templates'),
                     os.path.join(os.path.dirname(BASE_DIR), 'events/templates'),
-                    os.path.join(os.path.dirname(BASE_DIR, 'boardgames/templates'))
+                    os.path.join(os.path.dirname(BASE_DIR), 'boardgames/templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {

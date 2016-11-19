@@ -53,6 +53,8 @@ class Command(BaseCommand):
 
                     g.designed_by.add(person)
                     g.save()
+                    person.game.add(g)
+                    person.save()
 
 
                 tags = [items.attributes['value'].value for items in link if items.attributes['type'].value == "boardgamecategory"  or items.attributes['type'].value == "boardgamemechanic"]
@@ -66,6 +68,8 @@ class Command(BaseCommand):
                         tag = q.first()
                     g.tags.add(tag)
                     g.save()
+                    tag.games.add(g)
+                    tag.save()
 
                 print "     Game " + str(i) + ": " + g.name.encode("utf-8") +" saved!    Time elapsed = " + str(datetime.now()-starttime)
                 i += 1

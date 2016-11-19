@@ -18,7 +18,7 @@ def index(request):
 	boardgame_list = BoardGame.objects.order_by('name')
 	# Pagination Start
 	# Parsing pages and results for special conditions
-	page = request.GET.get('page', 'a')        
+	page = request.GET.get('page', 'a')
 	page_size = request.GET.get('results', 'a')
 	if page != 'a' and "results" in page:                #?pags=int?results=int
 		page_cutoff = page.find('?')
@@ -103,6 +103,7 @@ def detail(request, boardgameId):
 		next_id = str(int(next_boardgame)+1)
 		boardgame = get_object_or_404(BoardGame, id=next_boardgame)
 		title = boardgame.name
+		designers = boardgame.designer_set.all().values_list('name', flat=True)
 		try:
 			boardgame_next = BoardGame.objects.get(id=next_id)
 		except BoardGame.DoesNotExist:
@@ -111,7 +112,7 @@ def detail(request, boardgameId):
 			boardgame_prev = BoardGame.objects.get(id=prev_id)
 		except BoardGame.DoesNotExist:
 			prev_id = None
-		context = {'boardgame': boardgame, 'title': title, 
+		context = {'boardgame': boardgame, 'title': title,
 		'next_id': next_id, 'prev_id': prev_id}
 		return render(request, 'boardgames/detail.html/', context)
 	else:
@@ -119,6 +120,7 @@ def detail(request, boardgameId):
 		next_id = str(int(boardgameId)+1)
 		boardgame = get_object_or_404(BoardGame, id=boardgameId)
 		title = boardgame.name
+		designers = boardgame.designer_set.all().values_list('name', flat=True)
 		try:
 			boardgame_next = BoardGame.objects.get(id=next_id)
 		except BoardGame.DoesNotExist:
@@ -127,6 +129,6 @@ def detail(request, boardgameId):
 			boardgame_prev = BoardGame.objects.get(id=prev_id)
 		except BoardGame.DoesNotExist:
 			prev_id = None
-		context = {'boardgame': boardgame, 'title': title, 
+		context = {'boardgame': boardgame, 'title': title,
 		'next_id': next_id, 'prev_id': prev_id}
 		return render(request, 'boardgames/detail.html', context)
