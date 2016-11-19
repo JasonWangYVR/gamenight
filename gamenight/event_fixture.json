@@ -1,0 +1,46 @@
+[
+{
+  "model": "events.event",
+  "pk": 1,
+  "fields": {
+    "title": "Scythe @ Evan's",
+    "group": 1,
+    "organizer": 1,
+    "event_date": "2016-11-20T05:09:59.514Z",
+    "created_on": "2016-11-19T05:07:23.089Z",
+    "last_edited_date": "2016-11-19T05:09:31.554Z",
+    "location": "Evan's place"
+  }
+},
+{
+  "model": "events.event",
+  "pk": 2,
+  "fields": {
+    "title": "Risk:Legacy Marathon",
+    "group": 1,
+    "organizer": 1,
+    "event_date": "2016-11-22T05:12:33.113Z",
+    "created_on": "2016-11-19T05:12:33.113Z",
+    "last_edited_date": "2016-11-19T05:12:33.113Z",
+    "location": "Evant's House"
+  }
+},
+{
+  "model": "events.question",
+  "pk": 1,
+  "fields": {
+    "question_text": "What should we snack on?",
+    "pub_date": "2016-11-19T05:33:43.643Z",
+    "on_event": 1
+  }
+},
+{
+  "model": "events.question",
+  "pk": 2,
+  "fields": {
+    "question_text": "When should we start?",
+    "pub_date": "2016-11-19T05:34:09Z",
+    "on_event": 2
+  }
+}
+]
