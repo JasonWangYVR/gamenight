@@ -5,6 +5,7 @@ from django.urls import reverse
 #included models
 from .models import Event, Question, Choice
 from django.contrib.auth.models import User,Group
+import datetime
 
 # Create your views here.
 #index taken from Django tutorials
@@ -16,7 +17,7 @@ class IndexView(generic.ListView):
         return Event.objects.order_by('-id')[:5]
 #view for individual events and related models
 
-                                                                                #JASON: auth has been integrated
+                                                                                #JASON: auth has been integrated into the detail view
 def detail(request, event_id):
     #grab single events obj
     event = get_object_or_404(Event, pk=event_id)
@@ -60,37 +61,74 @@ def detail(request, event_id):
         return render(request, 'events/event_detail.html', context)
 
 
-class CreateEventView(generic.CreateView):
+# class CreateEventView(generic.CreateView):
+#     model = Event
+#     template_name = 'events/create_event.html'
+#     fields = '__all__'
+#
+#     def get_success_url(self):
+#         return reverse('events:index')
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(CreateEventView, self).get_context_data(**kwargs)
+#         context['action'] = reverse('events:create')
+#
+#         return context
 
-    model = Event
-    template_name = 'events/create_event.html'
-    fields = '__all__'
+def create_event(request):                                                      #JASON: My attempt at re-creating the create_event view
+    if request.user.is_authenticated():                                         #       since I wasn't really sure at all what the previous
+        if request.POST():                                                      #       version of it was doing.
+            form = EventForm(request.POST)
+            if form.is_valid():
+                    event = Event(                                              #JASON: This is still untested.
+                    title=form.cleaned_data['title'],
+                    organizer=request.user,
+                    #group=form.cleaned_data['group'],                          #JASON: Note sure how to implement groups quite yet
+                    event_date=form.cleaned_data['event_date'],                 #JASON: Also, unsure if this is the way we wan't to
+                    created_on=datetime.datetime.now(),                         #       create events.
+                    location=form.cleaned_data['location'].
+                    last_edited=datetime.datetime.now(),
+                    private_event=form.cleaned_data['private_event'],
+                )
+            event.save()
+            context = {
+                'event':event,
+            }
+            return render(request, 'events/event_detail.html', context)
+    else:
+        return redirect('authentication:login')
 
-    def get_success_url(self):
-        return reverse('events:index')
+# class EditEventView(generic.UpdateView):
+#     model = Event
+#     template_name = 'events/create_event.html'
+#     fields = '__all__'
+#
+#     def get_success_url(self):
+#         return reverse('events:index')
+#
+#     def get_context_data(self, **kwargs):
+#
+#         context = super(EditEventView, self).get_context_data(**kwargs)
+#         context['action'] = reverse('events:editevent', kwargs={'pk': self.get_object().id})
+#
+#         return context
 
-    def get_context_data(self, **kwargs):
+def edit_event(request, event_id):                                              #JASON: Once again, my attempt at creating something.
+    if request.user.is_authenticated():                                         #       This is still untested
+        event = Events.objects.get_object_or_404(pk=event_id,
+            organizer=request.user, deleted = False)
+        form = EventForm(instance=event)
 
-        context = super(CreateEventView, self).get_context_data(**kwargs)
-        context['action'] = reverse('events:create')
-
-        return context
-
-class EditEventView(generic.UpdateView):
-
-    model = Event
-    template_name = 'events/create_event.html'
-    fields = '__all__'
-
-    def get_success_url(self):
-        return reverse('events:index')
-
-    def get_context_data(self, **kwargs):
-
-        context = super(EditEventView, self).get_context_data(**kwargs)
-        context['action'] = reverse('events:editevent', kwargs={'pk': self.get_object().id})
-
-        return context
+        if request.method == 'POST':
+            edit_form = EventForm(request.POST, instance=event)
+            if edit_form.is_valid():
+                edit_form.save()
+                context = {
+                    'event':event,
+                }
+                return redirect('events/event_detail.html',context)
+    else:
+        return redirect('authentication:login')
 
 class CreateQuestionView(generic.CreateView):
     #Need to figure out a way to return from creating a question to the related event detail view

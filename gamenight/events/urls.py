@@ -8,12 +8,14 @@ urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     #handles requests for specific event according to event_id
     url(r'^(?P<event_id>[0-9]+)/$', views.detail, name='detail'),
+
 	#event creation
-	url(r'^new$', views.CreateEventView.as_view(),
-    name='create',),
-    #edits event
-	url(r'^edit/(?P<pk>\d+)/$', views.EditEventView.as_view(),
-    name='editevent',),
+    url(r'^create/$', views.create_event, name='create_event'),                 #JASON: For my newly created create and edit event views
+    #edit event
+	url(r'^edit/(?P<pk>\d+)/$', views.edit_event, name='edit_event',),
+
+
+
     #creates question
 	url(r'^addq/(?P<pk>\d+)/$', views.CreateQuestionView.as_view(),
     name='addquestion',),
