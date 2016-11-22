@@ -36,7 +36,7 @@ def signup(request):
         #return HttpResponse(template.render(context))
         return render(request, 'authentication/signup.html', {'form':form, 'registered':registered,})
     else:
-        return redirect('auth:login')
+        return redirect('authentication:login')
 
 def log_in(request):
     if not request.user.is_authenticated():

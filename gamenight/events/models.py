@@ -15,6 +15,9 @@ class Event(models.Model):
     last_edited_date = models.DateTimeField('Last Edited')
     location = models.CharField(max_length=100)
 
+    #for private/public events
+    private_event = models.BooleanField()
+
     def __str__(self):
         return self.title
 
