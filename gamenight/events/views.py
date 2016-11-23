@@ -15,9 +15,9 @@ from django.utils import timezone                                               
 #     #overwrite for listview only
 #     def get_queryset(self):
 #         return Event.objects.order_by('-id')[:5]
-def index(request):
-    if request.user.is_authenticated():
-        #private_events = Event.objects.prefecth_related('attendees').          #JASON: Very close, need to create Many
+#def index(request):
+#    if request.user.is_authenticated():
+        #private_events = Event.objects.prefecth_related('attendees')           #JASON: Very close, need to create Many
                                                                                 #       to many relationship in User
                                                                                 #       for events
 
@@ -84,15 +84,12 @@ def create_event(request):                                                      
         if request.POST():                                                      #       version of it was doing.
             form = EventForm(request.POST)
             if form.is_valid():
-                for User in form.cleaned_data['attendees']
-                    event_attendees.add(User)                                   #JASON: I'm almost completely certain this is illegal
                 event = Event.objects.new_event(                                #JASON: This is still untested, need TODO some form stuff
                 title=form.cleaned_data['title'],
                 organizer=request.user,
                 event_date=form.cleaned_data['event_date'],
                 location=form.cleaned_data['location'].
-                private_event=form.cleaned_data['private_event'],
-                attendees=event_attendees,                                      #JASON: No idea if this is how to do it
+                private_event=form.cleaned_data['private_event'],                                 #JASON: No idea if this is how to do it
             )
             event.save()
             context = {
