@@ -33,7 +33,7 @@ class EventForm(forms.ModelForm):                                               
         required = False,
         widget=forms.CheckboxInput()
     )
-
+                                                                                #JASON: TODO: Add multiple attendees.
 
     class Meta:
         model = Event

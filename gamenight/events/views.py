@@ -5,25 +5,29 @@ from django.urls import reverse
 #included models
 from .models import Event, Question, Choice
 from django.contrib.auth.models import User,Group
-import datetime
+from django.utils import timezone                                               #JASON: Need to $pip install pytz
 
 # Create your views here.
 #index taken from Django tutorials
-class IndexView(generic.ListView):
-    template_name = 'events/index.html'
-    context_object_name = 'latest_event_list'
-    #overwrite for listview only
-    def get_queryset(self):
-        return Event.objects.order_by('-id')[:5]
-#view for individual events and related models
+# class IndexView(generic.ListView):
+#     template_name = 'events/index.html'
+#     context_object_name = 'latest_event_list'
+#     #overwrite for listview only
+#     def get_queryset(self):
+#         return Event.objects.order_by('-id')[:5]
+def index(request):
+    if request.user.is_authenticated():
+        #private_events = Event.objects.prefecth_related('attendees').          #JASON: Very close, need to create Many
+                                                                                #       to many relationship in User
+                                                                                #       for events
 
-                                                                                #JASON: auth has been integrated into the detail view
-def detail(request, event_id):
+#view for individual events and related models
+def detail(request, event_id):                                                  #JASON: auth has been integrated into the detail view
     #grab single events obj
     event = get_object_or_404(Event, pk=event_id)
     if event.private_event == True:
         if request.user.is_authenticated():
-            if user in event.group:
+            if request.user in event.attendees:
                 #grab collection of questions that are related to event obj
                 # through primary key foreign key relationship
                 question = Question.objects.filter(on_event=event.pk)
@@ -80,16 +84,16 @@ def create_event(request):                                                      
         if request.POST():                                                      #       version of it was doing.
             form = EventForm(request.POST)
             if form.is_valid():
-                    event = Event(                                              #JASON: This is still untested.
-                    title=form.cleaned_data['title'],
-                    organizer=request.user,
-                    #group=form.cleaned_data['group'],                          #JASON: Note sure how to implement groups quite yet
-                    event_date=form.cleaned_data['event_date'],                 #JASON: Also, unsure if this is the way we wan't to
-                    created_on=datetime.datetime.now(),                         #       create events.
-                    location=form.cleaned_data['location'].
-                    last_edited=datetime.datetime.now(),
-                    private_event=form.cleaned_data['private_event'],
-                )
+                for User in form.cleaned_data['attendees']
+                    event_attendees.add(User)                                   #JASON: I'm almost completely certain this is illegal
+                event = Event.objects.new_event(                                #JASON: This is still untested, need TODO some form stuff
+                title=form.cleaned_data['title'],
+                organizer=request.user,
+                event_date=form.cleaned_data['event_date'],
+                location=form.cleaned_data['location'].
+                private_event=form.cleaned_data['private_event'],
+                attendees=event_attendees,                                      #JASON: No idea if this is how to do it
+            )
             event.save()
             context = {
                 'event':event,
