@@ -23,7 +23,7 @@ class Event(models.Model):
         return self.title
 
     def new_event(self, title, organizer, event_date, location,
-        private_event, attendees):
+        private_event):
         self.title = title
         self.organizer = organizer
         #self.event_date = event_date
@@ -31,9 +31,8 @@ class Event(models.Model):
         self.private_event = private_event
         # self.created_on =                                                     #JASON: Not sure how we're doing date and time yet.
         # self.last_edited_date =
-
-    def add_attendees(self, User):
-        #JASON: TODO:Add attendees
+		attendees.add(organizer)
+    
 
 class Message(models.Model):
     text = models.CharField(max_length=500)
