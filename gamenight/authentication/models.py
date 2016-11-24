@@ -13,9 +13,6 @@ class UserProfile(models.Model):
     post_zip = models.CharField(max_length=10)
     attending_events = models.ManyToManyField(Event)
 
-    class Meta:
-        abstract = True
-
     def create_profile(self, user, addr_1, addr_2, city, prov, post_zip):
         self.user = user
         self.addr_1 = addr_1
