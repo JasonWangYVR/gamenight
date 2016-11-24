@@ -1,0 +1,10 @@
+<!-- removed extends from base-->
+{% block content %}
+  {% if profile_created == False %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit </button>
+  </form>
+  {% endif %}
+{% endblock %}
