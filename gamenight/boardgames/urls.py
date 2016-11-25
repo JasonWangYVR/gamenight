@@ -13,4 +13,5 @@ urlpatterns = [
     # The next two urls are in case multiple urls to the same destination is better than an optional path
     #url(r'^(?P<id>[0-9]+)/$', views.detail, name='detail'),
     #url(r'^(?P<id>[0-9]+)?/([\w-]+)/$', views.detail, name='detail'),
+    url(r'^search/$', views.search, name='search'),
 ]

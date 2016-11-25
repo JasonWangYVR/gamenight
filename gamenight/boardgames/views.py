@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
+from django.template import RequestContext, loader
 from django.urls import reverse
 from django.views import generic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -8,6 +9,7 @@ import string
 from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import urlresolvers
+from django.db.models import Q
 
 from .models import BoardGame, Designer, Tag
 from .forms import SearchForm, PerPageForm
@@ -69,26 +71,7 @@ def index(request):
 		boardgames = paginator.page(paginator.num_pages)
 	#Pagination End
 
-	# if request.method == 'GET':
-	# 	print('in get')
-	# 	s_form = SearchForm(request.GET)
-	# 	p_form = PerPageForm(request.GET)
-	# 	# check whether it's valid:
-	# 	if s_form.is_valid():
-	# 		s_form.process()
-	# 		page = s_form.cleaned_data['want_page']
-	# 		url = '/boardgames/?page='+str(page)
-	# 		return HttpResponseRedirect(url)
-	# 	elif p_form.is_valid():
-	# 		p_form.process()
-	# 		per_page = p_form.cleaned_data['page_size']
-	# 		print(current_page)
-	# 		if int(per_page) == -1:
-	# 			per_page = boardgame_list.count()
-	# 		url = '/boardgames/?pages='+str(current_page)+'?results='+str(per_page)
-	# 		return HttpResponseRedirect(url)
-
-	context = {'boardgames': boardgames, 'title': title}
+	context = {'boardgames': boardgames, 'title': title, 'search': SearchForm()}
 	return render(request, 'boardgames/index.html', context)
 
 # Not currently being used
@@ -113,7 +96,7 @@ def detail(request, boardgameId):
 		except BoardGame.DoesNotExist:
 			prev_id = None
 		context = {'boardgame': boardgame, 'title': title,
-		'next_id': next_id, 'prev_id': prev_id}
+		'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm()}
 		return render(request, 'boardgames/detail.html/', context)
 	else:
 		prev_id = str(int(boardgameId)-1)
@@ -130,5 +113,44 @@ def detail(request, boardgameId):
 		except BoardGame.DoesNotExist:
 			prev_id = None
 		context = {'boardgame': boardgame, 'title': title,
-		'next_id': next_id, 'prev_id': prev_id}
+		'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm()}
 		return render(request, 'boardgames/detail.html', context)
+
+
+def search(request):
+	title = 'Search Results'
+	# Pagination Start
+	if request.method == 'GET':
+		search_form = SearchForm(request.GET)
+		if search_form.is_valid():
+			query = search_form.cleaned_data['q']
+			query_split = query.split(',')
+			search_terms = query.split(',')
+			for terms in query_split:
+				search_terms.append(terms.replace(' ', ''))
+			qobj = Q()
+			for q in search_terms:
+				qobj.add(Q(tag__tag_name__icontains=q), Q.OR)
+				qobj.add(Q(name__icontains=q), Q.OR)
+				# returns too many arbitrary results
+				# qobj.add(Q(description__icontains=q), Q.OR)
+			query2 = BoardGame.objects.filter(qobj).order_by('-bgg_bayesrating')
+                
+			paginator = Paginator(query2, 50)
+			page = request.GET.get('page')
+			try:
+				boardgames = paginator.page(page)
+			except PageNotAnInteger:
+			# If page is not an integer, deliver first page.
+				boardgames = paginator.page(1)
+			except EmptyPage:
+			# If page is out of range (e.g. 9999), deliver last page of results.
+				boardgames = paginator.page(paginator.num_pages)
+            
+			context = {'boardgames': boardgames, 'title': title, 'search': SearchForm()}
+			return render(request, 'boardgames/search.html', context)
+
+	context = {
+		'search': SearchForm(),
+	}
+	return render(request, 'boardgames/search.html', context)

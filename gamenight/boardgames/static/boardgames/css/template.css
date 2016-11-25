@@ -6991,3 +6991,11 @@ input:focus,
 p {
   margin-bottom: 0;
 }
+
+#id_q {
+  width: 250px;
+}
+
+.boardgames_body {
+  background-color: #f8f5f0;
+}
