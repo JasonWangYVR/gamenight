@@ -5,7 +5,6 @@
   </head>
 <body>
 	{% include "boardgames/navbar.html" %}
-	
 	<div class="col-xs-12 col-md-7 col-md-offset-2">
 		<div class="boardgames panel panel-default panel-chart">
 			<div class="boardgames_heading panel-heading col-md-12">
@@ -36,9 +35,9 @@
 				<!-- </div> -->
 				{% endfor %}
 				<!--If Pages Start Working-->
-<!-- 			<div class="col-xs-12 col-md-offset-1">
+			<div class="col-xs-12 col-md-offset-1">
 					        {% if boardgames.has_previous %}
-					            <a href="?page={{ boardgames.previous_page_number }}" class="boardgames_prev_page btn btn-primary col-md-2">previous</a>
+					            <a href="?page={{ boardgames.previous_page_number }}?q={{query}}" class="boardgames_prev_page btn btn-primary col-md-2">previous</a>
 					        {% else %}
 					        	<span class="col-md-2"></span>
 					        {% endif %}
@@ -46,9 +45,9 @@
 					            Page {{ boardgames.number }} of {{ boardgames.paginator.num_pages }}.
 					        </span>
 					        {% if boardgames.has_next %}
-					            <a href="?page={{ boardgames.next_page_number }}" class="boardgames_next_page btn btn-primary col-md-2">next</a>
+					            <a href="?page={{ boardgames.next_page_number }}?q={{query}}" class="boardgames_next_page btn btn-primary col-md-2">next</a>
 					        {% endif %}
-				</div> -->
+				</div>
 	        {% else %}
 	        <div class="col-md-12 text-center">
 	          <h1>Your search returned no results</h1>

@@ -29,15 +29,12 @@ def index(request):
 		page_size = page_size[ page_cutoff2+1 : len(page_size)]
 		page = page[0 : 0 + page_cutoff]
 	elif page_size != 'a' and "page" in page_size:        #?results=int?page=int
-		print(page_size)
 		page_cutoff = page_size.find('?')
 		page = page_size[page_cutoff : len(page_size)]
-		print(page)
 		page_cutoff2 = page.find('=')
 		page = page[ page_cutoff2 + 1 : len(page)]
 		page_size = page_size[0 : 0 + page_cutoff]
 	elif ' ' in page:                                  #?page=page+per_page
-		print('in pages')
 		temp = page.split()
 		page = temp[0]
 		page_size = temp[1]
@@ -121,11 +118,15 @@ def search(request):
 	title = 'Search Results'
 	# Pagination Start
 	if request.method == 'GET':
-		search_form = SearchForm(request.GET)
-		if search_form.is_valid():
-			query = search_form.cleaned_data['q']
-			query_split = query.split(',')
-			search_terms = query.split(',')
+		page = request.GET.get('page', 'a')
+		if page != 'a':
+			page_cutoff = page.find('?')
+			search = page[page_cutoff : len(page)]
+			page_cutoff2 = search.find('=')
+			search = search[ page_cutoff2+1 : len(search)]
+			page = page[0 : 0 + page_cutoff]
+			query_split = search.split(',')
+			search_terms = search.split(',')
 			for terms in query_split:
 				search_terms.append(terms.replace(' ', ''))
 			qobj = Q()
@@ -133,11 +134,12 @@ def search(request):
 				qobj.add(Q(tag__tag_name__icontains=q), Q.OR)
 				qobj.add(Q(name__icontains=q), Q.OR)
 				# returns too many arbitrary results
-				# qobj.add(Q(description__icontains=q), Q.OR)
+				qobj.add(Q(description__icontains=q), Q.OR)
 			query2 = BoardGame.objects.filter(qobj).order_by('-bgg_bayesrating')
                 
 			paginator = Paginator(query2, 50)
-			page = request.GET.get('page')
+			# page = request.GET.get('page')
+			print(page)
 			try:
 				boardgames = paginator.page(page)
 			except PageNotAnInteger:
@@ -146,9 +148,38 @@ def search(request):
 			except EmptyPage:
 			# If page is out of range (e.g. 9999), deliver last page of results.
 				boardgames = paginator.page(paginator.num_pages)
-            
-			context = {'boardgames': boardgames, 'title': title, 'search': SearchForm()}
+			context = {'boardgames': boardgames, 'title': title, 'query': search, 'search': SearchForm()}
 			return render(request, 'boardgames/search.html', context)
+
+		else:
+			search_form = SearchForm(request.GET)
+			if search_form.is_valid():
+				query = search_form.cleaned_data['q']
+				query_split = query.split(',')
+				search_terms = query.split(',')
+				for terms in query_split:
+					search_terms.append(terms.replace(' ', ''))
+				qobj = Q()
+				for q in search_terms:
+					qobj.add(Q(tag__tag_name__icontains=q), Q.OR)
+					qobj.add(Q(name__icontains=q), Q.OR)
+					# returns too many arbitrary results
+					# qobj.add(Q(description__icontains=q), Q.OR)
+				query2 = BoardGame.objects.filter(qobj).order_by('-bgg_bayesrating')
+	                
+				paginator = Paginator(query2, 50)
+				# page = request.GET.get('page')
+				print(page)
+				try:
+					boardgames = paginator.page(page)
+				except PageNotAnInteger:
+				# If page is not an integer, deliver first page.
+					boardgames = paginator.page(1)
+				except EmptyPage:
+				# If page is out of range (e.g. 9999), deliver last page of results.
+					boardgames = paginator.page(paginator.num_pages)
+				context = {'boardgames': boardgames, 'title': title, 'query': query, 'search': SearchForm()}
+				return render(request, 'boardgames/search.html', context)
 
 	context = {
 		'search': SearchForm(),
