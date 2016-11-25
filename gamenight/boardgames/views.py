@@ -169,7 +169,6 @@ def search(request):
 	                
 				paginator = Paginator(query2, 50)
 				# page = request.GET.get('page')
-				print(page)
 				try:
 					boardgames = paginator.page(page)
 				except PageNotAnInteger:
