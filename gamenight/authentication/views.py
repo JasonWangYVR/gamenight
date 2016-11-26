@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from authentication.forms import *
 from authentication.models import GNUser
+from boardgames.forms import SearchForm
 
 def signup(request):
     if not request.user.is_authenticated():
@@ -72,4 +73,4 @@ def log_out(request):
     return redirect('authentication:login')
 
 def profile(request):
-    return render(request, 'authentication/profile.html')
+    return render(request, 'authentication/profile.html', {'search': SearchForm()})

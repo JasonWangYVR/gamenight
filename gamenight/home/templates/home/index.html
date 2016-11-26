@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Gamenight</title>
+{% include "boardgames/head.html" %}
 </head>
 <body>
+ {% include "boardgames/navbar.html" %}
   <h1> Gamenight </h1>
   <a href="{% url 'authentication:signup' %}">Sign up</a>
   <a href="{% url 'authentication:login' %}">Log In</a>

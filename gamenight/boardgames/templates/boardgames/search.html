@@ -5,25 +5,12 @@
   </head>
 <body>
 	{% include "boardgames/navbar.html" %}
-	
 	<div class="col-xs-12 col-md-7 col-md-offset-2">
 		<div class="boardgames panel panel-default panel-chart">
 			<div class="boardgames_heading panel-heading col-md-12">
-			<h4 class="col-md-5"> Board Game List</h4>
-			<div class="boardgames_dropdown col-md-4 col-md-offset-3">
-			<!-- if time permits replace with a href link "?results='value' instead of a form to keep
-			 consistent results per page and url = '?page='num'?results='value'" like page probably as a dropdown-->
-			<form action="" method="get">
-				<select name="results" class="btn btn-primary dropdown boardgames_select">
-					<option value="10 {{boardgames.number}}">10 per page</option>
-					<option value="20 {{boardgames.number}}">20 per page</option>
-					<option value="50 {{boardgames.number}}">50 per page</option>
-					<option value="-1 {{boardgames.number}}">All</option>
-				</select>
-				<input type="submit" Value="Go" class="boardgames_select_submit">
-			</form>
+			<h4 class="col-md-5"> Search Results</h4>
 			</div>
-			</div>
+			{% if boardgames %}
 			<div class="boardgames_body panel panel-body col-md-12">
 				{% for boardgame in boardgames %}
 				<!-- <div class="col-xs-12 col-md-7 col-md-offset-2"> -->
@@ -47,42 +34,27 @@
 					</div>
 				<!-- </div> -->
 				{% endfor %}
-				<!-- TODO: Add infinite scroll -->
-				<div class="col-xs-12 col-md-offset-1">
+				<!--If Pages Start Working-->
+			<div class="col-xs-12 col-md-offset-1">
 					        {% if boardgames.has_previous %}
-					            <a href="?page={{ boardgames.previous_page_number }}" class="boardgames_prev_page btn btn-primary col-md-2">previous</a>
+					            <a href="?page={{ boardgames.previous_page_number }}?q={{query}}" class="boardgames_prev_page btn btn-primary col-md-2">previous</a>
 					        {% else %}
 					        	<span class="col-md-2"></span>
 					        {% endif %}
 					        <span class="current btn btn-primary col-md-2">
 					            Page {{ boardgames.number }} of {{ boardgames.paginator.num_pages }}.
 					        </span>
-					        <form action="" method="get">
-					        	<!-- {% csrf_token %} -->
-    							<input id="want_page" type="text" name="page" value="1" class="input-sm col-md-3">
-    							<input type="submit" value="OK" class="boardgames_page_submit col-md-1">
-							</form>
 					        {% if boardgames.has_next %}
-					            <a href="?page={{ boardgames.next_page_number }}" class="boardgames_next_page btn btn-primary col-md-2">next</a>
+					            <a href="?page={{ boardgames.next_page_number }}?q={{query}}" class="boardgames_next_page btn btn-primary col-md-2">next</a>
 					        {% endif %}
 				</div>
-			</div>
+	        {% else %}
+	        <div class="col-md-12 text-center">
+	          <h1>Your search returned no results</h1>
+	        </div>
+	        {% endif %}
+      		</div>
 		</div>
 	</div>
-<!-- Shows individual pages. Needs a paginator library to limit amount of pages	 
-	<ul class="pagination nav navbar-nav">
-    	{% if boardgames.has_previous %}
-            <li><a href="?page={{ boardgames.previous_page_number }}">Prev</a></li>
-    	{% endif %}
-    	{% for page in boardgames.paginator.page_range %}
-    		{% if boardgames.paginator.num_pages > 1 %}
-    			<li class="{% if boardgames.number == page  %}active{% endif %}"><a href="?page={{page }}">{{ page }}</a></li>
-    		{% endif %}
-    	{% endfor %}
-
-    {% if boardgames.has_next %}
-        <li> <a href="?page={{ boardgames.next_page_number }}">Next</a></li>
-    {% endif %}
- </ul> -->
 {% include "boardgames/footer.html" %}
 </body>
