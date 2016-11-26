@@ -22,7 +22,7 @@ def index(request):
 	# Parsing pages and results for special conditions
 	page = request.GET.get('page', 'a')
 	page_size = request.GET.get('results', 'a')
-	if page != 'a' and "results" in page:                #?pags=int?results=int
+	if page != 'a' and "results" in page:                #?page=int?results=int
 		page_cutoff = page.find('?')
 		page_size = page[page_cutoff : len(page)]
 		page_cutoff2 = page_size.find('=')
@@ -137,7 +137,7 @@ def search(request):
 				qobj.add(Q(description__icontains=q), Q.OR)
 			query2 = BoardGame.objects.filter(qobj).order_by('-bgg_bayesrating')
                 
-			paginator = Paginator(query2, 50)
+			paginator = Paginator(query2, 40)
 			# page = request.GET.get('page')
 			print(page)
 			try:
@@ -167,7 +167,7 @@ def search(request):
 					# qobj.add(Q(description__icontains=q), Q.OR)
 				query2 = BoardGame.objects.filter(qobj).order_by('-bgg_bayesrating')
 	                
-				paginator = Paginator(query2, 50)
+				paginator = Paginator(query2, 40)
 				# page = request.GET.get('page')
 				try:
 					boardgames = paginator.page(page)
