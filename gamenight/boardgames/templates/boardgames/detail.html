@@ -47,11 +47,9 @@
 				</table>
 			</div>
 			<div class="boardgame_detail_info_misc_other col-md-8">
-			<p>Designer:
 			<!--Other Data Such As Pub Data, Designer, etc.-->
-				 <!-- {% for designer in boardgame.designer_set.all %} -->
-					{{designers|join:","}}
-				<!-- {% endfor %} -->
+			<p>Designer:
+				{{designers|join:", "}}
 				</p>
 				<p>Weight: {{boardgame.bgg_weight|floatformat:2}}</p>
 				<p>Published Date: {{boardgame.pub_date}}</p>

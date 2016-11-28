@@ -83,7 +83,7 @@ def detail(request, boardgameId):
 		next_id = str(int(next_boardgame)+1)
 		boardgame = get_object_or_404(BoardGame, id=next_boardgame)
 		title = boardgame.name
-		designers = boardgame.designer_set.all().values_list('name', flat=True)
+		designers = boardgame.designed_by.all().values_list('name', flat=True)
 		try:
 			boardgame_next = BoardGame.objects.get(id=next_id)
 		except BoardGame.DoesNotExist:
@@ -93,14 +93,14 @@ def detail(request, boardgameId):
 		except BoardGame.DoesNotExist:
 			prev_id = None
 		context = {'boardgame': boardgame, 'title': title,
-		'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm()}
+		'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers}
 		return render(request, 'boardgames/detail.html/', context)
 	else:
 		prev_id = str(int(boardgameId)-1)
 		next_id = str(int(boardgameId)+1)
 		boardgame = get_object_or_404(BoardGame, id=boardgameId)
 		title = boardgame.name
-		designers = boardgame.designer_set.all().values_list('name', flat=True)
+		designers = boardgame.designed_by.all().values_list('name', flat=True)
 		try:
 			boardgame_next = BoardGame.objects.get(id=next_id)
 		except BoardGame.DoesNotExist:
@@ -110,7 +110,7 @@ def detail(request, boardgameId):
 		except BoardGame.DoesNotExist:
 			prev_id = None
 		context = {'boardgame': boardgame, 'title': title,
-		'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm()}
+		'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers}
 		return render(request, 'boardgames/detail.html', context)
 
 
