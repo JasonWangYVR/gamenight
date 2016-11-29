@@ -11,10 +11,10 @@ class Event(models.Model):
     created_on = models.DateTimeField(default=timezone.now)
     last_edited_date = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=100)
-	
-	def publish(self):
-		self.last_edited_date= timezone.now()
-		self.save()
+
+    def publish(self):
+	    self.last_edited_date= timezone.now()
+	    self.save()
 
     def __str__(self):
         return self.title
