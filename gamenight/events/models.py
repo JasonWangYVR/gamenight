@@ -6,7 +6,7 @@ from django.utils import timezone
 # Create your models here.
 class Event(models.Model):
     title = models.CharField(max_length=140)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    #group = models.ForeignKey(Group, on_delete=models.CASCADE)
     #uncertain if this is the correct declaration for Group
     organizer = models.ForeignKey(User, on_delete= models.CASCADE)
     #should we cascade user deletion and event deletion?
