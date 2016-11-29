@@ -4,9 +4,9 @@
 <h1>Create Event</h1>
 {% endif %}
 
-    <form method="POST" class="post-form">{% csrf_token %}
+    <form method="POST">{% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
+        <button type="submit">Save</button>
     </form>
 
 <p><a href="{% url 'events:index' %}">Back	to Event List</a></p>

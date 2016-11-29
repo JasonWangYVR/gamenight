@@ -27,8 +27,11 @@ def index(request):
             }
     return render(request, 'events/index.html', context)
 	
-#    def get_queryset(self):
-    #    return Event.objects.order_by('-id')[:5]
+def event_list(request):
+    event = Event.objects.filter.order_by('name')
+    return render(request, 'events/index.html', {'event': event})
+	
+	
 def detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     question = Question.objects.filter(on_event=event.pk)
@@ -49,7 +52,7 @@ def create_event(request):
             post = form.save(commit=False)
             #post.created_on = timezone.now()
             post.save()
-            return redirect('events/index.html')
+            #return redirect(events:index,pk=post.pk)
     else:
         form = EventForm()
     return render(request, 'events/create_event.html', {'form': form})

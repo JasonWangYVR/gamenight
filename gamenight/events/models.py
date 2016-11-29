@@ -1,19 +1,20 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.contrib.auth.models import User,Group
+from django.contrib.auth.models import User
 from django.utils import timezone
 # Create your models here.
 class Event(models.Model):
     title = models.CharField(max_length=140)
-    #group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    #uncertain if this is the correct declaration for Group
-    organizer = models.ForeignKey(User, on_delete= models.CASCADE)
-    #should we cascade user deletion and event deletion?
+    organizer = models.ForeignKey('auth.User')
     event_date = models.DateTimeField('Event Date')
-    created_on = models.DateTimeField('Date Created')
-    last_edited_date = models.DateTimeField('Last Edited')
+    created_on = models.DateTimeField(default=timezone.now)
+    last_edited_date = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=100)
+	
+	def publish(self):
+		self.last_edited_date= timezone.now()
+		self.save()
 
     def __str__(self):
         return self.title
