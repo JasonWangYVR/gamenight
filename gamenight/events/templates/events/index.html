@@ -1,8 +1,7 @@
-
 <h1>Recent Events List</h1>
 
-{% for event in events %}
-    {{ event }}
+{% for e in event %}
+    <p><a href="{% url 'events:detail' e.id %}">{{ e }}</a><p>
 {% endfor %}
 
 <a href="{% url 'events:create' %}">Create Event</a>

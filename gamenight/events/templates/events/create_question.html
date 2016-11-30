@@ -1,18 +1,12 @@
-{% if question.id %}
-<h1>Edit Question</h1>
+{% if event.id %}
+<h1>Create Question</h1>
 {% else %}
-<h1>Add New Question</h1>
+<h1>Edit Question</h1>
 {% endif %}
 
-<form action="{{ action }}" method="POST">
-
-<form action="{% url 'events:create' %}" method="POST">
-  {% csrf_token %}
-  <ul>
-    {{ form.as_ul }}
-  </ul>
-  <input id="save_question" type="submit" value="Save Question" />
-</form>
+    <form method="POST">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
 
 <p><a href="{% url 'events:index' %}">Back	to Event List</a></p>
-{# <p><a href="{% url 'events:detail' event.id %}">Back to {{ event.title }}</a></p> #}

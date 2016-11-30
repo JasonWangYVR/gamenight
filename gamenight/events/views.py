@@ -1,3 +1,4 @@
+import string
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext, loader
@@ -5,33 +6,34 @@ from django.urls import reverse
 from django.views import generic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django import template
-import string
 from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import urlresolvers
 from django.db.models import Q
-from .forms import EventForm
-
+#utilities
 from django.utils import timezone
-
 #included models
 from .models import Event, Question, Choice
-
+#include forms
+from .forms import EventForm, QuestionForm
 
 def index(request):
-    title = 'GameNight Event List'
-    event = Event.objects.order_by('name')
+    #what is this for? -JM
+    #title = 'GameNight Event List'
+    event = Event.objects.order_by('title')
     context = {
         'event': event,
+        #likely not needed -JM
         #'choices' : choice,
             }
     return render(request, 'events/index.html', context)
-	
-def event_list(request):
-    event = Event.objects.filter.order_by('name')
-    return render(request, 'events/index.html', {'event': event})
-	
-	
+
+#what is this? -JM
+#def event_list(request):
+#    event = Event.objects.filter.order_by('name')
+#    return render(request, 'events/index.html', {'event': event})
+
+
 def detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     question = Question.objects.filter(on_event=event.pk)
@@ -40,7 +42,7 @@ def detail(request, event_id):
 
     context = {
         'event': event,
-        'question_list' : question,
+        'question' : question,
         #'choices' : choice,
             }
     return render(request, 'events/event_detail.html', context)
@@ -56,6 +58,19 @@ def create_event(request):
     else:
         form = EventForm()
     return render(request, 'events/create_event.html', {'form': form})
+
+
+def create_question(request, event_id):
+    if request.method == "POST":
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            #post.created_on = timezone.now()
+            post.save()
+            #return redirect(events:index,pk=post.pk)
+    else:
+        form = QuestionForm()
+    return render(request, 'events/create_question.html', {'form': form})
 
 class EditEventView(generic.UpdateView):
 
