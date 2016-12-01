@@ -15,7 +15,7 @@ from django.utils import timezone
 #included models
 from .models import Event, Question, Choice
 #include forms
-from .forms import EventForm, QuestionForm
+from .forms import EventForm, QuestionForm, ChoiceForm
 
 def index(request):
     #what is this for? -JM
@@ -33,17 +33,15 @@ def index(request):
 #    event = Event.objects.filter.order_by('name')
 #    return render(request, 'events/index.html', {'event': event})
 
-
 def detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     question = Question.objects.filter(on_event=event.pk)
-
-    #choice = Choice.objects.filter(question=question.pk)
+    choice = Choice.objects.filter(question_id__in=question)
 
     context = {
         'event': event,
         'question' : question,
-        #'choices' : choice,
+        'choice' : choice,
             }
     return render(request, 'events/event_detail.html', context)
 
@@ -72,6 +70,18 @@ def create_question(request, event_id):
         form = QuestionForm()
     return render(request, 'events/create_question.html', {'form': form})
 
+def create_choice(request, question_id):
+    if request.method == "POST":
+        form = ChoiceForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            #post.created_on = timezone.now()
+            post.save()
+            #return redirect(events:index,pk=post.pk)
+    else:
+        form = ChoiceForm()
+    return render(request, 'events/create_choice.html', {'form': form})
+
 class EditEventView(generic.UpdateView):
 
     model = Event
@@ -85,24 +95,6 @@ class EditEventView(generic.UpdateView):
 
         context = super(EditEventView, self).get_context_data(**kwargs)
         context['action'] = reverse('events:editevent', kwargs={'pk': self.get_object().id})
-
-        return context
-
-class CreateQuestionView(generic.CreateView):
-    #Need to figure out a way to return from creating a question to the related event detail view
-    #at the moment this view only accepts one model, so we cannot return based on the event_id as the event model
-    #isn't available
-    model = Question
-    template_name = 'events/create_question.html'
-    fields = '__all__'
-
-    def get_success_url(self):
-        return reverse('events:index')
-
-    def get_context_data(self, **kwargs):
-
-        context = super(CreateQuestionView, self).get_context_data(**kwargs)
-        context['action'] = reverse('events:addquestion', kwargs={'pk': self.get_object().id})
 
         return context
 
@@ -122,10 +114,8 @@ class EditQuestionView(generic.UpdateView):
 
         return context
 
-class CreateChoiceView(generic.CreateView):
-    #Need to figure out a way to return from creating a question to the related event detail view
-    #at the moment this view only accepts one model, so we cannot return based on the event_id as the event model
-    #isn't available
+class EditChoiceView(generic.UpdateView):
+
     model = Choice
     template_name = 'events/create_choice.html'
     fields = '__all__'
@@ -135,7 +125,44 @@ class CreateChoiceView(generic.CreateView):
 
     def get_context_data(self, **kwargs):
 
-        context = super(CreateChoiceView, self).get_context_data(**kwargs)
-        context['action'] = reverse('events:addchoice', kwargs={'pk': self.get_object().id})
+        context = super(EditChoiceView, self).get_context_data(**kwargs)
+        context['action'] = reverse('events:editchoice', kwargs={'pk': self.get_object().id})
 
         return context
+
+#class CreateQuestionView(generic.CreateView):
+    #Need to figure out a way to return from creating a question to the related event detail view
+    #at the moment this view only accepts one model, so we cannot return based on the event_id as the event model
+    #isn't available
+    #model = Question
+    #template_name = 'events/create_question.html'
+    #fields = '__all__'
+
+    #def get_success_url(self):
+    #    return reverse('events:index')
+
+    #def get_context_data(self, **kwargs):
+
+    #    context = super(CreateQuestionView, self).get_context_data(**kwargs)
+    #    context['action'] = reverse('events:addquestion', kwargs={'pk': self.get_object().id})
+
+    #    return context
+
+
+#class CreateChoiceView(generic.CreateView):
+    #Need to figure out a way to return from creating a question to the related event detail view
+    #at the moment this view only accepts one model, so we cannot return based on the event_id as the event model
+    #isn't available
+#    model = Choice
+#    template_name = 'events/create_choice.html'
+#    fields = '__all__'
+
+#    def get_success_url(self):
+#        return reverse('events:index')
+
+#    def get_context_data(self, **kwargs):
+
+#        context = super(CreateChoiceView, self).get_context_data(**kwargs)
+#        context['action'] = reverse('events:addchoice', kwargs={'pk': self.get_object().id})
+
+#        return context

@@ -12,16 +12,16 @@ urlpatterns = [
 	url(r'^create/$', views.create_event, name='create',),
     #question creation
 	url(r'^createquestion/(?P<event_id>[0-9]+)/$', views.create_question, name='createquestion',),
+    #choice creation
+	url(r'^createchoice/(?P<question_id>[0-9]+)/$', views.create_choice, name='createchoice',),
     #edits event
-	url(r'^editevent/(?P<pk>\d+)/$', views.EditEventView.as_view(),
-    name='editevent',),
-    #creates question
-    url(r'^addq/(?P<pk>\d+)/$', views.CreateQuestionView.as_view(),
-    name='addquestion',),
+	url(r'^editevent/(?P<pk>\d+)/$', views.EditEventView.as_view(), name='editevent',),
     #edit question
-    url(r'^editq/(?P<pk>\d+)/$', views.EditQuestionView.as_view(),
-    name='editquestion',),
+    url(r'^editq/(?P<pk>\d+)/$', views.EditQuestionView.as_view(), name='editquestion',),
+    #edit choice
+    url(r'^editc/(?P<pk>\d+)/$', views.EditChoiceView.as_view(), name='editchoice',),
     #creates choice
-    url(r'^addq/(?P<pk>\d+)/$', views.CreateChoiceView.as_view(),
-    name='addchoice',),
+    #url(r'^addq/(?P<pk>\d+)/$', views.CreateChoiceView.as_view(), name='addchoice',),
+    #VOID creates question
+    #url(r'^addq/(?P<pk>\d+)/$', views.CreateQuestionView.as_view(), name='addquestion',),
     ]

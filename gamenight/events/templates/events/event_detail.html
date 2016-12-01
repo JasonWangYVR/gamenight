@@ -1,43 +1,48 @@
 <h1>Event Details</h1>
 
 {% if event %}
-<p>Title: {{ event.title }}</p>
-<!--<p>Group: {{ event.group }}<p>-->
-<p>Organizer: {{ event.organizer }}<p>
-<p>Date: {{ event.event_date }}</p>
-<p>Created: {{ event.created_on }}</p>
-<p>Edited: {{ event.last_edited_date }}</p>
-<p>Location: {{ event.location }}</p>
+  <p>Title: {{ event.title }}</p>
+  <!--<p>Group: {{ event.group }}<p>-->
+  <p>Organizer: {{ event.organizer }}<p>
+  <p>Date: {{ event.event_date }}</p>
+  <p>Created: {{ event.created_on }}</p>
+  <p>Edited: {{ event.last_edited_date }}</p>
+  <p>Location: {{ event.location }}</p>
 {% else %}
-<p>Event Error - Unable to Display</p>
+  <p>Event Error - Unable to Display</p>
 {% endif %}
 
 <p><a href="{% url 'events:editevent' pk=event.id %}">Edit Event</a></p>
 
 {% if question %}
-<p>Questions: </p>
-    <ul>
-    {% for q in question %}
-        <li>{{ q.question_text }}
-          <a href="{% url 'events:editquestion' q.id %}"> Edit</a>
-        {#<a href="{% url 'events:questiondetails' q.id %}"> </a></li>#}Details
-        {% if choices %}
-            <ul>
-            {% for c in choices %}
-                <li>{{ c.choice_text }}</a></li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>Choices will be displayed here eventually.</p>
-        {% endif %}
+  <p>Questions: </p>
+  <ul>
 
-    {% endfor %}
-    </ul>
+  {% for q in question %}
+
+    <li>{{ q.question_text }}
+    <a href="{% url 'events:editquestion' q.id %}"> Edit</a>
+
+    {% if choice %}
+      <ul>
+      {% for c in choice %}
+
+        {% if q.id == c.question_id %}
+          <li>{{ c.choice_text }} | Votes: {{ c.votes }} <a href="{% url 'events:editchoice' c.id %}"> Edit</a></li>
+        {% endif %}
+      {% endfor %}
+        </ul>
+  {% endif %}
+
+    <p><a href="{% url "events:createchoice" question_id=q.id %}">Add Choice</a></p>
+  {% endfor %}
+
+  </ul>
 {% else %}
-    <p>No questions.</p>
+  <p>No questions.</p>
 {% endif %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<p><a href="{% url "events:createquestion" pk=event.id %}">Add Question</a></p>
+<p><a href="{% url "events:createquestion" event_id=event.id %}">Add Question</a></p>
 <p><a href="{% url 'events:index' %}">Back to Event List</a></p>

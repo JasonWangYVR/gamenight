@@ -29,7 +29,7 @@ class Message(models.Model):
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
+    pub_date = models.DateTimeField(default=timezone.now)
     on_event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name='the related event')
     def __str__(self):
         return self.question_text
