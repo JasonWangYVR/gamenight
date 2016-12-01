@@ -18,8 +18,15 @@ urlpatterns = [
 	url(r'^editevent/(?P<pk>\d+)/$', views.EditEventView.as_view(), name='editevent',),
     #edit question
     url(r'^editq/(?P<pk>\d+)/$', views.EditQuestionView.as_view(), name='editquestion',),
+    #delete question
+    url(r'^deleteq/(?P<pk>\d+)/$', views.DeleteQuestionView.as_view(), name='deletequestion',),
     #edit choice
     url(r'^editc/(?P<pk>\d+)/$', views.EditChoiceView.as_view(), name='editchoice',),
+    #delete choice
+    url(r'^deletec/(?P<pk>\d+)/$', views.DeleteChoiceView.as_view(), name='deletechoice',),
+
+    url(r'^(?P<choice_id>[0-9]+)/vote/$', views.vote, name='vote'),
+
     #creates choice
     #url(r'^addq/(?P<pk>\d+)/$', views.CreateChoiceView.as_view(), name='addchoice',),
     #VOID creates question

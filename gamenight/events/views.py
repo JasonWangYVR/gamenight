@@ -2,7 +2,7 @@ import string
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext, loader
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django import template
@@ -129,6 +129,36 @@ class EditChoiceView(generic.UpdateView):
         context['action'] = reverse('events:editchoice', kwargs={'pk': self.get_object().id})
 
         return context
+
+class DeleteQuestionView(generic.DeleteView):
+
+    model = Question
+    success_url = reverse_lazy('events:index')
+
+class DeleteChoiceView(generic.DeleteView):
+
+    model = Choice
+    success_url = reverse_lazy('events:index')
+
+
+def vote(request, choice_id):
+    choice = get_object_or_404(Choice, pk=choice_id)
+    try:
+        selected_choice = choice
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        return render(request, 'events/index.html', {
+            'choice': choice,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('events:index'))
+
 
 #class CreateQuestionView(generic.CreateView):
     #Need to figure out a way to return from creating a question to the related event detail view

@@ -22,13 +22,22 @@
 
     <li>{{ q.question_text }}
     <a href="{% url 'events:editquestion' q.id %}"> Edit</a>
+    <a href="{% url 'events:deletequestion' q.id %}"> Delete</a></li>
 
     {% if choice %}
       <ul>
       {% for c in choice %}
 
         {% if q.id == c.question_id %}
-          <li>{{ c.choice_text }} | Votes: {{ c.votes }} <a href="{% url 'events:editchoice' c.id %}"> Edit</a></li>
+          <li>{{ c.choice_text }} | Votes: {{ c.votes }}
+            <form action="{% url 'events:vote' c.id %}" method="post">
+              {% csrf_token %}
+              <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+              <label for="choice{{ forloop.counter }}">{{ c.choice_text }}</label><br />
+              <input type="submit" value="Vote" />
+            </form>
+          <a href="{% url 'events:editchoice' c.id %}"> Edit</a>
+          <a href="{% url 'events:deletechoice' c.id %}"> Delete</a></li>
         {% endif %}
       {% endfor %}
         </ul>
