@@ -80,9 +80,9 @@ def detail(request, boardgameId):
 	if request.GET.get('next'):
 		# Quick way to go between detail pages. URL needs work
 		next_boardgame = request.GET.get('next')
+		boardgame = get_object_or_404(BoardGame, id=next_boardgame)
 		prev_id = str(int(next_boardgame)-1)
 		next_id = str(int(next_boardgame)+1)
-		boardgame = get_object_or_404(BoardGame, id=next_boardgame)
 		title = boardgame.name
 		designers = boardgame.designed_by.all().values_list('name', flat=True)
 		try:
@@ -97,9 +97,9 @@ def detail(request, boardgameId):
 		'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers}
 		return render(request, 'boardgames/detail.html/', context)
 	else:
+		boardgame = get_object_or_404(BoardGame, id=boardgameId)
 		prev_id = str(int(boardgameId)-1)
 		next_id = str(int(boardgameId)+1)
-		boardgame = get_object_or_404(BoardGame, id=boardgameId)
 		title = boardgame.name
 		designers = boardgame.designed_by.all().values_list('name', flat=True)
 		try:
