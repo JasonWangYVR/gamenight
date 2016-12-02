@@ -76,6 +76,7 @@ def index(request):
 # 	return HttpResponse('Your in the view to get the next/prev detail page and redirect to it')
 
 def detail(request, boardgameId):
+	# will need favourite logic once user is added
 	if request.GET.get('next'):
 		# Quick way to go between detail pages. URL needs work
 		next_boardgame = request.GET.get('next')
