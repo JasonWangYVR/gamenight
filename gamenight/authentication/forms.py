@@ -116,61 +116,61 @@ class LoginForm(forms.Form):
                                                                                 #       now this should do
 
 class ProfileForm(forms.Form):
-        addr_1 = forms.CharField(
-            label='Address Line 1',
-            min_length = 6,
-            required = True,
-            widget=forms.TextInput(
-                attrs = {
-                    'class':'form-control',
-                    'placeholder': '1-30 Characters',
-                }
-            )
+    addr_1 = forms.CharField(
+        label='Address Line 1',
+        min_length = 6,
+        required = True,
+        widget=forms.TextInput(
+            attrs = {
+                'class':'form-control',
+                'placeholder': '1-30 Characters',
+            }
         )
-        addr_2 = forms.CharField(
-            label='Address Line 2',
-            min_length = 6,
-            required = False,
-            widget=forms.TextInput(
-                attrs = {
-                    'class':'form-control',
-                    'placeholder': '1-30 Characters',
-                }
-            )
+    )
+    addr_2 = forms.CharField(
+        label='Address Line 2',
+        min_length = 6,
+        required = False,
+        widget=forms.TextInput(
+            attrs = {
+                'class':'form-control',
+                'placeholder': '1-30 Characters',
+            }
         )
-        city = froms.CharField(
-            label='City',
-            min_length = 6,
-            required = True,
-            widget=forms.TextInput(
-                attrs = {
-                    'class':'form-control',
-                    'placeholder': '1-30 Characters',
-                }
-            )
+    )
+    city = forms.CharField(
+        label='City',
+        min_length = 6,
+        required = True,
+        widget=forms.TextInput(
+            attrs = {
+                'class':'form-control',
+                'placeholder': '1-30 Characters',
+            }
         )
-        prov = models.CharField(
-            label = 'Province',
-            min_length = 2,
-            required = True,
-            widget=forms.TextInput(
-                attrs = {
-                    'class':'form-control',
-                    'placeholder': '2-5 Characters',
-                }
-            )
+    )
+    prov = forms.CharField(
+        label = 'Province',
+        min_length = 2,
+        required = True,
+        widget=forms.TextInput(
+            attrs = {
+                'class':'form-control',
+                'placeholder': '2-5 Characters',
+            }
         )
-        post_zip = models.CharField(
-            label = 'Postal Code',
-            min_length = 2,
-            required = True,
-            widget=forms.TextInput(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'2-10 Characters',
-                }
-            )
+    )
+    post_zip = forms.CharField(
+        label = 'Postal Code',
+        min_length = 2,
+        required = True,
+        widget=forms.TextInput(
+            attrs={
+                'class':'form-control',
+                'placeholder':'2-10 Characters',
+            }
         )
+    )
     class Meta:
         model = UserProfile
         fields = ('addr_1, addr_2, city, prov, post_zip')

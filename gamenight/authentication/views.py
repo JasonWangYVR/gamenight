@@ -105,7 +105,7 @@ def create_profile(request):
             profile_created = False
             if form.is_valid():
                 profile = UserProfile.objects.create_profile(
-                    user = request.user
+                    user = request.user,
                     addr_1 = form.cleaned_data['addr_1'],
                     addr_2 = form.cleaned_data['addr_2'],
                     city = form.cleaned_data['city'],
@@ -114,7 +114,7 @@ def create_profile(request):
                 )
                 profile_created = True
             context = {
-                'profile_created'=profile_created
+                'profile_created':profile_created
             }
         template = loader.get_template('authentication/create_profile.html')
         return render(request, 'authentication/create_profile.html', context)
