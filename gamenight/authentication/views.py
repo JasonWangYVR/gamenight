@@ -66,10 +66,10 @@ def log_in(request):
     else:
         try:
             profile = UserProfile.objects.filter(user=request.user, deleted=False)
-            context = {'user':request.user,'profile':profile}
+            return redirect('home:index')
         except ObjectDoesNotExist:
             context = {'user':request.user}
-        return render(request, 'authentication/profile.html', context)
+            return render(request, 'authentication/profile.html', context)
 
 def log_out(request):
     logout(request)
@@ -93,36 +93,39 @@ def profile(request):
 
 def create_profile(request):
     if request.user.is_authenticated():
-        # try:
-        #     profile = UserProfile.objects.get(user=request.user, deleted=False)
-        #     context = {
-        #         'user':request.user,
-        #         'profile':profile,
-        #     }
-        #     return render(request, 'authentication/profile.html', context)
-        # except ObjectDoesNotExist:
-        if request.method == POST:
-            form = ProfileForm()
-            profile_created = False
-            if form.is_valid():
-                profile = UserProfile.objects.create_profile(
-                    user = request.user,
-                    addr_1 = form.cleaned_data['addr_1'],
-                    addr_2 = form.cleaned_data['addr_2'],
-                    city = form.cleaned_data['city'],
-                    prov = form.cleaned_data['prov'],
-                    post_zip = form.cleaned_data['post_zip'],
-                )
-                profile_created = True
+        profile_created = False
+        try:
+            profile = UserProfile.objects.get(user=request.user, deleted=False)
             context = {
-                'profile_created':profile_created
+                'user':request.user,
+                'profile':profile,
             }
-        template = loader.get_template('authentication/create_profile.html')
-        context = RequestContext(request, {
-            'form': form,
-            'profile_created': profile_created,
-        })
-        return render(request, 'authentication/create_profile.html', {'form':form, 'profile_created':profile_created})
+            return render(request, 'authentication/profile.html', context)
+        except ObjectDoesNotExist:
+            if request.method == 'POST':
+                form = UserForm(request.POST)
+                if form.is_valid():
+                    profile = UserProfile.objects.create_profile(
+                        user = request.user,
+                        addr_1 = form.cleaned_data['addr_1'],
+                        addr_2 = form.cleaned_data['addr_2'],
+                        city = form.cleaned_data['city'],
+                        prov = form.cleaned_data['prov'],
+                        post_zip = form.cleaned_data['post_zip'],
+                    )
+                    profile_created = True
+                context = {
+                    'profile_created':profile_created
+                }
+                template = loader.get_template('authentication/create_profile.html')
+                context = RequestContext(request, {
+                    'form': form,
+                    'profile_created': profile_created,
+                })
+                return render(request, 'authentication/create_profile.html', {'profile_created':profile_created})
+            else:
+                form=ProfileForm()
+            return render(request, 'authentication/create_profile.html', {'form':form, 'profile_created':profile_created})
     else:
         return redirect('authentication:login')
 
