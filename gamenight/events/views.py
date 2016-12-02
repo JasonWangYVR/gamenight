@@ -1,53 +1,91 @@
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, render
+import string
+from django.shortcuts import get_object_or_404, render, redirect
+from django.http import HttpResponseRedirect, HttpResponse
+from django.template import RequestContext, loader
+from django.urls import reverse, reverse_lazy
 from django.views import generic
-from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django import template
+from django.core.urlresolvers import resolve
+from django.core.exceptions import ObjectDoesNotExist
+from django.core import urlresolvers
+from django.db.models import Q
+#utilities
+from django.utils import timezone
 #included models
-from .models import Event, Question, Choice
+from .models import Event, Question, Choice, Message
+#include forms
+from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm
 
-# Create your views here.
-#index taken from Django tutorials
-class IndexView(generic.ListView):
-    template_name = 'events/index.html'
-    context_object_name = 'latest_event_list'
-    #overwrite for listview only
-    def get_queryset(self):
-        return Event.objects.order_by('-id')[:5]
-#view for individual events and related models
-def detail(request, event_id):
-    #grab single events obj
-    event = get_object_or_404(Event, pk=event_id)
-    #grab collection of questions that are related to event obj
-    # through primary key foreign key relationship
-    question = Question.objects.filter(on_event=event.pk)
-
-    #not impletmented yet
-    #choice = Choice.objects.filter(question=question.pk)
-
-    #store objects (or collections) in context (dictionary)
+def index(request):
+    #title = 'GameNight Event List'
+    event = Event.objects.order_by('title')
     context = {
         'event': event,
-        'question_list' : question,
-        #'choices' : choice,
             }
-    #return request, template, and dictionary to views (template)
+    return render(request, 'events/index.html', context)
+
+def detail(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    question = Question.objects.filter(on_event=event.pk)
+    choice = Choice.objects.filter(question_id__in=question)
+    message = Message.objects.filter(on_event=event.pk)
+
+    context = {
+        'event': event,
+        'question' : question,
+        'choice' : choice,
+		'message' : message,
+            }
     return render(request, 'events/event_detail.html', context)
 
-class CreateEventView(generic.CreateView):
+def create_event(request):
+    if request.method == "POST":
+        form = EventForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            #post.created_on = timezone.now()
+            post.save()
+            #return redirect(events:index,pk=post.pk)
+    else:
+        form = EventForm()
+    return render(request, 'events/create_event.html', {'form': form})
 
-    model = Event
-    template_name = 'events/create_event.html'
-    fields = '__all__'
+def create_message(request, event_id):
+    if request.method == "POST":
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            #post.created_on = timezone.now()
+            post.save()
+            #return redirect(events:detail,pk=post.pk)
+    else:
+        form = MessageForm()
+    return render(request, 'events/create_message.html', {'form': form})
 
-    def get_success_url(self):
-        return reverse('events:index')
+def create_question(request, event_id):
+    if request.method == "POST":
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            #post.created_on = timezone.now()
+            post.save()
+            #return redirect(events:index,pk=post.pk)
+    else:
+        form = QuestionForm()
+    return render(request, 'events/create_question.html', {'form': form})
 
-    def get_context_data(self, **kwargs):
-
-        context = super(CreateEventView, self).get_context_data(**kwargs)
-        context['action'] = reverse('events:create')
-
-        return context
+def create_choice(request, question_id):
+    if request.method == "POST":
+        form = ChoiceForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            #post.created_on = timezone.now()
+            post.save()
+            #return redirect(events:index,pk=post.pk)
+    else:
+        form = ChoiceForm()
+    return render(request, 'events/create_choice.html', {'form': form})
 
 class EditEventView(generic.UpdateView):
 
@@ -62,24 +100,6 @@ class EditEventView(generic.UpdateView):
 
         context = super(EditEventView, self).get_context_data(**kwargs)
         context['action'] = reverse('events:editevent', kwargs={'pk': self.get_object().id})
-
-        return context
-
-class CreateQuestionView(generic.CreateView):
-    #Need to figure out a way to return from creating a question to the related event detail view
-    #at the moment this view only accepts one model, so we cannot return based on the event_id as the event model
-    #isn't available
-    model = Question
-    template_name = 'events/create_question.html'
-    fields = '__all__'
-
-    def get_success_url(self):
-        return reverse('events:index')
-
-    def get_context_data(self, **kwargs):
-
-        context = super(CreateQuestionView, self).get_context_data(**kwargs)
-        context['action'] = reverse('events:addquestion', kwargs={'pk': self.get_object().id})
 
         return context
 
@@ -99,10 +119,8 @@ class EditQuestionView(generic.UpdateView):
 
         return context
 
-class CreateChoiceView(generic.CreateView):
-    #Need to figure out a way to return from creating a question to the related event detail view
-    #at the moment this view only accepts one model, so we cannot return based on the event_id as the event model
-    #isn't available
+class EditChoiceView(generic.UpdateView):
+
     model = Choice
     template_name = 'events/create_choice.html'
     fields = '__all__'
@@ -112,7 +130,63 @@ class CreateChoiceView(generic.CreateView):
 
     def get_context_data(self, **kwargs):
 
-        context = super(CreateChoiceView, self).get_context_data(**kwargs)
-        context['action'] = reverse('events:addchoice', kwargs={'pk': self.get_object().id})
+        context = super(EditChoiceView, self).get_context_data(**kwargs)
+        context['action'] = reverse('events:editchoice', kwargs={'pk': self.get_object().id})
 
         return context
+
+class EditMessageView(generic.UpdateView):
+
+    model = Message
+    template_name = 'events/create_message.html'
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse('events:index')
+
+    def get_context_data(self, **kwargs):
+
+        context = super(EditMessageView, self).get_context_data(**kwargs)
+        context['action'] = reverse('events:editevent', kwargs={'pk': self.get_object().id})
+
+        return context
+
+class DeleteQuestionView(generic.DeleteView):
+
+    model = Question
+    success_url = reverse_lazy('events:index')
+
+class DeleteChoiceView(generic.DeleteView):
+
+    model = Choice
+    success_url = reverse_lazy('events:index')
+	
+class DeleteMessageView(generic.DeleteView):
+
+    model = Message
+    success_url = reverse_lazy('events:index')
+	
+class DeleteEventView(generic.DeleteView):
+
+    model = Event
+    success_url = reverse_lazy('events:index')
+
+
+def vote(request, choice_id):
+    choice = get_object_or_404(Choice, pk=choice_id)
+    try:
+        selected_choice = choice
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        return render(request, 'events/index.html', {
+            'choice': choice,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('events:index'))
+

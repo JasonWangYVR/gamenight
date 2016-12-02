@@ -1,0 +1,28 @@
+<!-- removed extends from base-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ {% include "authentication/head.html" %}
+</head>
+<body>
+	<div class="signup_header col-md-6 col-md-offset-3">
+		<h2>GameNight Sign Up</h2>
+	</div>
+	<div class="signup">
+		<div class="panel panel-default col-md-6 col-md-offset-3">
+			<div class="signup_body panel-body">
+				<div class="signup_body_info">
+					{% block content %}
+					  {% if registered == False %}
+					  <form method="post">
+					    {% csrf_token %}
+					    {{ form.as_p }}
+					    <button type="submit">Submit </button>
+					  </form>
+					  {% endif %}
+					{% endblock %}
+				</div>
+			</div>
+		</div>
+	</div>
+</body>

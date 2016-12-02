@@ -1,43 +1,78 @@
-<h1>Event Details</h1>
+<h1>Details for {{ event.title }}</h1>
 
 {% if event %}
-<p>Title: {{ event.title }}</p>
-<p>Group: {{ event.group }}<p>
-<p>Organizer: {{ event.organizer }}<p>
-<p>Date: {{ event.event_date }}</p>
-<p>Created: {{ event.created_on }}</p>
-<p>Edited: {{ event.last_edited_date }}</p>
-<p>Location: {{ event.location }}</p>
+  <p>Title: {{ event.title }}</p>
+  <!--<p>Group: {{ event.group }}<p>-->
+  <p>Organizer: {{ event.organizer }}<p>
+  <p>Date: {{ event.event_date }}</p>
+  <p>Created: {{ event.created_on }}</p>
+  <p>Edited: {{ event.last_edited_date }}</p>
+  <p>Location: {{ event.location }}</p>
 {% else %}
-<p>Event Error</p>
+  <p>Event Error - Unable to Display</p>
 {% endif %}
 
 <p><a href="{% url 'events:editevent' pk=event.id %}">Edit Event</a></p>
 
-{% if question_list %}
-<p>Questions: </p>
-    <ul>
-    {% for q in question_list %}
-        <li>{{ q.question_text }}
-          <a href="{% url 'events:editquestion' q.id %}"> Edit</a>
-        {#<a href="{% url 'events:questiondetails' q.id %}"> </a></li>#}Details
-        {% if choices %}
-            <ul>
-            {% for c in choices %}
-                <li>{{ c.choice_text }}</a></li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>Choices will be displayed here eventually.</p>
-        {% endif %}
+{% if question %}
+  <h2>Questions: </h2>
+  <ul>
 
-    {% endfor %}
-    </ul>
+  {% for q in question %}
+
+    <li>{{ q.question_text }}
+    <a href="{% url 'events:editquestion' q.id %}"> Edit</a>
+    <a href="{% url 'events:deletequestion' q.id %}"> Delete</a></li>
+
+    {% if choice %}
+      <ul>
+      {% for c in choice %}
+
+        {% if q.id == c.question_id %}
+          <li>{{ c.choice_text }} | Votes: {{ c.votes }}
+            <form action="{% url 'events:vote' c.id %}" method="post">
+              {% csrf_token %}
+              <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+              <label for="choice{{ forloop.counter }}">{{ c.choice_text }}</label><br />
+              <input type="submit" value="Vote" />
+            </form>
+          <a href="{% url 'events:editchoice' c.id %}"> Edit</a>
+          <a href="{% url 'events:deletechoice' c.id %}"> Delete</a></li>
+        {% endif %}
+      {% endfor %}
+        </ul>
+  {% endif %}
+
+    <p><a href="{% url "events:createchoice" question_id=q.id %}">Add Choice</a></p>
+  {% endfor %}
+
+  </ul>
 {% else %}
-    <p>No questions.</p>
+  <p>No questions.</p>
 {% endif %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<p><a href="{% url "events:addquestion" pk=event.id %}">Add Question</a></p>
+<p><a href="{% url "events:createquestion" event_id=event.id %}">Add Question</a></p>
+
+{% if message %}
+  <h2>Messages: </h2>
+  <ul>
+
+  {% for m in message %}
+
+    <li>{{ m.text }}
+	 <p>Date: {{ m.pub_date }} User: {{m.posted_by}}</p>
+    <a href="{% url 'events:editmessage' m.id %}"> Edit</a>
+	<a href="{% url 'events:deletemessage' m.id %}"> Delete</a></li>
+  </ul>
+    {% endfor %}
+{% else %}
+  <p>No messages.</p>
+{% endif %}
+
+<p><a href="{% url "events:createmessage" event_id=event.id %}">Add Message</a></p>
+
 <p><a href="{% url 'events:index' %}">Back to Event List</a></p>
+
+ <p><a href="{% url 'events:delete_event' pk=event.id %}"> Delete Event</a></li></p>
