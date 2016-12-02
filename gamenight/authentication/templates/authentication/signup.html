@@ -6,7 +6,5 @@
     {{ form.as_p }}
     <button type="submit">Submit </button>
   </form>
-  {% elif registered == True %}
-		<p><a href="{% url 'authentication:create_profile' %}">You've successfully signed up! Click here to continue.</a></p>
   {% endif %}
 {% endblock %}
