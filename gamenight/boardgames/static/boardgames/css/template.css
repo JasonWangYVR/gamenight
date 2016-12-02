@@ -4498,6 +4498,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-default {
   background-color: #3e3f3a;
   border-color: #3e3f3a;
+/*  background-color: #325d88;
+  border-color: #325d88;
+  blue color used in primary*/
 }
 .navbar-default .navbar-brand {
   color: #ffffff;
@@ -6998,4 +7001,65 @@ p {
 
 .boardgames_body {
   background-color: #f8f5f0;
+}
+
+.boardgame_title_star {
+  height: 22px;
+  text-align: right;
+  padding-right: 0px;
+  top: 0.4em;
+}
+
+.boardgame_detail_info_buttons {
+  padding-top: 15px;
+  position: relative;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  margin: auto;
+}
+
+.favorite_button .glyphicon-heart {
+  color: grey;
+}
+
+.favorited_button .glyphicon-heart {
+  color: yellow;
+}
+
+.favorite_button {
+  margin: auto;
+  position: relative;
+    top:0;
+    bottom: 0;
+    left: 50px;
+    right: 0;
+  color: black;
+  font-weight: bold;
+  background-color: white;
+}
+
+.favorite_button:hover {
+  color: #1cb7bf;
+}
+
+.favorited_button {
+  margin: auto;
+  position: relative;
+    top:0;
+    bottom: 0;
+    left: 50px;
+    right: 0;
+  color: black;
+  font-weight: bold;
+}
+
+.main_navbar {
+  background-color: #27AE60 ;
+  border-color: #27AE60 ;
+}
+
+.search_button {
+  background-color: #27AE60 ;
 }

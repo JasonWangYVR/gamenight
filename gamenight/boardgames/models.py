@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 
 class BoardGame(models.Model):
     name = models.CharField(max_length=200)
-    description = models.CharField(max_length=2000)
+    description = models.CharField(max_length=20000)
     #pub_date is when the game was originally published, not when added to our db
     pub_date = models.DateField('date published', null=True)
     #rating on bgg as of being pulled from bgg
@@ -30,14 +30,14 @@ class BoardGame(models.Model):
         return self.name
 
 class Designer(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=1000)
     game = models.ManyToManyField(BoardGame)
     def __str__(self):
         return self.name
 
 class Tag(models.Model):
-    tag_name = models.CharField(max_length=50)
-    description = models.CharField(max_length=1000)
+    tag_name = models.CharField(max_length=5000)
+    description = models.CharField(max_length=10000)
     games = models.ManyToManyField(BoardGame)
     def __str__(self):
         return self.tag_name

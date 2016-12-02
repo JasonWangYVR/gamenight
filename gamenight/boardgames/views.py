@@ -76,6 +76,7 @@ def index(request):
 # 	return HttpResponse('Your in the view to get the next/prev detail page and redirect to it')
 
 def detail(request, boardgameId):
+	# will need favourite logic once user is added
 	if request.GET.get('next'):
 		# Quick way to go between detail pages. URL needs work
 		next_boardgame = request.GET.get('next')
@@ -109,6 +110,7 @@ def detail(request, boardgameId):
 			boardgame_prev = BoardGame.objects.get(id=prev_id)
 		except BoardGame.DoesNotExist:
 			prev_id = None
+
 		context = {'boardgame': boardgame, 'title': title,
 		'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers}
 		return render(request, 'boardgames/detail.html', context)
@@ -134,12 +136,11 @@ def search(request):
 				qobj.add(Q(tag__tag_name__icontains=q), Q.OR)
 				qobj.add(Q(name__icontains=q), Q.OR)
 				# returns too many arbitrary results
-				qobj.add(Q(description__icontains=q), Q.OR)
-			query2 = BoardGame.objects.filter(qobj).order_by('-bgg_bayesrating')
+				# qobj.add(Q(description__icontains=q), Q.OR)
+			query2 = BoardGame.objects.filter(qobj).order_by('-bgg_bayesrating').distinct()
                 
 			paginator = Paginator(query2, 40)
 			# page = request.GET.get('page')
-			print(page)
 			try:
 				boardgames = paginator.page(page)
 			except PageNotAnInteger:
@@ -165,7 +166,7 @@ def search(request):
 					qobj.add(Q(name__icontains=q), Q.OR)
 					# returns too many arbitrary results
 					# qobj.add(Q(description__icontains=q), Q.OR)
-				query2 = BoardGame.objects.filter(qobj).order_by('-bgg_bayesrating')
+				query2 = BoardGame.objects.filter(qobj).order_by('-bgg_bayesrating').distinct()
 	                
 				paginator = Paginator(query2, 40)
 				# page = request.GET.get('page')
@@ -184,3 +185,17 @@ def search(request):
 		'search': SearchForm(),
 	}
 	return render(request, 'boardgames/search.html', context)
+
+
+def add_favourite(request, boardgameId):
+	boardgame = get_object_or_404(BoardGame, id=boardgameId)
+	slug = boardgame.slug
+	return HttpResponseRedirect(reverse('boardgames:detail', args=[boardgameId, slug]))
+	# return HttpResponseRedirect(reverse('boardgames:detail', kwargs={'boardgameId': boardgameId}))
+
+
+def remove_favourite(request, boardgameId):
+	boardgame = get_object_or_404(BoardGame, id=boardgameId)
+	slug = boardgame.slug
+	return HttpResponseRedirect(reverse('boardgames:detail', args=[boardgameId, slug]))
+	# return HttpResponseRedirect(reverse('boardgames:detail', kwargs={'boardgameId': boardgameId}))

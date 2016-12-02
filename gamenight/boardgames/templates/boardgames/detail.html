@@ -21,7 +21,7 @@
 				<span><img src="{% static 'boardgames/images/placeholder.png' %}" alt="placeholder" height="300" width="300"></span>
 			{% endif %}
 		</div>
-		<div class="boardgame_detail_info_misc col-md-8">
+		<div class="boardgame_detail_info_misc col-md-6">
 			<div class="boardgame_detail_info_misc_header">
 					<div class="rating">
 						<div id="octagon">
@@ -56,6 +56,21 @@
 				<p>Best Player Count: {{boardgame.best_player_count}}</p>
 			</div>
 		</div>
+		<div class="boardgame_detail_info_buttons col-md-12">
+			<!-- if not favourite-->
+			<form class="favorite_button" action="{% url 'boardgames:add_favourite' boardgame.id %}" method="POST" id="favorite_form">
+				<!-- <input id="submit" type="button" value=" Favorite"></input> -->
+				{% csrf_token %}
+			</form>
+			<button class="favorite_button btn btn-xs" type="submit" form="favorite_form" value="Submit"><span class="glyphicon glyphicon-heart"></span> Favourite</button>
+			<!--else-->
+			<form class="favorited_button" action="{% url 'boardgames:remove_favourite' boardgame.id %}" method="POST" id="favorited_form">
+				<!-- <input id="submit" type="button" value=" Favorite"></input> -->
+				{% csrf_token %}
+			</form>
+			<button class="favorited_button btn btn-xs" type="submit" form="favorited_form" value="Submit"><span class="glyphicon glyphicon-heart"></span> Favourited</button>
+			<!--end if-->
+		</div>
 	</div>
 	<div class="boardgame_detail_description panel panel-default panel-body col-md-12">
 	<h3>Description</h3>
@@ -67,7 +82,7 @@
 		<div class="tags">
 		<h4>Tags</h4>
 		{% for tag in boardgame.tag_set.all %}
-		    <h5><span class="label label-primary">{{ tag.tag_name }}</span></h5>
+		    <span tabindex="0" class="tag_label_popover label label-primary" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="{{ tag.description }}">{{ tag.tag_name }}</span>
 		{% endfor %}
 		</div>
 	</div>
@@ -75,10 +90,10 @@
 		</div>
 	<div class="col-md-8 col-md-offset-4">
 		{% if prev_id != None %}
-			<a href="?next={{prev_id}}" class="boardgames_next_page btn btn-primary col-md-2">prev</a>
+			<a href="?next={{prev_id}}" class="boardgame_detail_next_page btn btn-primary col-md-2">prev</a>
 		{% endif %}
 		{% if next_id != None %}
-			<a href="?next={{next_id}}" class="boardgames_next_page btn btn-primary col-md-2">next</a>
+			<a href="?next={{next_id}}" class="boardgame_detail_next_page btn btn-primary col-md-2">next</a>
 		{% endif %}
 	</div>
 </div>
