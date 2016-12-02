@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include "boardgames/head.html" %}
+  </head>
+ <body>
+ {% include "boardgames/navbar.html" %}
+
+	<div class="boardgame_detail col-xs-12 col-md-8 col-md-offset-2">
+		<div class="panel panel-primary">
+			<div class="boardgame_detail_heading panel-heading col-md-12">
+				<h2>{{boardgame.name}}</h2>
+			</div>
+	<div class="boardgame_detail_info panel panel-default panel-body col-md-12">
+		<div class="boardgame_detail_info_image col-md-3">
+		<!--Boardgame Image-->
+			{% if boardgame.img_link %}
+				<img src="{{boardgame.img_link}}" alt="{{boardgame.name}}" height="300" width="300">
+			{% else %}
+			{% load static %}
+				<span><img src="{% static 'boardgames/images/placeholder.png' %}" alt="placeholder" height="300" width="300"></span>
+			{% endif %}
+		</div>
+		<div class="boardgame_detail_info_misc col-md-8">
+			<div class="boardgame_detail_info_misc_header">
+					<div class="rating">
+						<div id="octagon">
+							<p id="bgg_bayesrating">{{boardgame.bgg_bayesrating|floatformat:2}}</p>
+						</div>
+					</div>
+					<!--Other Things in Header Area Go Here!-->
+			</div>
+			<div class="boardgame_detail_info_misc_table col-md-8">
+			<!--Table of Basic Data-->
+				<table class="table table-striped">
+					<tr>
+						<td class="players">Players: </td>
+						<td>Min: {{boardgame.min_players}}</td>
+						<td>Max: {{boardgame.max_players}}</td>
+					</tr>
+					<tr>
+						<td class="playtime">Playtime:</td>
+						<td>Min: {{boardgame.min_playtime}} mins</td>
+						<td>Max: {{boardgame.max_playtime}} mins</td>
+					</tr>
+					<tr></tr>
+				</table>
+			</div>
+			<div class="boardgame_detail_info_misc_other col-md-8">
+			<!--Other Data Such As Pub Data, Designer, etc.-->
+			<p>Designer:
+				{{designers|join:", "}}
+				</p>
+				<p>Weight: {{boardgame.bgg_weight|floatformat:2}}</p>
+				<p>Published Date: {{boardgame.pub_date}}</p>
+				<p>Best Player Count: {{boardgame.best_player_count}}</p>
+			</div>
+		</div>
+	</div>
+	<div class="boardgame_detail_description panel panel-default panel-body col-md-12">
+	<h3>Description</h3>
+	<div class="description">
+		<p>{{boardgame.description}}</p>
+	</div>
+	</div>
+	<div class="boardgame_detail_tags panel panel-default panel-body col-md-12">
+		<div class="tags">
+		<h4>Tags</h4>
+		{% for tag in boardgame.tag_set.all %}
+		    <h5><span class="label label-primary">{{ tag.tag_name }}</span></h5>
+		{% endfor %}
+		</div>
+	</div>
+		<div class="reviews">
+		</div>
+	<div class="col-md-8 col-md-offset-4">
+		{% if prev_id != None %}
+			<a href="?next={{prev_id}}" class="boardgames_next_page btn btn-primary col-md-2">prev</a>
+		{% endif %}
+		{% if next_id != None %}
+			<a href="?next={{next_id}}" class="boardgames_next_page btn btn-primary col-md-2">next</a>
+		{% endif %}
+	</div>
+</div>
+</div>
+{% include "boardgames/footer.html" %}
+</body>

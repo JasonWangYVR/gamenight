@@ -1,0 +1,15 @@
+<h1>Add New Choice</h1>
+
+
+<form action="{{ action }}" method="POST">
+
+<form action="{% url "events:create" %}" method="POST">
+  {% csrf_token %}
+  <ul>
+    {{ form.as_ul }}
+  </ul>
+  <input id="save_choice" type="submit" value="Add Choice" />
+</form>
+
+<p><a href="{% url 'events:index' %}">Back	to Event List</a></p>
+{# <p><a href="{% url 'events:detail' event.id %}">Back to {{ event.title }}</a></p> #}

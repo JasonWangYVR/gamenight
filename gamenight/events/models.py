@@ -23,7 +23,7 @@ class Message(models.Model):
     text = models.CharField(max_length=500)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
     on_event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    pub_date = models.DateTimeField('date published')
+    pub_date = models.DateTimeField(default=timezone.now)
     message_number = models.IntegerField(default=0)
     #message_number will help us maintain order of messages in a given Event
 

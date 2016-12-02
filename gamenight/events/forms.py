@@ -1,5 +1,5 @@
 from django import forms
-from .models import Event, Question, Choice
+from .models import Event, Question, Choice, Message
 
 class EventForm(forms.ModelForm):
 
@@ -18,3 +18,9 @@ class ChoiceForm(forms.ModelForm):
 	class Meta:
 		model = Choice
 		fields = ('question','choice_text', 'votes')
+
+class MessageForm(forms.ModelForm):
+
+	class Meta:
+		model = Message
+		fields = ('text','posted_by','on_event','pub_date')

@@ -1,4 +1,4 @@
-<h1>Event Details</h1>
+<h1>Details for {{ event.title }}</h1>
 
 {% if event %}
   <p>Title: {{ event.title }}</p>
@@ -15,7 +15,7 @@
 <p><a href="{% url 'events:editevent' pk=event.id %}">Edit Event</a></p>
 
 {% if question %}
-  <p>Questions: </p>
+  <h2>Questions: </h2>
   <ul>
 
   {% for q in question %}
@@ -54,4 +54,25 @@
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 <p><a href="{% url "events:createquestion" event_id=event.id %}">Add Question</a></p>
+
+{% if message %}
+  <h2>Messages: </h2>
+  <ul>
+
+  {% for m in message %}
+
+    <li>{{ m.text }}
+	 <p>Date: {{ m.pub_date }} User: {{m.posted_by}}</p>
+    <a href="{% url 'events:editmessage' m.id %}"> Edit</a>
+	<a href="{% url 'events:deletemessage' m.id %}"> Delete</a></li>
+  </ul>
+    {% endfor %}
+{% else %}
+  <p>No messages.</p>
+{% endif %}
+
+<p><a href="{% url "events:createmessage" event_id=event.id %}">Add Message</a></p>
+
 <p><a href="{% url 'events:index' %}">Back to Event List</a></p>
+
+ <p><a href="{% url 'events:delete_event' pk=event.id %}"> Delete Event</a></li></p>

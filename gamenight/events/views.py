@@ -13,35 +13,29 @@ from django.db.models import Q
 #utilities
 from django.utils import timezone
 #included models
-from .models import Event, Question, Choice
+from .models import Event, Question, Choice, Message
 #include forms
-from .forms import EventForm, QuestionForm, ChoiceForm
+from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm
 
 def index(request):
-    #what is this for? -JM
     #title = 'GameNight Event List'
     event = Event.objects.order_by('title')
     context = {
         'event': event,
-        #likely not needed -JM
-        #'choices' : choice,
             }
     return render(request, 'events/index.html', context)
-
-#what is this? -JM
-#def event_list(request):
-#    event = Event.objects.filter.order_by('name')
-#    return render(request, 'events/index.html', {'event': event})
 
 def detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     question = Question.objects.filter(on_event=event.pk)
     choice = Choice.objects.filter(question_id__in=question)
+    message = Message.objects.filter(on_event=event.pk)
 
     context = {
         'event': event,
         'question' : question,
         'choice' : choice,
+		'message' : message,
             }
     return render(request, 'events/event_detail.html', context)
 
@@ -57,6 +51,17 @@ def create_event(request):
         form = EventForm()
     return render(request, 'events/create_event.html', {'form': form})
 
+def create_message(request, event_id):
+    if request.method == "POST":
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            #post.created_on = timezone.now()
+            post.save()
+            #return redirect(events:detail,pk=post.pk)
+    else:
+        form = MessageForm()
+    return render(request, 'events/create_message.html', {'form': form})
 
 def create_question(request, event_id):
     if request.method == "POST":
@@ -130,6 +135,22 @@ class EditChoiceView(generic.UpdateView):
 
         return context
 
+class EditMessageView(generic.UpdateView):
+
+    model = Message
+    template_name = 'events/create_message.html'
+    fields = '__all__'
+
+    def get_success_url(self):
+        return reverse('events:index')
+
+    def get_context_data(self, **kwargs):
+
+        context = super(EditMessageView, self).get_context_data(**kwargs)
+        context['action'] = reverse('events:editevent', kwargs={'pk': self.get_object().id})
+
+        return context
+
 class DeleteQuestionView(generic.DeleteView):
 
     model = Question
@@ -138,6 +159,16 @@ class DeleteQuestionView(generic.DeleteView):
 class DeleteChoiceView(generic.DeleteView):
 
     model = Choice
+    success_url = reverse_lazy('events:index')
+	
+class DeleteMessageView(generic.DeleteView):
+
+    model = Message
+    success_url = reverse_lazy('events:index')
+	
+class DeleteEventView(generic.DeleteView):
+
+    model = Event
     success_url = reverse_lazy('events:index')
 
 
@@ -159,40 +190,3 @@ def vote(request, choice_id):
         # user hits the Back button.
         return HttpResponseRedirect(reverse('events:index'))
 
-
-#class CreateQuestionView(generic.CreateView):
-    #Need to figure out a way to return from creating a question to the related event detail view
-    #at the moment this view only accepts one model, so we cannot return based on the event_id as the event model
-    #isn't available
-    #model = Question
-    #template_name = 'events/create_question.html'
-    #fields = '__all__'
-
-    #def get_success_url(self):
-    #    return reverse('events:index')
-
-    #def get_context_data(self, **kwargs):
-
-    #    context = super(CreateQuestionView, self).get_context_data(**kwargs)
-    #    context['action'] = reverse('events:addquestion', kwargs={'pk': self.get_object().id})
-
-    #    return context
-
-
-#class CreateChoiceView(generic.CreateView):
-    #Need to figure out a way to return from creating a question to the related event detail view
-    #at the moment this view only accepts one model, so we cannot return based on the event_id as the event model
-    #isn't available
-#    model = Choice
-#    template_name = 'events/create_choice.html'
-#    fields = '__all__'
-
-#    def get_success_url(self):
-#        return reverse('events:index')
-
-#    def get_context_data(self, **kwargs):
-
-#        context = super(CreateChoiceView, self).get_context_data(**kwargs)
-#        context['action'] = reverse('events:addchoice', kwargs={'pk': self.get_object().id})
-
-#        return context

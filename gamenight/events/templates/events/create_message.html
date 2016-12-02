@@ -1,0 +1,12 @@
+{% if event.id %}
+<h1>Edit Message</h1>
+{% else %}
+<h1>Create Message</h1>
+{% endif %}
+
+    <form method="POST">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+
+<p><a href="{% url 'events:index' %}">Back	to Event List</a></p>

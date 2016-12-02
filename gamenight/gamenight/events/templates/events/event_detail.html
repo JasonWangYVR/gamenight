@@ -1,0 +1,43 @@
+<h1>Event Details</h1>
+
+{% if event %}
+<p>Title: {{ event.title }}</p>
+<p>Group: {{ event.group }}<p>
+<p>Organizer: {{ event.organizer }}<p>
+<p>Date: {{ event.event_date }}</p>
+<p>Created: {{ event.created_on }}</p>
+<p>Edited: {{ event.last_edited_date }}</p>
+<p>Location: {{ event.location }}</p>
+{% else %}
+<p>Event Error</p>
+{% endif %}
+
+<p><a href="{% url 'events:editevent' pk=event.id %}">Edit Event</a></p>
+
+{% if question_list %}
+<p>Questions: </p>
+    <ul>
+    {% for q in question_list %}
+        <li>{{ q.question_text }}
+          <a href="{% url 'events:editquestion' q.id %}"> Edit</a>
+        {#<a href="{% url 'events:questiondetails' q.id %}"> </a></li>#}Details
+        {% if choices %}
+            <ul>
+            {% for c in choices %}
+                <li>{{ c.choice_text }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Choices will be displayed here eventually.</p>
+        {% endif %}
+
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No questions.</p>
+{% endif %}
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<p><a href="{% url "events:addquestion" pk=event.id %}">Add Question</a></p>
+<p><a href="{% url 'events:index' %}">Back to Event List</a></p>
