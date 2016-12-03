@@ -19,6 +19,7 @@ from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm
 
 def index(request):
     #title = 'GameNight Event List'
+    #TODO: filter for user created and invited
     event = Event.objects.order_by('title')
     context = {
         'event': event,
@@ -189,3 +190,25 @@ def vote(request, choice_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('events:index'))
+
+
+def public_events(request):
+    title = 'Public Events'
+    #TODO: filter for public
+    event_list = Event.objects.filter()
+    page = request.GET.get('page')
+    paginator = Paginator(event_list, 10)
+    try:
+        event = paginator.page(page)
+    except PageNotAnInteger:
+    # If page is not an integer, deliver first page.
+        event = paginator.page(1)
+    except EmptyPage:
+    # If page is out of range (e.g. 9999), deliver last page of results.
+        event = paginator.page(paginator.num_pages)
+    #Pagination End
+    context = {
+        'event': event,
+        'title': title
+        }
+    return render(request, 'events/public_events.html', context)
