@@ -14,6 +14,8 @@
   <p>Created: {{ event.created_on }}</p>
   <p>Edited: {{ event.last_edited_date }}</p>
   <p>Location: {{ event.location }}</p>
+  <p>Private Event: {{event.private_event}}</p>
+  
 {% else %}
   <p>Event Error - Unable to Display</p>
 {% endif %}
