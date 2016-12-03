@@ -13,7 +13,7 @@ from django.db.models import Q
 #utilities
 from django.utils import timezone
 #included models
-from .models import Event, Question, Choice, Message
+from .models import Event, Question, Choice, Message, User
 #include forms
 from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm
 

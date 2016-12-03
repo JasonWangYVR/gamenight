@@ -1,7 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include "events/head.html" %}
+  </head>
+<body>
 {% if event.id %}
-<h1>Create Question</h1>
-{% else %}
 <h1>Edit Question</h1>
+{% else %}
+<h1>Create Question</h1>
 {% endif %}
 
     <form method="POST">{% csrf_token %}
@@ -10,3 +16,5 @@
     </form>
 
 <p><a href="{% url 'events:index' %}">Back	to Event List</a></p>
+{% include "events/footer.html" %}
+</body>

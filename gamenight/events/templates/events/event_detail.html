@@ -1,3 +1,9 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include "events/head.html" %}
+  </head>
+<body>
 <h1>Details for {{ event.title }}</h1>
 
 {% if event %}
@@ -76,3 +82,6 @@
 <p><a href="{% url 'events:index' %}">Back to Event List</a></p>
 
  <p><a href="{% url 'events:delete_event' pk=event.id %}"> Delete Event</a></li></p>
+ {% include "events/footer.html" %}
+ </body>
+ 

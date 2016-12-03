@@ -23,7 +23,13 @@ class EventForm(forms.ModelForm):                                               
     event_date = forms.DateTimeField(
         label = 'Date/Time',
         required = True,
-        widget=forms.DateTimeInput()
+        widget=forms.DateTimeInput(
+			attrs = {
+				'class': 'form-control',
+				'placeholder': 'YYYY-MM-DD',
+			}
+		
+		)
     )
     location = forms.CharField(
         label = 'Location',

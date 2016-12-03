@@ -10,12 +10,12 @@ class Event(models.Model):
     attending_users = models.ManyToManyField('authentication.UserProfile')
     event_date = models.DateTimeField('Event Date')
     created_on = models.DateTimeField(default=timezone.now)
-    last_edited_date = models.DateTimeField(blank=True, null=True)
+    last_edited_date = models.DateTimeField(default=timezone.now)
     location = models.CharField(max_length=100)
 
-    def publish(self):
-	    self.last_edited_date= timezone.now()
-	    self.save()
+    #def publish(self):
+	 #   self.last_edited_date= timezone.now()
+	 #   self.save()
 
     def __str__(self):
         return self.title

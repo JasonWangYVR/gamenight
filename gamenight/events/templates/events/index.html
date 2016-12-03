@@ -7,11 +7,11 @@
 
 {% include "boardgames/navbar.html" %}
 
-{% if latest_event_list %}
+{% if event %}
 <h1>Recent Events List</h1>
     <ul>
-    {% for event in latest_event_list %}
-        <li><a href="{% url 'events:detail' event.id %}">{{ event.title }}</a></li>
+    {% for e in event %}
+        <li><a href="{% url 'events:detail' e.id %}">{{ e }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
@@ -21,3 +21,4 @@
 <a href="{% url 'events:create' %}">Create Event</a>
 {% include "events/footer.html" %}
 </body>
+
