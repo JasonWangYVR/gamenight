@@ -160,12 +160,12 @@ class DeleteChoiceView(generic.DeleteView):
 
     model = Choice
     success_url = reverse_lazy('events:index')
-	
+
 class DeleteMessageView(generic.DeleteView):
 
     model = Message
     success_url = reverse_lazy('events:index')
-	
+
 class DeleteEventView(generic.DeleteView):
 
     model = Event
@@ -189,4 +189,3 @@ def vote(request, choice_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('events:index'))
-

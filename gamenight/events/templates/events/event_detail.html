@@ -14,6 +14,7 @@
 
 <p><a href="{% url 'events:editevent' pk=event.id %}">Edit Event</a></p>
 
+<!--Question & Choice details BEGIN here-->
 {% if question %}
   <h2>Questions: </h2>
   <ul>
@@ -25,22 +26,35 @@
     <a href="{% url 'events:deletequestion' q.id %}"> Delete</a></li>
 
     {% if choice %}
+    <!--Vote buttons for other users BEGIN here-->
+    {% for c in choice %}
+      <form action="{% url 'events:vote' c.id %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value={{ c.choice_text }} />
+      </form>
+    {% endfor %}
+    <!--Vote buttons for other users END here-->
+
+    <!--Vote buttons for creator BEGIN here-->
       <ul>
       {% for c in choice %}
 
         {% if q.id == c.question_id %}
           <li>{{ c.choice_text }} | Votes: {{ c.votes }}
+            <!--
             <form action="{% url 'events:vote' c.id %}" method="post">
               {% csrf_token %}
               <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
               <label for="choice{{ forloop.counter }}">{{ c.choice_text }}</label><br />
               <input type="submit" value="Vote" />
             </form>
+           -->
           <a href="{% url 'events:editchoice' c.id %}"> Edit</a>
           <a href="{% url 'events:deletechoice' c.id %}"> Delete</a></li>
         {% endif %}
       {% endfor %}
-        </ul>
+      </ul>
+      <!--Vote buttons for creator END here-->
   {% endif %}
 
     <p><a href="{% url "events:createchoice" question_id=q.id %}">Add Choice</a></p>
@@ -55,6 +69,9 @@
 
 <p><a href="{% url "events:createquestion" event_id=event.id %}">Add Question</a></p>
 
+<!--Question & Choice details END here-->
+
+<!--Messages BEGIN here-->
 {% if message %}
   <h2>Messages: </h2>
   <ul>
@@ -73,6 +90,8 @@
 
 <p><a href="{% url "events:createmessage" event_id=event.id %}">Add Message</a></p>
 
+<!--Messages END here-->
+
 <p><a href="{% url 'events:index' %}">Back to Event List</a></p>
 
- <p><a href="{% url 'events:delete_event' pk=event.id %}"> Delete Event</a></li></p>
+<p><a href="{% url 'events:delete_event' pk=event.id %}"> Delete Event</a></li></p>

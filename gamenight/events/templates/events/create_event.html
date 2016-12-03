@@ -9,4 +9,4 @@
         <button type="submit">Save</button>
     </form>
 
-<p><a href="{% url 'events:index' %}">Back	to Event List</a></p>
+<p><a href="{% url 'events:detail' event.id %}">Back	to {{event.title}}</a></p>
