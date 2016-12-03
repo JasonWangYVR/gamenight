@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include "authentication/head.html" %}
+</head>
+<body>
+ {% include "boardgames/navbar.html" %}
+  <h1> Gamenight </h1>
+  {% include "home/sidebar.html" %}<!-- 
+  <a href="{% url 'authentication:signup' %}">Sign up</a>
+  <a href="{% url 'authentication:login' %}">Log In</a>
+  <p>
+  <a href="{% url 'boardgames:index' %}">Board Games</a>
+</p>
+<p>
+  <a href="{% url 'events:index' %}">Event Index</a>
+</p> -->
+	<div class="public_events col-xs-12 col-md-8">
+		<div class="panel panel-primary">
+			<div class="public_events_heading panel-heading col-md-12">
+				<h2>Favourite Boardgames</h2>
+			</div>
+			<div class="favourite_list_body panel panel-default panel-body col-md-12">
+				<div class="favourite_list_body_info col-md-3">
+				</div>
+			</div>
+		</div>
+	</div>
+	{% include "home/rightsidebar.html" %}
+</body>
+</html>
