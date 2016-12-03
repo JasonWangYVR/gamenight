@@ -1,7 +1,23 @@
-<h1>Recent Events List</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include "events/head.html" %}
+  </head>
+<body>
 
-{% for e in event %}
-    <p><a href="{% url 'events:detail' e.id %}">{{ e }}</a><p>
-{% endfor %}
+{% include "boardgames/navbar.html" %}
+
+{% if latest_event_list %}
+<h1>Recent Events List</h1>
+    <ul>
+    {% for event in latest_event_list %}
+        <li><a href="{% url 'events:detail' event.id %}">{{ event.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No events are available.</p>
+{% endif %}
 
 <a href="{% url 'events:create' %}">Create Event</a>
+{% include "events/footer.html" %}
+</body>
