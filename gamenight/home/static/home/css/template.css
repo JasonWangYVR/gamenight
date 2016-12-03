@@ -6940,7 +6940,7 @@ input:focus,
 }
 
 .welcome-guest {
-  background-color: #3e3f3a;
+  background-color: #27AE60; /*#3e3f3a*/
   border-radius: 10px;
   text-align: center;
   color: #eee;

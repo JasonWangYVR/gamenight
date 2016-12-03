@@ -130,3 +130,9 @@ def create_profile(request):
 #TODO
 def edit_profile(request):
     pass
+
+
+def favourite_list(request):
+    # if request.user.is_authenticated():
+    context = {'search': SearchForm()}
+    return render(request, 'authentication/favourite_list.html', context)
