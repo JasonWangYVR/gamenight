@@ -21,3 +21,4 @@ tests/report/
 gamenight/db.sqlite3
 gamenight/boardgames/migrations
 gamenight/events/migrations
+polls
