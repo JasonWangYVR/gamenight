@@ -1,10 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
- {% include "authentication/head.html" %}
-</head>
-<body>
- {% include "boardgames/navbar.html" %}
-  <h1>User Profile</h1>
-</body>
-</html>
+{% block content %}
+  {% if profile %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    {% include "authentication/head.html" %}
+    <title>User Profile</title>
+    </head>
+    <body>
+      {% include "boardgames/navbar.html" %}
+      <h1>User Profile TRUE</h1>
+    </body>
+    </html>
+  {% else %}
+    <html lang="en">
+    <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>User Profile</title>
+    </head>
+    <body>
+      <h1>User Profile ELSE</h1>
+    </body>
+    </html>
+  {% endif %}
+{% endblock %}

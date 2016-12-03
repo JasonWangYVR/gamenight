@@ -1,5 +1,6 @@
 from django import forms
-from authentication.models import GNUser
+from .models import UserProfile
+from django.contrib.auth.models import User
 
 class UserForm(forms.ModelForm):
     username = forms.CharField(
@@ -67,7 +68,7 @@ class UserForm(forms.ModelForm):
     )
 
     class Meta:
-        model = GNUser
+        model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password')
 
     def clean(self):
@@ -107,3 +108,68 @@ class LoginForm(forms.Form):
             }
         )
     )
+                                                                                #JASON: Below is the form for when a user
+                                                                                #       decides that they want to include
+                                                                                #       address stuff. Later we'll include
+                                                                                #       favorite boardgames and junk. For
+                                                                                #       now this should do
+
+class ProfileForm(forms.ModelForm):
+    addr_1 = forms.CharField(
+        label='Address Line 1',
+        min_length = 6,
+        required = True,
+        widget=forms.TextInput(
+            attrs = {
+                'class':'form-control',
+                'placeholder': '1-30 Characters',
+            }
+        )
+    )
+    addr_2 = forms.CharField(
+        label='Address Line 2',
+        min_length = 6,
+        required = False,
+        widget=forms.TextInput(
+            attrs = {
+                'class':'form-control',
+                'placeholder': '1-30 Characters',
+            }
+        )
+    )
+    city = forms.CharField(
+        label='City',
+        min_length = 6,
+        required = True,
+        widget=forms.TextInput(
+            attrs = {
+                'class':'form-control',
+                'placeholder': '1-30 Characters',
+            }
+        )
+    )
+    prov = forms.CharField(
+        label = 'Province',
+        min_length = 2,
+        required = True,
+        widget=forms.TextInput(
+            attrs = {
+                'class':'form-control',
+                'placeholder': '2-5 Characters',
+            }
+        )
+    )
+    post_zip = forms.CharField(
+        label = 'Postal Code',
+        min_length = 2,
+        required = True,
+        widget=forms.TextInput(
+            attrs={
+                'class':'form-control',
+                'placeholder':'2-10 Characters',
+            }
+        )
+    )
+    class Meta:
+        model = UserProfile
+        fields = ('addr_1', 'addr_2', 'city', 'prov', 'post_zip',)

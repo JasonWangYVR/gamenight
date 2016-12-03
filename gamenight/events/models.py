@@ -1,12 +1,13 @@
 from __future__ import unicode_literals
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-# Create your models here.
+from authentication.models import UserProfile
+
 class Event(models.Model):
     title = models.CharField(max_length=140)
     organizer = models.ForeignKey('auth.User')
+    attending_users = models.ManyToManyField('authentication.UserProfile')
     event_date = models.DateTimeField('Event Date')
     created_on = models.DateTimeField(default=timezone.now)
     last_edited_date = models.DateTimeField(blank=True, null=True)

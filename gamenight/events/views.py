@@ -44,6 +44,7 @@ def create_event(request):
         form = EventForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
+            post.organizer = request.user
             #post.created_on = timezone.now()
             post.save()
             #return redirect(events:index,pk=post.pk)
@@ -160,17 +161,16 @@ class DeleteChoiceView(generic.DeleteView):
 
     model = Choice
     success_url = reverse_lazy('events:index')
-	
+
 class DeleteMessageView(generic.DeleteView):
 
     model = Message
     success_url = reverse_lazy('events:index')
-	
+
 class DeleteEventView(generic.DeleteView):
 
     model = Event
     success_url = reverse_lazy('events:index')
-
 
 def vote(request, choice_id):
     choice = get_object_or_404(Choice, pk=choice_id)
@@ -189,4 +189,3 @@ def vote(request, choice_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('events:index'))
-
