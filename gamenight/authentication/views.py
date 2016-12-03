@@ -98,30 +98,26 @@ def create_profile(request):
             profile = UserProfile.objects.get(user=request.user, deleted=False)
             context = {
                 'user':request.user,
-                'profile':profile,
+                'profile':profile, #was previously profile but his doesn't work with the way the template was described
             }
-            return render(request, 'authentication/profile.html', context)
+            return render(request, 'authentication/profile.html', {'user':request.user,'profile':True})
         except ObjectDoesNotExist:
             if request.method == 'POST':
-                form = UserForm(request.POST)
+                form = ProfileForm(request.POST)
                 if form.is_valid():
-                    profile = UserProfile.objects.create_profile(
-                        user = request.user,
-                        addr_1 = form.cleaned_data['addr_1'],
-                        addr_2 = form.cleaned_data['addr_2'],
-                        city = form.cleaned_data['city'],
-                        prov = form.cleaned_data['prov'],
-                        post_zip = form.cleaned_data['post_zip'],
-                    )
+                    profile = form.save(commit=False)
+                    profile.user = request.user
+                    profile.deleted = False
+                    profile.save()
                     profile_created = True
                 context = {
                     'profile_created':profile_created
                 }
-                template = loader.get_template('authentication/create_profile.html')
-                context = RequestContext(request, {
-                    'form': form,
-                    'profile_created': profile_created,
-                })
+                #template = loader.get_template('authentication/create_profile.html')
+                #context = RequestContext(request, {
+                #    'form': form,
+                #    'profile_created': profile_created,
+                #})
                 return render(request, 'authentication/create_profile.html', {'profile_created':profile_created})
             else:
                 form=ProfileForm()

@@ -21,7 +21,7 @@ urlpatterns = [
     #requests for events app redirected to events' urls.py
     url(r'^events/', include('events.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^$', include('home.urls',namespace="home")),
+    url(r'^', include('home.urls',namespace="home")),
     url(r'^user/', include('authentication.urls', namespace="authentication")),
     url(r'^boardgames/', include('boardgames.urls')),
     url(r'^events/', include('events.urls')),

@@ -1,7 +1,6 @@
 from django import forms
 from .models import UserProfile
 from django.contrib.auth.models import User
-#from django.contrib.auth.models import User
 
 class UserForm(forms.ModelForm):
     username = forms.CharField(
@@ -115,7 +114,7 @@ class LoginForm(forms.Form):
                                                                                 #       favorite boardgames and junk. For
                                                                                 #       now this should do
 
-class ProfileForm(forms.Form):
+class ProfileForm(forms.ModelForm):
     addr_1 = forms.CharField(
         label='Address Line 1',
         min_length = 6,
@@ -173,4 +172,4 @@ class ProfileForm(forms.Form):
     )
     class Meta:
         model = UserProfile
-        fields = ('addr_1, addr_2, city, prov, post_zip')
+        fields = ('addr_1', 'addr_2', 'city', 'prov', 'post_zip',)
