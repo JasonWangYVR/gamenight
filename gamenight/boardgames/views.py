@@ -103,12 +103,13 @@ def detail(request, boardgameId):
 
 			favourite = False
 			# Do favourite things
-			# fav = UserFavorites.objects.get(user=request.user, deleted=False)
-			# favourite_bg = fav.objects.filter(favourite_games=boardgameId).distinct()
-			# if favourite_bg == None:
-			# 	favourite = False
-			# else:
-			# 	favourite = True
+			user_profile = UserProfile.objects.get(user=request.user, deleted=False)
+			bg = BoardGame.objects.get(id=boardgameId)
+			favourite_bg = user_profile.favorite_games.filter(id=boardgameId)
+			if not favourite_bg:
+				favourite = False
+			else:
+				favourite = True
 
 			context = {'boardgame': boardgame, 'title': title,
 			'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers, 'user': request.user, 'favourite': favourite}
@@ -130,12 +131,14 @@ def detail(request, boardgameId):
 
 			favourite = False
 			# Do favourite things
-			# fav = UserFavorites.objects.get(user=request.user, deleted=False)
-			# favourite_bg = fav.objects.filter(favourite_games=boardgameId).distinct()
-			# if favourite_bg == None:
-			# 	favourite = False
-			# else:
-			# 	favourite = True
+			user_profile = UserProfile.objects.get(user=request.user, deleted=False)
+			bg = BoardGame.objects.get(id=boardgameId)
+			favourite_bg = user_profile.favorite_games.filter(id=boardgameId)
+			
+			if not favourite_bg:
+				favourite = False
+			else:
+				favourite = True
 
 			context = {'boardgame': boardgame, 'title': title,
 			'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers, 'user': request.user, 'favourite': favourite}
@@ -267,5 +270,9 @@ def add_favourite(request, boardgameId):
 def remove_favourite(request, boardgameId):
 	boardgame = get_object_or_404(BoardGame, id=boardgameId)
 	slug = boardgame.slug
+	if request.user.is_authenticated:
+		user_profile = UserProfile.objects.get(user=request.user, deleted=False)
+		bg = BoardGame.objects.get(id=boardgameId)
+		user_profile.favorite_games.remove(bg)
 	return HttpResponseRedirect(reverse('boardgames:detail', args=[boardgameId, slug]))
 	# return HttpResponseRedirect(reverse('boardgames:detail', kwargs={'boardgameId': boardgameId}))
