@@ -55,16 +55,16 @@ class QuestionForm(forms.ModelForm):
 
 	class Meta:
 		model = Question
-		fields = ('question_text','on_event','pub_date')
+		fields = ('question_text','pub_date')
 
 class ChoiceForm(forms.ModelForm):
 
 	class Meta:
 		model = Choice
-		fields = ('question','choice_text', 'votes')
+		fields = ('choice_text', 'votes')
 
 class MessageForm(forms.ModelForm):
 
 	class Meta:
 		model = Message
-		fields = ('text','posted_by','on_event','pub_date')
+		fields = ('text','pub_date')

@@ -47,7 +47,7 @@ def create_event(request):
             post.organizer = request.user
             #post.created_on = timezone.now()
             post.save()
-            #return redirect(events:index,pk=post.pk)
+            return redirect('events:index')
     else:
         form = EventForm()
     return render(request, 'events/create_event.html', {'form': form})
@@ -57,9 +57,10 @@ def create_message(request, event_id):
         form = MessageForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            #post.created_on = timezone.now()
+            post.posted_by = request.user
+            post.on_event = get_object_or_404(Event, pk=event_id)
             post.save()
-            #return redirect(events:detail,pk=post.pk)
+            return redirect('events:detail',event_id)
     else:
         form = MessageForm()
     return render(request, 'events/create_message.html', {'form': form})
@@ -69,9 +70,10 @@ def create_question(request, event_id):
         form = QuestionForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
+            post.on_event = get_object_or_404(Event, pk=event_id)
             #post.created_on = timezone.now()
             post.save()
-            #return redirect(events:index,pk=post.pk)
+            return redirect('events:detail',event_id)
     else:
         form = QuestionForm()
     return render(request, 'events/create_question.html', {'form': form})
@@ -81,9 +83,9 @@ def create_choice(request, question_id):
         form = ChoiceForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            #post.created_on = timezone.now()
+            post.question = get_object_or_404(Question, pk=question_id)
             post.save()
-            #return redirect(events:index,pk=post.pk)
+            return redirect('events:detail',question_id)
     else:
         form = ChoiceForm()
     return render(request, 'events/create_choice.html', {'form': form})
