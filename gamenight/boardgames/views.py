@@ -10,7 +10,10 @@ from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import urlresolvers
 from django.db.models import Q
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 
+from authentication.models import UserProfile
 from .models import BoardGame, Designer, Tag
 from .forms import SearchForm, PerPageForm
 
@@ -100,6 +103,12 @@ def detail(request, boardgameId):
 
 			favourite = False
 			# Do favourite things
+			# fav = UserFavorites.objects.get(user=request.user, deleted=False)
+			# favourite_bg = fav.objects.filter(favourite_games=boardgameId).distinct()
+			# if favourite_bg == None:
+			# 	favourite = False
+			# else:
+			# 	favourite = True
 
 			context = {'boardgame': boardgame, 'title': title,
 			'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers, 'user': request.user, 'favourite': favourite}
@@ -121,6 +130,12 @@ def detail(request, boardgameId):
 
 			favourite = False
 			# Do favourite things
+			# fav = UserFavorites.objects.get(user=request.user, deleted=False)
+			# favourite_bg = fav.objects.filter(favourite_games=boardgameId).distinct()
+			# if favourite_bg == None:
+			# 	favourite = False
+			# else:
+			# 	favourite = True
 
 			context = {'boardgame': boardgame, 'title': title,
 			'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers, 'user': request.user, 'favourite': favourite}
@@ -240,6 +255,9 @@ def add_favourite(request, boardgameId):
 	boardgame = get_object_or_404(BoardGame, id=boardgameId)
 	slug = boardgame.slug
 	if request.user.is_authenticated:
+		user_profile = UserProfile.objects.get(user=request.user, deleted=False)
+		bg = BoardGame.objects.get(id=boardgameId)
+		user_profile.favorite_games.add(bg)
 		return HttpResponseRedirect(reverse('boardgames:detail', args=[boardgameId, slug]))
 	else:
 		return HttpResponseRedirect(reverse('authentication:login'))
