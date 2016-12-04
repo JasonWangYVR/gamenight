@@ -17,7 +17,10 @@ from .forms import SearchForm, PerPageForm
 # Create your views here.
 def index(request):
 	title = 'GameNight Board Game List'
-	boardgame_list = BoardGame.objects.order_by('name')
+	try:
+		boardgame_list = BoardGame.objects.order_by('name')
+	except ObjectDoesNotExist:
+		HttpResponse('No boardgames available')
 	# Pagination Start
 	# Parsing pages and results for special conditions
 	page = request.GET.get('page', 'a')
@@ -68,7 +71,7 @@ def index(request):
 		boardgames = paginator.page(paginator.num_pages)
 	#Pagination End
 
-	context = {'boardgames': boardgames, 'title': title, 'search': SearchForm()}
+	context = {'boardgames': boardgames, 'title': title, 'search': SearchForm(), 'user': request.user}
 	return render(request, 'boardgames/index.html', context)
 
 # Not currently being used
@@ -149,7 +152,7 @@ def search(request):
 			except EmptyPage:
 			# If page is out of range (e.g. 9999), deliver last page of results.
 				boardgames = paginator.page(paginator.num_pages)
-			context = {'boardgames': boardgames, 'title': title, 'query': search, 'search': SearchForm()}
+			context = {'boardgames': boardgames, 'title': title, 'query': search, 'search': SearchForm(), 'user': request.user}
 			return render(request, 'boardgames/search.html', context)
 
 		else:
@@ -178,7 +181,7 @@ def search(request):
 				except EmptyPage:
 				# If page is out of range (e.g. 9999), deliver last page of results.
 					boardgames = paginator.page(paginator.num_pages)
-				context = {'boardgames': boardgames, 'title': title, 'query': query, 'search': SearchForm()}
+				context = {'boardgames': boardgames, 'title': title, 'query': query, 'search': SearchForm(), 'user': request.user}
 				return render(request, 'boardgames/search.html', context)
 
 	context = {
