@@ -2,6 +2,15 @@
 <html lang="en">
   <head>
     {% include "events/head.html" %}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css"> 
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script>
+$(document).ready(function() {
+    $('.datepicker').datepicker();
+});
+</script>
+
   </head>
 <body>
 {% if event.id %}
@@ -9,12 +18,11 @@
 {% else %}
 <h1>Create Event</h1>
 {% endif %}
-
     <form method="POST">{% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Save</button>
     </form>
-
-<p><a href="{% url 'events:index' %}">Back	to Event List</a></p>
+<p><a href="{% url 'events:index' %}">Back	to Event List</a></p>	
 {% include "events/footer.html" %}
 </body>
+
