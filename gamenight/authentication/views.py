@@ -25,7 +25,7 @@ def signup(request):
                 registered = True
                 template = loader.get_template('authentication/signup.html')
                 context = RequestContext(request, {'registered':registered })
-                return render(request, 'authentication/signup.html', {'registered': registered,})
+                return redirect('authentication:login')
         else:
             form = UserForm()
 
@@ -120,7 +120,7 @@ def create_profile(request):
                 #    'form': form,
                 #    'profile_created': profile_created,
                 #})
-                return render(request, 'authentication/create_profile.html', {'profile_created':profile_created})
+                return redirect('authentication:profile')
             else:
                 form=ProfileForm()
             return render(request, 'authentication/create_profile.html', {'form':form, 'profile_created':profile_created})
