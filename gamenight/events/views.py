@@ -19,6 +19,7 @@ from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm
 
 def index(request):
     #title = 'GameNight Event List'
+    #connecting to db to get Event Obj
     event = Event.objects.order_by('title')
     context = {
         'event': event,
@@ -86,6 +87,24 @@ def create_choice(request, question_id):
     else:
         form = ChoiceForm()
     return render(request, 'events/create_choice.html', {'form': form})
+
+def edit_choice(request, choice_id):
+    #new data
+    if request.method == "POST":
+        form = ChoiceForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            #post.created_on = timezone.now()
+            post.save()
+            #return redirect(events:index,pk=post.pk)
+    #old data
+    else:
+        choice = Choice.objects.get(pk=choice_id)
+        data = { 'question' : choice.question,
+            'choice_text' : choice.choice_text,
+            'votes' : choice.votes, }
+        form = ChoiceForm(data)
+    return render(request, 'events/edit_choice.html', {'form': form})
 
 class EditEventView(generic.UpdateView):
 

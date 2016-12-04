@@ -17,7 +17,7 @@ class Event(models.Model):
 	    self.save()
 
     def __str__(self):
-        return self.title
+        return self.title# + self.id #for troubleshooting
 
 class Message(models.Model):
     text = models.CharField(max_length=500)
@@ -32,11 +32,11 @@ class Question(models.Model):
     pub_date = models.DateTimeField(default=timezone.now)
     on_event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name='the related event')
     def __str__(self):
-        return self.question_text
+        return self.question_text# + self.id #for troubleshooting
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=100)
     votes = models.IntegerField(default=0)
     def __str__(self):
-        return self.choice_text
+        return self.choice_text# + self.id #for troubleshooting
