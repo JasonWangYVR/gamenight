@@ -99,7 +99,7 @@ def create_choice(request, question_id):
             post = form.save(commit=False)
             post.question = get_object_or_404(Question, pk=question_id)
             post.save()
-            return redirect('events:detail',question_id)
+            return redirect('events:index')
     else:
         form = ChoiceForm()
     return render(request, 'events/create_choice.html', {'form': form})
@@ -144,25 +144,26 @@ def edit_message(request, message_id):
     return render(request, 'events/create_message.html', {'form': form})	
 
 
-class DeleteQuestionView(generic.DeleteView):
+def delete_question(request, question_id):
+    instance = get_object_or_404(Question, pk=question_id)
+    instance.delete()
+    return redirect('events:index')
 
-    model = Question
-    success_url = reverse_lazy('events:index')
+def delete_message(request, message_id):
+    instance = get_object_or_404(Message, pk=message_id)
+    instance.delete()
+    return redirect('events:index')
 
-class DeleteChoiceView(generic.DeleteView):
+def delete_choice(request, choice_id):
+    instance = get_object_or_404(Choice, pk=choice_id)
+    instance.delete()
+    return redirect('events:index')
 
-    model = Choice
-    success_url = reverse_lazy('events:index')
+def delete_event(request, event_id):
+    instance = get_object_or_404(Event, pk=event_id)
+    instance.delete()
+    return redirect('events:index')
 
-class DeleteMessageView(generic.DeleteView):
-
-    model = Message
-    success_url = reverse_lazy('events:index')
-
-class DeleteEventView(generic.DeleteView):
-
-    model = Event
-    success_url = reverse_lazy('events:index')
 
 def vote(request, choice_id):
     choice = get_object_or_404(Choice, pk=choice_id)
