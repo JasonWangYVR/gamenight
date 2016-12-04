@@ -52,6 +52,19 @@ def create_event(request):
     else:
         form = EventForm()
     return render(request, 'events/create_event.html', {'form': form})
+	
+def edit_event(request, event_id):
+    post = get_object_or_404(Event, pk=event_id)
+    if request.method == "POST":
+        form = EventForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.organizer = request.user
+            post.save()
+            return redirect('events:index')
+    else:
+        form = EventForm(instance=post)
+    return render(request, 'events/create_event.html', {'form': form})
 
 def create_message(request, event_id):
     if request.method == "POST":
@@ -91,69 +104,45 @@ def create_choice(request, question_id):
         form = ChoiceForm()
     return render(request, 'events/create_choice.html', {'form': form})
 
-class EditEventView(generic.UpdateView):
+def edit_question(request, question_id):
+    post = get_object_or_404(Question, pk=question_id)
+    if request.method == "POST":
+        form = QuestionForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.organizer = request.user
+            post.save()
+            return redirect('events:index')
+    else:
+        form = QuestionForm(instance=post)
+    return render(request, 'events/create_question.html', {'form': form})
+	
+def edit_choice(request, choice_id):
+    post = get_object_or_404(Choice, pk=choice_id)
+    if request.method == "POST":
+        form = ChoiceForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.organizer = request.user
+            post.save()
+            return redirect('events:index')
+    else:
+        form = ChoiceForm(instance=post)
+    return render(request, 'events/create_choice.html', {'form': form})
 
-    model = Event
-    template_name = 'events/create_event.html'
-    fields = '__all__'
+def edit_message(request, message_id):
+    post = get_object_or_404(Message, pk=message_id)
+    if request.method == "POST":
+        form = MessageForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.organizer = request.user
+            post.save()
+            return redirect('events:index')
+    else:
+        form = MessageForm(instance=post)
+    return render(request, 'events/create_message.html', {'form': form})	
 
-    def get_success_url(self):
-        return reverse('events:index')
-
-    def get_context_data(self, **kwargs):
-
-        context = super(EditEventView, self).get_context_data(**kwargs)
-        context['action'] = reverse('events:editevent', kwargs={'pk': self.get_object().id})
-
-        return context
-
-class EditQuestionView(generic.UpdateView):
-
-    model = Question
-    template_name = 'events/create_question.html'
-    fields = '__all__'
-
-    def get_success_url(self):
-        return reverse('events:index')
-
-    def get_context_data(self, **kwargs):
-
-        context = super(EditQuestionView, self).get_context_data(**kwargs)
-        context['action'] = reverse('events:editquestion', kwargs={'pk': self.get_object().id})
-
-        return context
-
-class EditChoiceView(generic.UpdateView):
-
-    model = Choice
-    template_name = 'events/create_choice.html'
-    fields = '__all__'
-
-    def get_success_url(self):
-        return reverse('events:index')
-
-    def get_context_data(self, **kwargs):
-
-        context = super(EditChoiceView, self).get_context_data(**kwargs)
-        context['action'] = reverse('events:editchoice', kwargs={'pk': self.get_object().id})
-
-        return context
-
-class EditMessageView(generic.UpdateView):
-
-    model = Message
-    template_name = 'events/create_message.html'
-    fields = '__all__'
-
-    def get_success_url(self):
-        return reverse('events:index')
-
-    def get_context_data(self, **kwargs):
-
-        context = super(EditMessageView, self).get_context_data(**kwargs)
-        context['action'] = reverse('events:editevent', kwargs={'pk': self.get_object().id})
-
-        return context
 
 class DeleteQuestionView(generic.DeleteView):
 
