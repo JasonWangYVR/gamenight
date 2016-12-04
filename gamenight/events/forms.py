@@ -1,5 +1,7 @@
 from django import forms
 from .models import Event, Question, Choice, Message
+from functools import partial
+DateInput = partial(forms.DateInput, {'class': 'datepicker'})
 
 #OLD EVENT FORM
 #class EventForm(forms.ModelForm):
@@ -20,11 +22,10 @@ class EventForm(forms.ModelForm):                                               
             }
         )
     )
-    event_date = forms.DateTimeField(
-        label = 'Date/Time',
-        required = True,
-        widget=forms.DateTimeInput()
-    )
+
+		
+		
+    
     location = forms.CharField(
         label = 'Location',
         required = True,
@@ -35,6 +36,10 @@ class EventForm(forms.ModelForm):                                               
             }
         )
     )
+	
+    event_date = forms.DateField(widget=DateInput())
+    #widget=forms.DateField(widget=DateInput('%d/%m/%Y'))
+
     private_event = forms.BooleanField(
         label = 'Private Event',
         required = False,
@@ -43,22 +48,22 @@ class EventForm(forms.ModelForm):                                               
                                                                                 #JASON: TODO: Add multiple attendees.
     class Meta:
         model = Event
-        fields = ('title', 'event_date', 'location', 'private_event')
+        fields = ('title', 'location', 'event_date', 'private_event')
 
 class QuestionForm(forms.ModelForm):
 
 	class Meta:
 		model = Question
-		fields = ('question_text','on_event','pub_date')
+		fields = ('question_text','pub_date')
 
 class ChoiceForm(forms.ModelForm):
 
 	class Meta:
 		model = Choice
-		fields = ('question','choice_text', 'votes')
+		fields = ('choice_text', 'votes')
 
 class MessageForm(forms.ModelForm):
 
 	class Meta:
 		model = Message
-		fields = ('text','posted_by','on_event','pub_date')
+		fields = ('text','pub_date')
