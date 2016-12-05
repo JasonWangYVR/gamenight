@@ -2,7 +2,7 @@
 {% if is_organizer == True %}
 <!--   <div class="add-attendee-form col-md-2 col-md-offset-4"> -->
     <form class="add-attendee" action="{% url 'events:add_attendee' event.id %}" method="POST" name="form" id="add-attendee">
-      {{add_form}}<button class="btn btn-primary btn-xs">Submit</button>
+      {{add_form}}<button class="add-attendee-button btn btn-primary btn-md">Submit</button>
       {% csrf_token %}
     </form>
     <br>
