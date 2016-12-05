@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.template import RequestContext, loader
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -7,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from authentication.forms import *
 from boardgames.forms import SearchForm
 from authentication.models import UserProfile
+from boardgames.models import BoardGame
 
 def signup(request):
     if not request.user.is_authenticated():
@@ -133,6 +135,20 @@ def edit_profile(request):
 
 
 def favourite_list(request):
-    # if request.user.is_authenticated():
-    context = {'search': SearchForm()}
-    return render(request, 'authentication/favourite_list.html', context)
+    if request.user.is_authenticated():
+        user_profile = UserProfile.objects.get(user=request.user, deleted=False)
+        favourite_bg = user_profile.favorite_games.all()
+        context = {'search': SearchForm(), 'favourites': favourite_bg}
+        return render(request, 'authentication/favourite_list.html', context)
+    else:
+        return HttpResponseRedirect(reverse('authentication:login'))
+
+def remove_favourite(request, boardgameId):
+    boardgame = get_object_or_404(BoardGame, id=boardgameId)
+    if request.user.is_authenticated:
+        user_profile = UserProfile.objects.get(user=request.user, deleted=False)
+        bg = BoardGame.objects.get(id=boardgameId)
+        user_profile.favorite_games.remove(bg)
+        return HttpResponseRedirect(reverse('authentication:favourite_list'))
+    else:
+        return HttpResponseRedirect(reverse('authentication:login'))

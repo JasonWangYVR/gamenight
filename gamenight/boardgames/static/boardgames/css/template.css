@@ -7025,7 +7025,7 @@ p {
 }
 
 .favorited_button .glyphicon-heart {
-  color: yellow;
+  color: red;
 }
 
 .favorite_button {

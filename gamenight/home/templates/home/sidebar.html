@@ -1,4 +1,4 @@
-<div class="container col-sm-3 col-md-2 sidebar">
+<div class="container col-sm-3 col-md-2 col-md-offset-1 sidebar">
     <div class="row">
         <div class="">
             <nav class="nav-sidebar">
@@ -11,7 +11,7 @@
                     <li class="event-create"><a href="{% url 'events:create'%}">Create Event</a></li>
                     <li class="event-public"><a href="{% url 'events:public_events'%}">Public Events</a></li>
                     <li class="boardgames"><a href="{% url 'boardgames:index'%}">Boardgames</a></li>
-                    <li class="favourites-list"><a href="#">Favourites</a></li>
+                    <li class="favourites-list"><a href="{% url 'authentication:favourite_list'%}">Favourites</a></li>
                     <!-- <li class="faq"><a href="#">FAQ</a></li> -->
                     <li class="nav-divider"></li>
                     <li class="logout"><a href="{% url 'authentication:logout'%}">Logout</a></li>

@@ -274,5 +274,7 @@ def remove_favourite(request, boardgameId):
 		user_profile = UserProfile.objects.get(user=request.user, deleted=False)
 		bg = BoardGame.objects.get(id=boardgameId)
 		user_profile.favorite_games.remove(bg)
-	return HttpResponseRedirect(reverse('boardgames:detail', args=[boardgameId, slug]))
+		return HttpResponseRedirect(reverse('boardgames:detail', args=[boardgameId, slug]))
+	else:
+		return HttpResponseRedirect(reverse('authentication:login'))
 	# return HttpResponseRedirect(reverse('boardgames:detail', kwargs={'boardgameId': boardgameId}))
