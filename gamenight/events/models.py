@@ -9,7 +9,7 @@ class Event(models.Model):
     organizer = models.ForeignKey('auth.User')
     event_date = models.DateTimeField('Event Date')
     created_on = models.DateTimeField(default=timezone.now)
-    last_edited_date = models.DateTimeField(blank=True, null=True)
+    last_edited_date = models.DateTimeField(default=timezone.now)
     location = models.CharField(max_length=100)
 
     def publish(self):

@@ -67,3 +67,15 @@ class MessageForm(forms.ModelForm):
 	class Meta:
 		model = Message
 		fields = ('text','pub_date')
+		
+class SearchEventsForm(forms.Form):
+    q = forms.CharField(
+        required = True,
+        max_length = 50,
+        widget=forms.TextInput(
+            attrs = {
+                'class': 'form-control',
+                'placeholder': 'Public Event',
+            }
+        )
+    )

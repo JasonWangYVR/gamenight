@@ -18,10 +18,10 @@
 	<div class="public_events col-xs-12 col-md-5">
 		<div class="panel panel-primary">
 			<div class="public_events_heading panel-heading col-md-12">
-				<h2>Public Events</h2>
-				<form class="event_search" role="search" method="get" action="{% url 'events:search_event' %}">
+				<h2>Searched Public Events</h2>
+				<form class="publicevent_search" role="search" method="get" action="{% url 'events:search_event' %}">
         <div class="input-group" width="100">
-          {{ search.q }}
+          {{ search_p.q }}
           <span class="input-group-btn">
             <button type="submit" class="search_button btn btn-default">Submit</button>
           </span>
