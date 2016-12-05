@@ -16,8 +16,9 @@ from django.utils import timezone
 from .models import Event, Question, Choice, Message, User
 from authentication.models import UserProfile
 #include forms
-from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm, SearchEventsForm
+from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm
 from boardgames.forms import SearchForm
+from events.forms import SearchEventsForm
 
 def index(request):
     #title = 'GameNight Event List'
@@ -365,7 +366,7 @@ def public_events(request):
     context = {
         'events': events,
         'title': title,
-		'search': SearchForm(),
+		'search': SearchEventsForm(),
 		'user': request.user,
         }
     return render(request, 'events/public_events.html', context)
@@ -387,6 +388,6 @@ def search_event(request):
 				return render(request, 'events/search_event.html', context)
 
 	context = {
-		'search': SearchForm(),
+		'search' :SearchForm(),
 	}
 	return render(request, 'boardgames/search.html', context)

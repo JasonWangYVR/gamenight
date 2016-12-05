@@ -1,35 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-{% include "home/head.html" %}
+{% include "events/head.html" %}
 </head>
 <body>
  {% include "boardgames/navbar.html" %}
   <!-- <h1> Gamenight </h1> -->
-  {% include "home/sidebar.html" %}<!--
-  <a href="{% url 'authentication:signup' %}">Sign up</a>
-  <a href="{% url 'authentication:login' %}">Log In</a>
-  <p>
-  <a href="{% url 'boardgames:index' %}">Board Games</a>
-</p>
-<p>
-  <a href="{% url 'events:index' %}">Event Index</a>
-</p> -->
-	<div class="public_events_near col-xs-12 col-md-5">
-		<div class="panel panel-primary">
-			<div class="public_events_near_heading panel-heading col-md-12">
-				<h2>Public Events Near You</h2>
-			</div>
-			<div class="public_events_near_body panel panel-default panel-body col-md-12">
-				<div class="public_events_near_map col-md-3">
-			<div class="public_events_body panel panel-default panel-body col-md-12">
-				<div class="public_events_map col-md-3">
-				</div>
-				<div class="public_events_near_body_info col-md-9">
-				</div>
-			</div>
-		</div>
-	</div>
+  {% include "home/sidebar.html" %}
+  {% include "events/public_events.html" %}
 	{% include "home/rightsidebar.html" %}
 </body>
 </html>

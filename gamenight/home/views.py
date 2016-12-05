@@ -4,6 +4,7 @@ from boardgames.forms import SearchForm
 from django.contrib.auth.models import User
 from authentication.models import UserProfile
 from events.models import Event
+from events.forms import SearchEventsForm
 
 def index(request):
     event=Event.objects.order_by('event_date')[:5]
@@ -22,5 +23,6 @@ def index(request):
     context = {
         'user':request.user,
 		'events':event,
+		'search':SearchEventsForm(),
     }
     return render(request, 'home/index.html', context)
