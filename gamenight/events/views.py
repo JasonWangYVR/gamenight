@@ -126,7 +126,7 @@ def edit_question(request, question_id):
             return redirect('events:index')
     else:
         form = QuestionForm(instance=post)
-    return render(request, 'events/create_question.html', {'form': form})
+    return render(request, 'events/edit_question.html', {'form': form})
 	
 def edit_choice(request, choice_id):
     post = get_object_or_404(Choice, pk=choice_id)
@@ -139,7 +139,7 @@ def edit_choice(request, choice_id):
             return redirect('events:index')
     else:
         form = ChoiceForm(instance=post)
-    return render(request, 'events/create_choice.html', {'form': form})
+    return render(request, 'events/edit_choice.html', {'form': form})
 
 def edit_message(request, message_id):
     post = get_object_or_404(Message, pk=message_id)
@@ -152,7 +152,7 @@ def edit_message(request, message_id):
             return redirect('events:index')
     else:
         form = MessageForm(instance=post)
-    return render(request, 'events/create_message.html', {'form': form})	
+    return render(request, 'events/edit_message.html', {'form': form})	
 
 
 def delete_question(request, question_id):
