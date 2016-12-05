@@ -9,19 +9,21 @@
     <div class="container">
       <!--col-sm-3 col-md-2 col-md-offset-1 sidebar -->
       {% include "home/sidebar.html" %}
-      <div class="col-md-7 col-sm-9 col-xs-12">
-        <h1 class="mainheading">Edit Message</h1>
+ <div class="public_events col-xs-12 col-md-5">
+		<div class="panel panel-primary">
+			<div class="public_events_heading panel-heading col-md-12">
+				<h2>Edit Message</h2>
 
-
-        <form method="POST">
-          {% csrf_token %}
-          {{ form.as_p }}
-          <button type="submit">Save</button>
-        </form>
-
-        <p><a href="{% url 'events:index' %}">Back	to Event List</a></p>
-      </div>
-    </div>
+			</div>
+			<div class="public_events_body panel panel-default panel-body col-md-12">
+			  <form method="POST">
+				  {% csrf_token %}
+				  {{ form.as_p }}
+				  <button type="submit">Submit</button>
+				</form>				    
+			</div>
+		</div>
+	</div>
     {% include "events/footer.html" %}
   </body>
 </html>

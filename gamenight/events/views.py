@@ -306,7 +306,7 @@ def edit_question(request, question_id):
                     return redirect('events:index')
             else:
                 form = QuestionForm(instance=post)
-            return render(request, 'events/create_question.html', {'form': form})
+            return render(request, 'events/edit_question.html', {'form': form})
         else:
             return redirect('home:index') #not his question to edit
     else:
@@ -325,7 +325,7 @@ def edit_choice(request, choice_id):
                     return redirect('events:index')
             else:
                 form = ChoiceForm(instance=post)
-            return render(request, 'events/create_choice.html', {'form': form})
+            return render(request, 'events/edit_choice.html', {'form': form})
         else:
             return redirect('home:index') #Not his choice to alter?
     else:
@@ -344,7 +344,7 @@ def edit_message(request, message_id):
                     return redirect('events:index')
             else:
                 form = MessageForm(instance=post)
-            return render(request, 'events/create_message.html', {'form': form})	
+            return render(request, 'events/edit_message.html', {'form': form})	
         else:
             return redirect('home:index') #Not his message to alter
     else:
