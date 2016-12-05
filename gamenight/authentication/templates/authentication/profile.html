@@ -41,7 +41,9 @@
             <div class="col-md-3">
             <ul>
               <li>Address Line 1:</li>
-              <li>Address Line 2:</li>
+              {% if profile.addr_2 == "None" %}
+                <li>Address Line 2:</li>
+              {% endif %}
               <li>City:</li>
               <li>Province:</li>
               <li>Postal Code:</li>
@@ -50,7 +52,9 @@
             <div class="user-info col-md-9">
               <ul>
                 <li>{{profile.addr_1}}</li>
-                <li>{{profile.addr_2}}</li>
+                {% if profile.addr_2 != "None" %}
+                  <li>{{profile.addr_2}}</li>
+                {% endif %}
                 <li>{{profile.city}}</li>
                 <li>{{profile.prov}}</li>
                 <li>{{profile.post_zip}}</li>
