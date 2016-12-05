@@ -1,15 +1,26 @@
-<!-- removed extends from base-->
+<!DOCTYPE html>
+<html lang="en">
 <head>
-{% include "authentication/head.html" %}
+ {% include "authentication/head.html" %}
 </head>
-{% block content %}
-  {% if profile_created == False %}
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit </button>
-  </form>
-  {% elif profile_created == True %}
-  	<p><a href="{%url 'authentication:profile' %}">Continue to your profile</a></p>
-  {% endif %}
-{% endblock %}
+<body>
+  <div class="create_profile_header col-md-6 col-md-offset-3">
+		<h2>GameNight Profile Creation</h2>
+	</div>
+	<div class="create_profile">
+		<div class="panel panel-default col-md-6 col-md-offset-3">
+			<div class="create_profile panel-body">
+				<div class="create_profile_info">
+					{% block content %}
+					  <form method="post">
+					    {% csrf_token %}
+					    {{ form.as_p }}
+					    <button type="submit">Submit </button>
+					  </form>
+					{% endblock %}
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+

@@ -6916,3 +6916,23 @@ input:focus,
 .user-info li {
   list-style-type: none;
 }
+
+.favourite_list_buttons {
+  padding-top:  10px;
+  position: relative;
+  display: inline-block;
+}
+
+.favourite_list_buttons a {
+  vertical-align: middle;
+}
+
+
+.favourite_list_form {
+  height: 0px;
+  width: 10px;
+}
+
+.favourite_list_info_title {
+  padding-bottom: 10px;
+}

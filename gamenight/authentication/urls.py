@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^profile/edit-profile/$', views.edit_profile, name='edit_profile'),
     url(r'^create-profile/$', views.create_profile, name='create_profile'),
     url(r'^favourite-list/$', views.favourite_list, name='favourite_list'),
+    url(r'^(?P<boardgameId>[0-9]+)/remove_favourite/$', views.remove_favourite, name='remove_favourite'),
 
 ]

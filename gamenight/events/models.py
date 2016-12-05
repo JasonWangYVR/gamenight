@@ -7,17 +7,14 @@ from authentication.models import UserProfile
 class Event(models.Model):
     title = models.CharField(max_length=140)
     organizer = models.ForeignKey('auth.User')
-    #attending_users = models.ManyToManyField('authentication.UserProfile')
     event_date = models.DateTimeField('Event Date')
     created_on = models.DateTimeField(default=timezone.now)
-    last_edited_date = models.DateTimeField(default=timezone.now)
+    last_edited_date = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=100)
-    private_event = models.BooleanField(default=False)
-	
 
-    #def publish(self):
-	 #   self.last_edited_date= timezone.now()
-	 #   self.save()
+    def publish(self):
+	    self.last_edited_date= timezone.now()
+	    self.save()
 
     def __str__(self):
         return self.title
@@ -39,7 +36,6 @@ class Question(models.Model):
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    #on_event = models.ForeignKey(Event, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=100)
     votes = models.IntegerField(default=0)
     def __str__(self):
