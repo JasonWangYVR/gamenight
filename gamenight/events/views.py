@@ -23,9 +23,9 @@ from events.forms import SearchEventsForm
 def index(request):
     #title = 'GameNight Event List'
     #TODO: filter for user created and invited
-    event = Event.objects.order_by('title')
+    events = Event.objects.order_by('title')
     context = {
-        'event': event,
+        'events': events,
 		'search': SearchForm(),
             }
     return render(request, 'events/index.html', context)
