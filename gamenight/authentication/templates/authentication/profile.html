@@ -10,18 +10,54 @@
     </head>
     <body>
       {% include "boardgames/navbar.html" %}
-      <h1>User Profile TRUE</h1>
-    </body>
-    </html>
-  {% else %}
-    <html lang="en">
-    <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>User Profile</title>
-    </head>
-    <body>
-      <h1>User Profile ELSE</h1>
+      <div class=col-xs-12 col-md-7">
+        <div class="panel panel-primary">
+          <div class="panel-heading col-md-12">
+            <h2>Personal Information</h2>
+          </div>
+          <div class="panel panel-default panel-body col-md-12">
+            <div class="col-md-3">
+            <ul>
+              <li>Username:</li>
+              <li>First Name:</li>
+              <li>Last Name:</li>
+              <li>E-Mail:</li>
+            </ul>
+            </div>
+            <div class="user-info col-md-9">
+              <ul>
+                <li>{{user.username}}</li>
+                <li>{{user.first_name}}</li>
+                <li>{{user.last_name}}</li>
+                <li>{{user.email}}</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-heading col-md-12">
+            <h2>Profile Information</h2>
+          </div>
+          <div class="panel panel-default panel-body col-md-12">
+            <div class="col-md-3">
+            <ul>
+              <li>Address Line 1:</li>
+              <li>Address Line 2:</li>
+              <li>City:</li>
+              <li>Province:</li>
+              <li>Postal Code:</li>
+            </ul>
+            </div>
+            <div class="user-info col-md-9">
+              <ul>
+                <li>{{profile.addr_1}}</li>
+                <li>{{profile.addr_2}}</li>
+                <li>{{profile.city}}</li>
+                <li>{{profile.prov}}</li>
+                <li>{{profile.post_zip}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </body>
     </html>
   {% endif %}

@@ -6912,3 +6912,7 @@ input:focus,
 .signup_now a {
   color: red;
 }
+
+.user-info li {
+  list-style-type: none;
+}
