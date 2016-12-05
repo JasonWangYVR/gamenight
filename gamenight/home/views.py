@@ -22,5 +22,6 @@ def index(request):
     context = {
         'user':request.user,
 		'events':event,
+		'search':SearchForm(),
     }
     return render(request, 'home/index.html', context)
