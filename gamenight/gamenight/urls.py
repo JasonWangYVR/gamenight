@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^user/', include('authentication.urls', namespace="authentication")),
     url(r'^boardgames/', include('boardgames.urls')),
     url(r'^events/', include('events.urls')),
+    url(r'^captcha/', include('captcha.urls')),
 ]

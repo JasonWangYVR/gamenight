@@ -1,6 +1,7 @@
 from django import forms
 from .models import UserProfile
 from django.contrib.auth.models import User
+from captcha.fields import CaptchaField
 
 class UserForm(forms.ModelForm):
     username = forms.CharField(
@@ -66,6 +67,8 @@ class UserForm(forms.ModelForm):
             }
         )
     )
+
+    captcha = CaptchaField()
 
     class Meta:
         model = User
@@ -168,13 +171,8 @@ class LoginForm(forms.Form):
             }
         )
     )
-
-                                                                                #JASON: Below is the form for when a user
-                                                                                #       decides that they want to include
-                                                                                #       address stuff. Later we'll include
-                                                                                #       favorite boardgames and junk. For
-                                                                                #       now this should do
-
+    captcha = CaptchaField()
+    
 class ProfileForm(forms.ModelForm):
     addr_1 = forms.CharField(
         label='Address Line 1',
