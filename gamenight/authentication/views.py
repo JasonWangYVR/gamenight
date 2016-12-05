@@ -86,7 +86,7 @@ def profile(request):
             context = {
                 'user':request.user,
                 'profile':profile,
-                'search_form':SearchForm(),
+                'search':SearchForm(),
             }
             return render(request, 'authentication/profile.html', context)
         except ObjectDoesNotExist:
