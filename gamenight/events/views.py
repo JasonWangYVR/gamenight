@@ -49,7 +49,7 @@ def index(request):
         return render(request, 'events/index.html', context)
 
 
-	
+
 def detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     if event.private_event == False:
@@ -70,7 +70,7 @@ def detail(request, event_id):
             'choice' : choice,
             'message' : message,
             'search': SearchForm(),
-            'is_organizer': is_organizer,   
+            'is_organizer': is_organizer,
             'attendees': attendees,
             'add_form': add_attendee_form,
                 }
@@ -125,7 +125,7 @@ def add_attendee(request, event_id):
             event = get_object_or_404(Event, id=event_id)
             try:
                 to_add = User.objects.get(username=username)
-                try: 
+                try:
                     to_add_profile = UserProfile.objects.get(user=to_add)
                     try:
                         ok = to_add_profile.attending_events.get(id=event_id)
@@ -187,14 +187,14 @@ def create_event(request):
 def edit_event(request, event_id):
 	if request.user.is_authenticated():
 		post = get_object_or_404(Event, pk=event_id)
-		if post.organizer == request.user:	
+		if post.organizer == request.user:
 			if request.method == "POST":
 				form = EventForm(request.POST, instance=post)
 				if form.is_valid():
 					post = form.save(commit=False)
 					post.organizer = request.user
 					post.save()
-					return redirect('events:index')
+					return redirect('events:detail',event_id)
 			else:
 				form = EventForm(instance=post)
 				return render(request, 'events/edit_event.html', {'form': form})
@@ -282,18 +282,19 @@ def create_question(request, event_id):
                 return rediect('home:index') #Not going to this event
     else:
         return redirect('authentication:login')
-            
+
 
 def create_choice(request, question_id):
     if request.user.is_authenticated():
         question = get_object_or_404(Question, pk=question_id)
+        event = get_object_or_404(Event, pk=question.on_event_id)
         if request.method == "POST":
             form = ChoiceForm(request.POST)
             if form.is_valid():
                 post = form.save(commit=False)
                 post.question = question
                 post.save()
-                return redirect('events:index')
+                return redirect('events:detail', event.id)
         else:
             form = ChoiceForm()
         return render(request, 'events/create_choice.html', {'form': form})
@@ -303,6 +304,7 @@ def create_choice(request, question_id):
 def edit_question(request, question_id):
     if request.user.is_authenticated():
         post = get_object_or_404(Question, pk=question_id)
+        event = get_object_or_404(Event, pk=post.on_event_id)
         if post.on_event.organizer == request.user:
             if request.method == "POST":
                 form = QuestionForm(request.POST, instance=post)
@@ -310,7 +312,7 @@ def edit_question(request, question_id):
                     post = form.save(commit=False)
                     post.organizer = request.user
                     post.save()
-                    return redirect('events:index')
+                    return redirect('events:detail', event.id)
             else:
                 form = QuestionForm(instance=post)
             return render(request, 'events/create_question.html', {'form': form})
@@ -318,10 +320,12 @@ def edit_question(request, question_id):
             return redirect('home:index') #not his question to edit
     else:
         return redirect('authentication:login')
-	
+
 def edit_choice(request, choice_id):
     if request.user.is_authenticated():
         post = get_object_or_404(Choice, pk=choice_id)
+        question = get_object_or_404(Question, pk= post.question_id)
+        event = get_object_or_404(Event, pk=question.on_event_id)
         if post.question.on_event.organizer == request.user:
             if request.method == "POST":
                 form = ChoiceForm(request.POST, instance=post)
@@ -329,7 +333,7 @@ def edit_choice(request, choice_id):
                     post = form.save(commit=False)
                     post.organizer = request.user
                     post.save()
-                    return redirect('events:index')
+                    return redirect('events:detail', event.id)
             else:
                 form = ChoiceForm(instance=post)
             return render(request, 'events/create_choice.html', {'form': form})
@@ -341,6 +345,7 @@ def edit_choice(request, choice_id):
 def edit_message(request, message_id):
     if request.user.is_authenticated():
         post = get_object_or_404(Message, pk=message_id)
+        event = get_object_or_404(Event, pk=post.on_event_id)
         if post.posted_by == request.user:
             if request.method == "POST":
                 form = MessageForm(request.POST, instance=post)
@@ -348,10 +353,10 @@ def edit_message(request, message_id):
                     post = form.save(commit=False)
                     post.organizer = request.user
                     post.save()
-                    return redirect('events:index')
+                    return redirect('events:detail', event.id)
             else:
                 form = MessageForm(instance=post)
-            return render(request, 'events/create_message.html', {'form': form})	
+            return render(request, 'events/create_message.html', {'form': form})
         else:
             return redirect('home:index') #Not his message to alter
     else:
@@ -361,9 +366,10 @@ def edit_message(request, message_id):
 def delete_question(request, question_id):
     if request.user.is_authenticated():
         instance = get_object_or_404(Question, pk=question_id)
+        event = get_object_or_404(Event, pk=instance.on_event_id)
         if instance.on_event.organizer == request.user:
             instance.delete()
-            return redirect('events:index')
+            return redirect('events:detail', event.id)
         else:
             return redirect('home:index') #not his to touch
     else:
@@ -372,9 +378,11 @@ def delete_question(request, question_id):
 def delete_message(request, message_id):
     if request.user.is_authenticated():
         instance = get_object_or_404(Message, pk=message_id)
+        event = get_object_or_404(Event, pk=instance.on_event_id)
+        #event = Event.objects.get(pk=instance.on_event_id)
         if instance.posted_by == request.user:
             instance.delete()
-            return redirect('events:index')
+            return redirect('events:detail', event.id)
         else:
             return redirect('home:index') #not his to touch
     else:
@@ -383,9 +391,11 @@ def delete_message(request, message_id):
 def delete_choice(request, choice_id):
     if request.user.is_authenticated():
         instance = get_object_or_404(Choice, pk=choice_id)
+        question = get_object_or_404(Question, pk=instance.question_id)
+        event = get_object_or_404(Event, pk=question.on_event_id)
         if instance.question.on_event.organizer == request.user:
             instance.delete()
-            return redirect('events:index')
+            return redirect('events:detail', event.id)
         else:
             return redirect('home:index') #Not his to touch
     else:
@@ -490,7 +500,7 @@ def search_event(request):
                     qobj = Q()
                     qobj.add(Q(title__icontains=query), Q.OR)
                     query2 = Event.objects.filter(qobj)
-                       
+
                     context = {'events': query2, 'title': title, 'query': query,
                      'search': SearchForm(), 'user': request.user,
                       'search_p': SearchEventsForm(), 'events_u':event}
@@ -511,7 +521,7 @@ def search_event(request):
     				qobj = Q()
     				qobj.add(Q(title__icontains=query), Q.OR)
     				query2 = Event.objects.filter(qobj)
-    	               
+
     				context = {'events': query2, 'title': title, 'query': query, 'search': SearchForm(), 'user': request.user, 'search_p': SearchEventsForm()}
     				return render(request, 'events/search_event.html', context)
 
