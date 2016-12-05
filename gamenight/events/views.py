@@ -193,8 +193,8 @@ def create_message(request, event_id):
             return render(request, 'events/create_message.html', {'form': form})
         else:
             try:
-                is_attending = user.attending_events.get(id=event_id)
                 user = UserProfile.objects.get(user=request.user, deleted=False)
+                is_attending = user.attending_events.get(id=event_id)
                 if request.method == "POST":
                     form = MessageForm(request.POST)
                     if form.is_valid():
@@ -213,8 +213,10 @@ def create_message(request, event_id):
 
 def create_question(request, event_id):
     if request.user.is_authenticated():
+        print('auth')
         event = get_object_or_404(Event, pk=event_id)
         if event.private_event == False:
+            print('public')
             if event.organizer == request.user:
                 if request.method == "POST":
                     form = QuestionForm(request.POST)
@@ -231,9 +233,11 @@ def create_question(request, event_id):
                 return redirect('home:index') #maybe a new page saying that he can't edit it unless he is organizer
         else:
             try:
-                is_attending = user.attending_events.get(id=event_id)
+                print('in try')
                 user = UserProfile.objects.get(user=request.user, deleted=False)
-                if event.organizer == user:
+                is_attending = user.attending_events.get(id=event_id)
+                if event.organizer == request.user:
+                    print('org')
                     if request.method == "POST":
                         form = QuestionForm(request.POST)
                         if form.is_valid():
@@ -393,6 +397,8 @@ def vote(request, choice_id):
                 return HttpResponseRedirect(reverse('events:index'))
         else:
             try:
+                user = UserProfile.objects.get(user=request.user, deleted=False)
+                event_id = choice.question.on_event.id
                 is_attending = user.attending_events.get(id=event_id)
                 try:
                     selected_choice = choice

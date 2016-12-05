@@ -1,24 +1,31 @@
-<ul class='attending-users'>
+<div class='attending-users col-md-12'>
 {% if is_organizer == True %}
+<!--   <div class="add-attendee-form col-md-2 col-md-offset-4"> -->
+    <form class="add-attendee" action="{% url 'events:add_attendee' event.id %}" method="POST" name="form" id="add-attendee">
+      {{add_form}}<button class="btn btn-primary btn-xs">Submit</button>
+      {% csrf_token %}
+    </form>
+    <br>
+<!--   </div> -->
+<!--   <div class="attendees col-md-3"> -->
+  <h4>Attending Users</h4>
   {% for attendee in attendees %}
-    <li>{{attendee.user.username}}
       {% if attendee.user != request.user %}
         <form class="remove-attendee" action="{% url 'events:remove_attendee' event.id attendee.user.username%}" method="POST" id="remove-attendee">
-          <button class="btn btn-primary btn-sm" >Remove</button>
+          <label>{{attendee.user.username}}</label>
+          <button class="btn btn-primary btn-xs" >Remove</button>
           {% csrf_token %}
         </form>
+      {% else %}
+        <label>{{attendee.user.username}}</label>
       {% endif %}
-    </li>
   {% endfor %}
-  <form class="add-attendee" action="{% url 'events:add_attendee' event.id %}" method="POST" name="form" id="add-attendee">
-  {{add_form}}
-  <button value="Submit">Submit</button>
-  {% csrf_token %}
-  </form>
+<!--   </div> -->
 {% else %}
+  <h4>Attending Users</h4>
   {% for attendee in attendees %}
     <li>{{attendee.user.username}}</li>
   {% endfor %}
 {% endif %}
-</ul>
+</div>
 
