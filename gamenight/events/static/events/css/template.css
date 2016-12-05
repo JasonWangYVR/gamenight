@@ -7064,6 +7064,24 @@ p {
   background-color: #27AE60 ;
 }
 
-.add-attendee {
+#add-attendee {
+  width: 300px;
+  height: 50px;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+#add-attendee label {
+  float: left;
+  margin-top: 1em;
+}
+
+#id_username {
+  float: left;
   width: 150px;
+  margin: 0;
+}
+
+.add-attendee-button {
+  float: left;
 }
