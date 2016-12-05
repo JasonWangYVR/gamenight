@@ -26,6 +26,8 @@ class Message(models.Model):
     pub_date = models.DateTimeField(default=timezone.now)
     message_number = models.IntegerField(default=0)
     #message_number will help us maintain order of messages in a given Event
+    def __str__(self):
+        return self.text
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)

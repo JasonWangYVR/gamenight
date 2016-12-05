@@ -1,4 +1,6 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'events/style.css' %}" />
 {% block content %}
-<h1>This event is private.</h1>
+<h1 class="mainheading">This event is private.</h1>
 <a href="{% url 'home:index' %}">Click here to return to home</a>
 {% endblock %}

@@ -6,7 +6,7 @@
 <body>
  {% include "boardgames/navbar.html" %}
   <!-- <h1> Gamenight </h1> -->
-  {% include "home/sidebar.html" %}<!-- 
+  {% include "home/sidebar.html" %}<!--
   <a href="{% url 'authentication:signup' %}">Sign up</a>
   <a href="{% url 'authentication:login' %}">Log In</a>
   <p>
@@ -21,6 +21,7 @@
 				<h2>Public Events Near You</h2>
 			</div>
 			<div class="public_events_body panel panel-default panel-body col-md-12">
+        {% include "events/index2.html" %}
 				<div class="public_events_map col-md-3">
 				</div>
 				<div class="public_events_body_info col-md-9">
