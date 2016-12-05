@@ -86,6 +86,7 @@ def profile(request):
             context = {
                 'user':request.user,
                 'profile':profile,
+                'search':SearchForm(),
             }
             return render(request, 'authentication/profile.html', context)
         except ObjectDoesNotExist:
@@ -129,8 +130,36 @@ def create_profile(request):
 
 #TODO
 def edit_profile(request):
-    pass
+    if request.user.is_authenticated():
+        try:
+            profile = UserProfile.objects.get(user=request.user, deleted=False)
+        except ObjectDoesNotExist:
+            return redirect('authentication:profile')
 
+        if request.method == "POST":
+            form = EditProfileForm(request.POST, instance=profile)
+            if form.is_valid():
+                profile.save()
+            return redirect('authentication:profile')
+        else:
+            form = EditProfileForm(instance=profile)
+        return render(request, 'authentication/edit_profile.html', {'form': form})
+    else:
+        return redirect('authentication:login')
+
+def edit_personal(request):
+    if request.user.is_authenticated():
+        user = request.user
+        if request.method == "POST":
+            form = EditUserForm(request.POST, instance=user)
+            if form.is_valid():
+                user.save()
+            return redirect('authentication:profile')
+        else:
+            form = EditUserForm(instance=user)
+        return render(request, 'authentication/edit_personal.html', {'form': form})
+    else:
+        return redirect('authentication:login')
 
 def favourite_list(request):
     # if request.user.is_authenticated():

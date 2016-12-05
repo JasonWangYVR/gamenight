@@ -16,9 +16,3 @@ class UserProfile(models.Model):
     attending_events = models.ManyToManyField('events.Event')
     favorite_games = models.ManyToManyField('boardgames.BoardGame')
     deleted = models.BooleanField()
-
-
-    def create_profile(self):
-        self.save()
-
-    #TODO: def delete_profile()

@@ -3,13 +3,9 @@
 {% include "authentication/head.html" %}
 </head>
 {% block content %}
-  {% if profile_created == False %}
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Submit </button>
   </form>
-  {% elif profile_created == True %}
-  	<p><a href="{%url 'authentication:profile' %}">Continue to your profile</a></p>
-  {% endif %}
 {% endblock %}
