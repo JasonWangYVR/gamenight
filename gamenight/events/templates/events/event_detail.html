@@ -92,7 +92,6 @@
     
 
 
-      {% include "events/footer.html" %}
       <hr>
 
       <!--<footer>
@@ -100,8 +99,9 @@
       </footer>-->
 
     </div><!--/.container-->
-
-
+    <p><a href="{% url 'events:delete_event' event.id %}"> Delete Event</a></li></p>
+    {% include "events/attendee_manager.html" %}
+    {% include "events/footer.html" %}
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -111,5 +111,6 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
     <script src="offcanvas.js"></script>
+    {% include "events/footer.html" %}
   </body>
 </html>

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 #from events.models import Event
 #from boardgames.models import BoardGame
 
@@ -16,3 +17,10 @@ class UserProfile(models.Model):
     attending_events = models.ManyToManyField('events.Event')
     favorite_games = models.ManyToManyField('boardgames.BoardGame')
     deleted = models.BooleanField()
+
+    def is_attending(self, event_id):
+        try:
+            is_ok = self.attending_events.get(id=event_id)
+            return True
+        except ObjectDoesNotExist:
+            return False

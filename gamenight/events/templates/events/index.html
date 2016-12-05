@@ -6,11 +6,11 @@
 <body>
 {% include "boardgames/navbar.html" %}
 {% include "home/sidebar.html" %}
-{% if event %}
+{% if events %}
 <div class="col-md-7 col-sm-9 col-xs-12">
 <h1 class="mainheading">Recent Events List</h1>
     <ul>
-    {% for e in event %}
+    {% for e in events %}
         <li class="listitem"><a href="{% url 'events:detail' e.id %}">{{ e }}</a></li>
     {% endfor %}
     </ul>

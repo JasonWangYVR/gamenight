@@ -23,9 +23,6 @@ class EventForm(forms.ModelForm):                                               
         )
     )
 
-		
-		
-    
     location = forms.CharField(
         label = 'Location',
         required = True,
@@ -76,6 +73,19 @@ class SearchEventsForm(forms.Form):
             attrs = {
                 'class': 'form-control',
                 'placeholder': 'Public Event',
+            }
+        )
+    )
+
+class AddAttendeeForm(forms.Form):
+    username = forms.CharField(
+        label = 'Username',
+        min_length = 6,
+        required = True,
+        widget=forms.TextInput(
+            attrs = {
+                'class': 'form-control',
+                'placeholder': '6-30 Characters',
             }
         )
     )

@@ -8,6 +8,10 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     #handles requests for specific event according to event_id
     url(r'^(?P<event_id>[0-9]+)/$', views.detail, name='detail'),
+    #adding an attendee
+    url(r'^(?P<event_id>[0-9]+)/add-attendee/$', views.add_attendee, name='add_attendee'),
+    #removing an attendee
+    url(r'^(?P<event_id>[0-9]+)/(?P<username_to_remove>[\w-]+)/remove-attendee/$', views.remove_attendee, name='remove_attendee'),
 	#event creation
 	url(r'^create/$', views.create_event, name='create',),
     #question creation

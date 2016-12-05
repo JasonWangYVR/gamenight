@@ -16,18 +16,21 @@ from django.utils import timezone
 from .models import Event, Question, Choice, Message, User
 from authentication.models import UserProfile
 #include forms
-from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm, SearchEventsForm
+from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm, AddAttendeeForm, SearchEventsForm
 from boardgames.forms import SearchForm
 
 def index(request):
     #title = 'GameNight Event List'
     #TODO: filter for user created and invited
-    event = Event.objects.order_by('title')
-    context = {
-        'event': event,
-		'search': SearchForm(),
-            }
-    return render(request, 'events/index.html', context)
+    if request.user.is_authenticated():
+        user = UserProfile.objects.get(user=request.user)
+        attending = user.attending_events.all()
+
+        context = {
+            'events': attending,
+    		'search': SearchForm(),
+                }
+        return render(request, 'events/index.html', context)
 
 	
 def detail(request, event_id):
@@ -56,17 +59,84 @@ def detail(request, event_id):
             choice = Choice.objects.filter(question_id__in=question)
             message = Message.objects.filter(on_event=event.pk)
 
+            is_organizer = False
+            if request.user == event.organizer:
+                is_organizer = True
+
+            add_attendee_form = AddAttendeeForm()
+
+            #CAUTION: CANCER BELOW
+            dudes = UserProfile.objects.all()
+            attendees = [user]
+
+            for guy in dudes:
+                if guy.is_attending(event_id=event_id) == True:
+                    if guy.user != event.organizer:
+                        attendees.append(guy)
+
+
             context = {
                 'event': event,
                 'question' : question,
                 'choice' : choice,
                 'message' : message,
                 'search': SearchForm(),
+                'is_organizer': is_organizer,
+                'attendees': attendees,
+                'add_form': add_attendee_form,
                     }
             return render(request, 'events/event_detail.html', context)
         else:
             return redirect('authentication:login')
 
+def add_attendee(request, event_id):
+    print('test1')
+    if request.method == "POST":
+        form = AddAttendeeForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            event = get_object_or_404(Event, id=event_id)
+            try:
+                to_add = User.objects.get(username=username)
+                try: 
+                    to_add_profile = UserProfile.objects.get(user=to_add)
+                    try:
+                        ok = to_add_profile.attending_events.get(id=event_id)
+                        message="User already attending"
+                        return redirect('events:detail', event_id)
+                    except ObjectDoesNotExist:
+                        to_add_profile.attending_events.add(event)
+                        message="User successfully added"
+                        return redirect('events:detail', event_id)
+                except ObjectDoesNotExist:
+                    message="User needs to set up their profile!"
+                    return redirect('events:detail', event_id)
+            except ObjectDoesNotExist:
+                message="User does not exist"
+                return redirect('events:detail', event_id)
+    else:
+        form = AddAttendeeForm()
+        return HttpResponseRedirect(reverse('events:event_detail', args=[event_id]))
+
+def remove_attendee(request, event_id, username_to_remove):
+    event = get_object_or_404(Event, id=event_id)
+    try:
+        to_remove = User.objects.get(username=username_to_remove)
+        try:
+            to_remove_profile = UserProfile.objects.get(user=to_remove)
+            try:
+                to_remove_profile.attending_events.remove(event)
+                message="User has been successfully removed."
+                return redirect('events:detail', event_id)
+            except ObjectDoesNotExist:
+                message="User is not attending this event."
+                return redirect('events:detail', event_id)
+        except ObjectDoesNotExist:
+            message="User's profile does not exist"
+            return redirect('events:detail', event_id)
+    except ObjectDoesNotExist:
+        message="User does not exist!"
+        return redirect('events:detail', event_id)
 
 def create_event(request):
     if request.user.is_authenticated():
