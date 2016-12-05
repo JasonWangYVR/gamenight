@@ -33,6 +33,7 @@ def index(request):
 			'events':events,
 			'events_u':event,
 			'search':SearchForm(),
+			'search_p': SearchEventsForm()
 		}
 		return render(request, 'home/index.html', context)
 	else:
@@ -53,5 +54,6 @@ def index(request):
 			'user':request.user,
 			'events':events,
 			'search':SearchForm(),
+			'search_p': SearchEventsForm()
 		}
 		return render(request, 'home/index.html', context)

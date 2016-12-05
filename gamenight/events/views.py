@@ -464,22 +464,48 @@ def public_events(request):
     return render(request, 'events/public_events.html', context)
 
 def search_event(request):
-	title = 'Search Results'
-	# Pagination Start
-	if request.method == 'GET':
-			search_form = SearchEventsForm(request.GET)
-			if search_form.is_valid():
-				query = search_form.cleaned_data['q']
-				#filter for public events
-				#pub_events = Event.objects.filter(private_event=False)
-				qobj = Q()
-				qobj.add(Q(title__icontains=query), Q.OR)
-				query2 = Event.objects.filter(qobj)
-	               
-				context = {'events': query2, 'title': title, 'query': query, 'search': SearchForm(), 'user': request.user, 'search_p': SearchEventsForm()}
-				return render(request, 'events/search_event.html', context)
+    title = 'Search Results'
+    if request.user.is_authenticated():
+        user = UserProfile.objects.get(user=request.user)
+        attending = user.attending_events.all()
 
-	context = {
-		'search' :SearchForm(),
-	}
-	return render(request, 'boardgames/search.html', context)
+        event = attending.order_by('event_date')[:5] # right sidebar
+        # Pagination Start
+        if request.method == 'GET':
+                search_form = SearchEventsForm(request.GET)
+                if search_form.is_valid():
+                    query = search_form.cleaned_data['q']
+                    #filter for public events
+                    #pub_events = Event.objects.filter(private_event=False)
+                    qobj = Q()
+                    qobj.add(Q(title__icontains=query), Q.OR)
+                    query2 = Event.objects.filter(qobj)
+                       
+                    context = {'events': query2, 'title': title, 'query': query,
+                     'search': SearchForm(), 'user': request.user,
+                      'search_p': SearchEventsForm(), 'events_u':event}
+                    return render(request, 'events/search_event.html', context)
+
+        context = {
+            'search' :SearchForm(),
+        }
+        return render(request, 'boardgames/search.html', context)
+    else:
+    	# Pagination Start
+    	if request.method == 'GET':
+    			search_form = SearchEventsForm(request.GET)
+    			if search_form.is_valid():
+    				query = search_form.cleaned_data['q']
+    				#filter for public events
+    				#pub_events = Event.objects.filter(private_event=False)
+    				qobj = Q()
+    				qobj.add(Q(title__icontains=query), Q.OR)
+    				query2 = Event.objects.filter(qobj)
+    	               
+    				context = {'events': query2, 'title': title, 'query': query, 'search': SearchForm(), 'user': request.user, 'search_p': SearchEventsForm()}
+    				return render(request, 'events/search_event.html', context)
+
+    	context = {
+    		'search' :SearchForm(),
+    	}
+    	return render(request, 'boardgames/search.html', context)
