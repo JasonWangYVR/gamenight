@@ -61,8 +61,7 @@ def detail(request, event_id):
 
         for guy in dudes:
             if guy.is_attending(event_id=event_id) == True:
-                if guy.user != event.organizer:
-                    attendees.append(guy)
+                attendees.append(guy)
 
         is_organizer = False
         context = {
@@ -96,13 +95,11 @@ def detail(request, event_id):
 
             #CAUTION: CANCER BELOW
             dudes = UserProfile.objects.all()
-            attendees = [user]
+            attendees = []
 
             for guy in dudes:
                 if guy.is_attending(event_id=event_id) == True:
-                    if guy.user != event.organizer:
-                        if guy.user != request.user
-                            attendees.append(guy)
+                    attendees.append(guy)
 
 
             context = {
