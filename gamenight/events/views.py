@@ -57,13 +57,23 @@ def detail(request, event_id):
         choice = Choice.objects.filter(question_id__in=question)
         message = Message.objects.filter(on_event=event.pk)
 
+        for guy in dudes:
+            if guy.is_attending(event_id=event_id) == True:
+                if guy.user != event.organizer:
+                    attendees.append(guy)
+
+        is_organizer = False
         context = {
             'event': event,
             'question' : question,
             'choice' : choice,
-    		'message' : message,
-    		'search': SearchForm(),
+            'message' : message,
+            'search': SearchForm(),
+            'is_organizer': is_organizer,   
+            'attendees': attendees,
+            'add_form': add_attendee_form,
                 }
+                
         return render(request, 'events/event_detail.html', context)
     else:
         if request.user.is_authenticated():
