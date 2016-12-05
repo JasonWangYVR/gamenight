@@ -7085,3 +7085,17 @@ p {
 .add-attendee-button {
   float: left;
 }
+
+.public_events_heading h2 {
+  display: inline;
+  height: 46px;
+}
+
+#id_qq {
+  width: 200px;
+}
+
+.event_search {
+  display: inline;
+  float: right;
+}

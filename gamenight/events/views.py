@@ -474,7 +474,7 @@ def search_event(request):
         if request.method == 'GET':
                 search_form = SearchEventsForm(request.GET)
                 if search_form.is_valid():
-                    query = search_form.cleaned_data['q']
+                    query = search_form.cleaned_data['qq']
                     #filter for public events
                     #pub_events = Event.objects.filter(private_event=False)
                     qobj = Q()
@@ -495,7 +495,7 @@ def search_event(request):
     	if request.method == 'GET':
     			search_form = SearchEventsForm(request.GET)
     			if search_form.is_valid():
-    				query = search_form.cleaned_data['q']
+    				query = search_form.cleaned_data['qq']
     				#filter for public events
     				#pub_events = Event.objects.filter(private_event=False)
     				qobj = Q()
