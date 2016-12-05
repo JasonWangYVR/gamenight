@@ -3,8 +3,10 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from boardgames.forms import SearchForm
 from django.contrib.auth.models import User
 from authentication.models import UserProfile
+from events.models import Event
 
 def index(request):
+    event=Event.objects.order_by('event_date')[:5]
         #return render(request, 'home/index.html', {'search': SearchForm(), 'user':request.user}) #HEAD
 
  #   if request.user.is_authenticated():
@@ -19,5 +21,6 @@ def index(request):
  #       return render(request, 'home/index.html', {'search': SearchForm()})
     context = {
         'user':request.user,
+		'events':event,
     }
     return render(request, 'home/index.html', context)

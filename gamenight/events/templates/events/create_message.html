@@ -5,11 +5,8 @@
   </head>
 <body>
 
-{% if event.id %}
-<h1>Edit Message</h1>
-{% else %}
 <h1>Create Message</h1>
-{% endif %}
+
 
     <form method="POST">{% csrf_token %}
         {{ form.as_p }}

@@ -11,19 +11,28 @@
 
 {% if event %}
   <p>Title: {{ event.title }}</p>
-  <!--<p>Group: {{ event.group }}<p>-->
+  <br>	
   <p>Organizer: {{ event.organizer }}<p>
+  <br>
   <p>Date: {{ event.event_date }}</p>
+  <br>
   <p>Created: {{ event.created_on }}</p>
+  <br>
   <p>Edited: {{ event.last_edited_date }}</p>
+  <br>
   <p>Location: {{ event.location }}</p>
-  <p>Private Event: {{event.private_event}}</p>
+  <br>
+  {% if event.private_event %}
+  <p>This is a private event.</p>
+  {% else %}
+  <p>This is a public event.</p>
+  {% endif %}
   
 {% else %}
   <p>Event Error - Unable to Display</p>
 {% endif %}
 
-<p><a href="{% url 'events:editevent' pk=event.id %}">Edit Event</a></p>
+<p><a href="{% url 'events:editevent' event.id %}">Edit Event</a></p>
 
 {% if question %}
   <h2>Questions: </h2>
@@ -86,7 +95,7 @@
 
 <p><a href="{% url 'events:index' %}">Back to Event List</a></p>
 
- <p><a href="{% url 'events:delete_event' pk=event.id %}"> Delete Event</a></li></p>
+ <p><a href="{% url 'events:delete_event' event.id %}"> Delete Event</a></li></p>
  {% include "events/footer.html" %}
  </body>
  

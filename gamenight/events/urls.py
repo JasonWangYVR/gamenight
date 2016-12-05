@@ -17,21 +17,21 @@ urlpatterns = [
 	#message creation
 	url(r'^createmessage/(?P<event_id>[0-9]+)/$', views.create_message, name='createmessage',),
     #edits event
-	url(r'^editevent/(?P<pk>\d+)/$', views.EditEventView.as_view(), name='editevent',),
+	url(r'^editevent/(?P<event_id>\d+)/edit/$', views.edit_event, name='editevent',),
     #edit question
-    url(r'^editq/(?P<pk>\d+)/$', views.EditQuestionView.as_view(), name='editquestion',),
+    url(r'^editq/(?P<question_id>\d+)/$', views.edit_question, name='editquestion',),
     #edit message
-    url(r'^editm/(?P<pk>\d+)/$', views.EditMessageView.as_view(), name='editmessage',),
+    url(r'^editm/(?P<message_id>\d+)/$', views.edit_message, name='editmessage',),
     #delete question
-    url(r'^deleteq/(?P<pk>\d+)/$', views.DeleteQuestionView.as_view(), name='deletequestion',),
+    url(r'^deleteq/(?P<question_id>\d+)/$', views.delete_question, name='deletequestion',),
     #edit choice
-    url(r'^editc/(?P<pk>\d+)/$', views.EditChoiceView.as_view(), name='editchoice',),
+    url(r'^editc/(?P<choice_id>\d+)/$', views.edit_choice, name='editchoice',),
     #delete choice
-    url(r'^deletec/(?P<pk>\d+)/$', views.DeleteChoiceView.as_view(), name='deletechoice',),
+    url(r'^deletec/(?P<choice_id>\d+)/$', views.delete_choice, name='deletechoice',),
 	#delete message
-    url(r'^deletem/(?P<pk>\d+)/$', views.DeleteMessageView.as_view(), name='deletemessage',),
+    url(r'^deletem/(?P<message_id>\d+)/$', views.delete_message, name='deletemessage',),
 	#delete event
-    url(r'^deleteevent/(?P<pk>\d+)/$', views.DeleteEventView.as_view(), name='delete_event',),
+    url(r'^deleteevent/(?P<event_id>\d+)/$', views.delete_event, name='delete_event',),
 	#vote
     url(r'^(?P<choice_id>[0-9]+)/vote/$', views.vote, name='vote'),
 

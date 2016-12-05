@@ -1,4 +1,5 @@
 <!--{% if user.is_authenticated %}-->
+
 <div class="container col-sm-4 col-md-3 right-sidebar">   
     <div class="row">
         <div class="">
@@ -9,8 +10,31 @@
                             <h7>Upcoming Events</h7>
                         </div>
                         <div class="upcoming_events_body panel panel-default panel-body col-md-12">
-                            <div class="upcoming_events_body_info col-md-3">
-                            </div>
+							{% for event in events %}
+								{% if forloop.counter|divisibleby:2 %}
+									<div class="upcoming_events_even">
+									<a class="upcoming_events_a" href="{% url 'events:detail' event.id %}">
+										<b>{{event.title}}</b>
+										<br>
+										{{event.event_date}},
+										{{event.location}}
+										<br>
+										<br>
+										</a>
+									</div>
+								{% else %}
+									<div class="upcoming_events_odd">
+									<a class="upcoming_events_a" href="{% url 'events:detail' event.id %}">
+										<b>{{event.title}}</b>
+										<br>
+										{{event.event_date}},
+										{{event.location}}
+										<br>
+										<br>
+									</div>
+								{% endif %}
+							{% endfor %}
+
                         </div>
                     </div>
                 </div>

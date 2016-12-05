@@ -5,13 +5,10 @@
   </head>
 <body>
 
-{% if question.id %}
 <h1>Create Choice</h1>
-{% else %}
-<h1>Edit Choice</h1>
-{% endif %}
 
-    <form method="POST">{% csrf_token %}
+
+    <form method="POST">{% csrf_token %}	
         {{ form.as_p }}
         <button type="submit">Save</button>
     </form>

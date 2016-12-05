@@ -5,14 +5,13 @@
   </head>
 <body>
 
-<h1>Create Question</h1>
-
+<h1>Edit Event</h1>
 
     <form method="POST">{% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Save</button>
     </form>
-
-<p><a href="{% url 'events:index' %}">Back	to Event List</a></p>
+<p><a href="{% url 'events:index' %}">Back	to Event List</a></p>	
 {% include "events/footer.html" %}
 </body>
+
