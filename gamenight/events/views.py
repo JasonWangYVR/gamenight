@@ -157,6 +157,9 @@ def remove_attendee(request, event_id, username_to_remove):
 
 def create_event(request):
     if request.user.is_authenticated():
+        user = UserProfile.objects.get(user=request.user)
+        attending = user.attending_events.all()
+        event = attending.order_by('event_date')[:5]
         if request.method == "POST":
             form = EventForm(request.POST)
             if form.is_valid():
@@ -170,7 +173,7 @@ def create_event(request):
                 return redirect('events:index')
         else:
             form = EventForm()
-            return render(request, 'events/create_event.html', {'form': form})
+            return render(request, 'events/create_event.html', {'form': form, 'events_u': event,})
     else:
         return redirect('authentication:login')
 
