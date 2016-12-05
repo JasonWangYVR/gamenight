@@ -13,12 +13,6 @@ class UserProfile(models.Model):
     city = models.CharField(max_length=30)
     prov = models.CharField(max_length=5)
     post_zip = models.CharField(max_length=10)
-    #attending_events = models.ManyToManyField('events.Event')
+    attending_events = models.ManyToManyField('events.Event')
     favorite_games = models.ManyToManyField('boardgames.BoardGame')
     deleted = models.BooleanField()
-
-
-    def create_profile(self):
-        self.save()
-
-    #TODO: def delete_profile()

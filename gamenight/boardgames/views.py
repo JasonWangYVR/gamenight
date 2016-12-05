@@ -10,14 +10,20 @@ from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import urlresolvers
 from django.db.models import Q
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 
+from authentication.models import UserProfile
 from .models import BoardGame, Designer, Tag
 from .forms import SearchForm, PerPageForm
 
 # Create your views here.
 def index(request):
 	title = 'GameNight Board Game List'
-	boardgame_list = BoardGame.objects.order_by('name')
+	try:
+		boardgame_list = BoardGame.objects.order_by('name')
+	except ObjectDoesNotExist:
+		HttpResponse('No boardgames available')
 	# Pagination Start
 	# Parsing pages and results for special conditions
 	page = request.GET.get('page', 'a')
@@ -68,7 +74,7 @@ def index(request):
 		boardgames = paginator.page(paginator.num_pages)
 	#Pagination End
 
-	context = {'boardgames': boardgames, 'title': title, 'search': SearchForm()}
+	context = {'boardgames': boardgames, 'title': title, 'search': SearchForm(), 'user': request.user}
 	return render(request, 'boardgames/index.html', context)
 
 # Not currently being used
@@ -77,43 +83,104 @@ def index(request):
 
 def detail(request, boardgameId):
 	# will need favourite logic once user is added
-	if request.GET.get('next'):
-		# Quick way to go between detail pages. URL needs work
-		next_boardgame = request.GET.get('next')
-		boardgame = get_object_or_404(BoardGame, id=next_boardgame)
-		prev_id = str(int(next_boardgame)-1)
-		next_id = str(int(next_boardgame)+1)
-		title = boardgame.name
-		designers = boardgame.designed_by.all().values_list('name', flat=True)
-		try:
-			boardgame_next = BoardGame.objects.get(id=next_id)
-		except BoardGame.DoesNotExist:
-			next_id = None
-		try:
-			boardgame_prev = BoardGame.objects.get(id=prev_id)
-		except BoardGame.DoesNotExist:
-			prev_id = None
-		context = {'boardgame': boardgame, 'title': title,
-		'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers}
-		return render(request, 'boardgames/detail.html/', context)
-	else:
-		boardgame = get_object_or_404(BoardGame, id=boardgameId)
-		prev_id = str(int(boardgameId)-1)
-		next_id = str(int(boardgameId)+1)
-		title = boardgame.name
-		designers = boardgame.designed_by.all().values_list('name', flat=True)
-		try:
-			boardgame_next = BoardGame.objects.get(id=next_id)
-		except BoardGame.DoesNotExist:
-			next_id = None
-		try:
-			boardgame_prev = BoardGame.objects.get(id=prev_id)
-		except BoardGame.DoesNotExist:
-			prev_id = None
+	if request.user.is_authenticated:
+		if request.GET.get('next'):
+			# Quick way to go between detail pages. URL needs work
+			next_boardgame = request.GET.get('next')
+			boardgame = get_object_or_404(BoardGame, id=next_boardgame)
+			prev_id = str(int(next_boardgame)-1)
+			next_id = str(int(next_boardgame)+1)
+			title = boardgame.name
+			designers = boardgame.designed_by.all().values_list('name', flat=True)
+			try:
+				boardgame_next = BoardGame.objects.get(id=next_id)
+			except BoardGame.DoesNotExist:
+				next_id = None
+			try:
+				boardgame_prev = BoardGame.objects.get(id=prev_id)
+			except BoardGame.DoesNotExist:
+				prev_id = None
 
-		context = {'boardgame': boardgame, 'title': title,
-		'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers}
-		return render(request, 'boardgames/detail.html', context)
+			favourite = False
+			# Do favourite things
+			user_profile = UserProfile.objects.get(user=request.user, deleted=False)
+			bg = BoardGame.objects.get(id=boardgameId)
+			favourite_bg = user_profile.favorite_games.filter(id=boardgameId)
+			if not favourite_bg:
+				favourite = False
+			else:
+				favourite = True
+
+			context = {'boardgame': boardgame, 'title': title,
+			'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers, 'user': request.user, 'favourite': favourite}
+			return render(request, 'boardgames/detail.html/', context)
+		else:
+			boardgame = get_object_or_404(BoardGame, id=boardgameId)
+			prev_id = str(int(boardgameId)-1)
+			next_id = str(int(boardgameId)+1)
+			title = boardgame.name
+			designers = boardgame.designed_by.all().values_list('name', flat=True)
+			try:
+				boardgame_next = BoardGame.objects.get(id=next_id)
+			except BoardGame.DoesNotExist:
+				next_id = None
+			try:
+				boardgame_prev = BoardGame.objects.get(id=prev_id)
+			except BoardGame.DoesNotExist:
+				prev_id = None
+
+			favourite = False
+			# Do favourite things
+			user_profile = UserProfile.objects.get(user=request.user, deleted=False)
+			bg = BoardGame.objects.get(id=boardgameId)
+			favourite_bg = user_profile.favorite_games.filter(id=boardgameId)
+			
+			if not favourite_bg:
+				favourite = False
+			else:
+				favourite = True
+
+			context = {'boardgame': boardgame, 'title': title,
+			'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers, 'user': request.user, 'favourite': favourite}
+			return render(request, 'boardgames/detail.html', context)
+	else:
+		if request.GET.get('next'):
+			# Quick way to go between detail pages. URL needs work
+			next_boardgame = request.GET.get('next')
+			boardgame = get_object_or_404(BoardGame, id=next_boardgame)
+			prev_id = str(int(next_boardgame)-1)
+			next_id = str(int(next_boardgame)+1)
+			title = boardgame.name
+			designers = boardgame.designed_by.all().values_list('name', flat=True)
+			try:
+				boardgame_next = BoardGame.objects.get(id=next_id)
+			except BoardGame.DoesNotExist:
+				next_id = None
+			try:
+				boardgame_prev = BoardGame.objects.get(id=prev_id)
+			except BoardGame.DoesNotExist:
+				prev_id = None
+			context = {'boardgame': boardgame, 'title': title,
+			'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers, 'user': request.user}
+			return render(request, 'boardgames/detail.html/', context)
+		else:
+			boardgame = get_object_or_404(BoardGame, id=boardgameId)
+			prev_id = str(int(boardgameId)-1)
+			next_id = str(int(boardgameId)+1)
+			title = boardgame.name
+			designers = boardgame.designed_by.all().values_list('name', flat=True)
+			try:
+				boardgame_next = BoardGame.objects.get(id=next_id)
+			except BoardGame.DoesNotExist:
+				next_id = None
+			try:
+				boardgame_prev = BoardGame.objects.get(id=prev_id)
+			except BoardGame.DoesNotExist:
+				prev_id = None
+
+			context = {'boardgame': boardgame, 'title': title,
+			'next_id': next_id, 'prev_id': prev_id, 'search': SearchForm(), 'designers': designers, 'user': request.user}
+			return render(request, 'boardgames/detail.html', context)
 
 
 def search(request):
@@ -149,7 +216,7 @@ def search(request):
 			except EmptyPage:
 			# If page is out of range (e.g. 9999), deliver last page of results.
 				boardgames = paginator.page(paginator.num_pages)
-			context = {'boardgames': boardgames, 'title': title, 'query': search, 'search': SearchForm()}
+			context = {'boardgames': boardgames, 'title': title, 'query': search, 'search': SearchForm(), 'user': request.user}
 			return render(request, 'boardgames/search.html', context)
 
 		else:
@@ -178,7 +245,7 @@ def search(request):
 				except EmptyPage:
 				# If page is out of range (e.g. 9999), deliver last page of results.
 					boardgames = paginator.page(paginator.num_pages)
-				context = {'boardgames': boardgames, 'title': title, 'query': query, 'search': SearchForm()}
+				context = {'boardgames': boardgames, 'title': title, 'query': query, 'search': SearchForm(), 'user': request.user}
 				return render(request, 'boardgames/search.html', context)
 
 	context = {
@@ -190,12 +257,24 @@ def search(request):
 def add_favourite(request, boardgameId):
 	boardgame = get_object_or_404(BoardGame, id=boardgameId)
 	slug = boardgame.slug
-	return HttpResponseRedirect(reverse('boardgames:detail', args=[boardgameId, slug]))
+	if request.user.is_authenticated:
+		user_profile = UserProfile.objects.get(user=request.user, deleted=False)
+		bg = BoardGame.objects.get(id=boardgameId)
+		user_profile.favorite_games.add(bg)
+		return HttpResponseRedirect(reverse('boardgames:detail', args=[boardgameId, slug]))
+	else:
+		return HttpResponseRedirect(reverse('authentication:login'))
 	# return HttpResponseRedirect(reverse('boardgames:detail', kwargs={'boardgameId': boardgameId}))
 
 
 def remove_favourite(request, boardgameId):
 	boardgame = get_object_or_404(BoardGame, id=boardgameId)
 	slug = boardgame.slug
-	return HttpResponseRedirect(reverse('boardgames:detail', args=[boardgameId, slug]))
+	if request.user.is_authenticated:
+		user_profile = UserProfile.objects.get(user=request.user, deleted=False)
+		bg = BoardGame.objects.get(id=boardgameId)
+		user_profile.favorite_games.remove(bg)
+		return HttpResponseRedirect(reverse('boardgames:detail', args=[boardgameId, slug]))
+	else:
+		return HttpResponseRedirect(reverse('authentication:login'))
 	# return HttpResponseRedirect(reverse('boardgames:detail', kwargs={'boardgameId': boardgameId}))

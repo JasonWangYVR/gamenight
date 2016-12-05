@@ -1,4 +1,3 @@
-<!-- removed extends from base-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,13 +12,11 @@
 			<div class="signup_body panel-body">
 				<div class="signup_body_info">
 					{% block content %}
-					  {% if registered == False %}
 					  <form method="post">
 					    {% csrf_token %}
 					    {{ form.as_p }}
 					    <button type="submit">Submit </button>
 					  </form>
-					  {% endif %}
 					{% endblock %}
 				</div>
 			</div>

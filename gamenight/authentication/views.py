@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.template import RequestContext, loader
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -7,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from authentication.forms import *
 from boardgames.forms import SearchForm
 from authentication.models import UserProfile
+from boardgames.models import BoardGame
 
 def signup(request):
     if not request.user.is_authenticated():
@@ -25,7 +27,7 @@ def signup(request):
                 registered = True
                 template = loader.get_template('authentication/signup.html')
                 context = RequestContext(request, {'registered':registered })
-                return render(request, 'authentication/signup.html', {'registered': registered,})
+                return redirect('authentication:login')
         else:
             form = UserForm()
 
@@ -86,6 +88,7 @@ def profile(request):
             context = {
                 'user':request.user,
                 'profile':profile,
+                'search':SearchForm(),
             }
             return render(request, 'authentication/profile.html', context)
         except ObjectDoesNotExist:
@@ -120,7 +123,7 @@ def create_profile(request):
                 #    'form': form,
                 #    'profile_created': profile_created,
                 #})
-                return render(request, 'authentication/create_profile.html', {'profile_created':profile_created})
+                return redirect('authentication:profile')
             else:
                 form=ProfileForm()
             return render(request, 'authentication/create_profile.html', {'form':form, 'profile_created':profile_created})
@@ -129,10 +132,52 @@ def create_profile(request):
 
 #TODO
 def edit_profile(request):
-    pass
+    if request.user.is_authenticated():
+        try:
+            profile = UserProfile.objects.get(user=request.user, deleted=False)
+        except ObjectDoesNotExist:
+            return redirect('authentication:profile')
 
+        if request.method == "POST":
+            form = EditProfileForm(request.POST, instance=profile)
+            if form.is_valid():
+                profile.save()
+            return redirect('authentication:profile')
+        else:
+            form = EditProfileForm(instance=profile)
+        return render(request, 'authentication/edit_profile.html', {'form': form})
+    else:
+        return redirect('authentication:login')
+
+def edit_personal(request):
+    if request.user.is_authenticated():
+        user = request.user
+        if request.method == "POST":
+            form = EditUserForm(request.POST, instance=user)
+            if form.is_valid():
+                user.save()
+            return redirect('authentication:profile')
+        else:
+            form = EditUserForm(instance=user)
+        return render(request, 'authentication/edit_personal.html', {'form': form})
+    else:
+        return redirect('authentication:login')
 
 def favourite_list(request):
-    # if request.user.is_authenticated():
-    context = {'search': SearchForm()}
-    return render(request, 'authentication/favourite_list.html', context)
+    if request.user.is_authenticated():
+        user_profile = UserProfile.objects.get(user=request.user, deleted=False)
+        favourite_bg = user_profile.favorite_games.all()
+        context = {'search': SearchForm(), 'favourites': favourite_bg}
+        return render(request, 'authentication/favourite_list.html', context)
+    else:
+        return HttpResponseRedirect(reverse('authentication:login'))
+
+def remove_favourite(request, boardgameId):
+    boardgame = get_object_or_404(BoardGame, id=boardgameId)
+    if request.user.is_authenticated:
+        user_profile = UserProfile.objects.get(user=request.user, deleted=False)
+        bg = BoardGame.objects.get(id=boardgameId)
+        user_profile.favorite_games.remove(bg)
+        return HttpResponseRedirect(reverse('authentication:favourite_list'))
+    else:
+        return HttpResponseRedirect(reverse('authentication:login'))
