@@ -1,0 +1,11 @@
+<span id="links">
+<div class="datasection">
+    <ul>
+    {% for e in events %}
+        <li class="listitem"><a href="{% url 'events:detail' e.id %}">{{ e }}</a></li>
+    {% endfor %}
+    </ul>
+</div>
+
+{% include "events/footer.html" %}
+</span>

@@ -4498,6 +4498,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-default {
   background-color: #3e3f3a;
   border-color: #3e3f3a;
+/*  background-color: #325d88;
+  border-color: #325d88;
+  blue color used in primary*/
 }
 .navbar-default .navbar-brand {
   color: #ffffff;
@@ -4511,7 +4514,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   color: #8e8c84;
 }
 .navbar-default .navbar-nav > li > a {
-  color: #98978b;
+  color: #4c4c4c;
 }
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
@@ -6907,4 +6910,156 @@ input:focus,
 .panel-default .panel-title,
 .panel-default .panel-footer {
   color: #98978b;
+}
+
+.boardgame_detail_info {
+  background: #eee;
+  margin-bottom: 0;
+}
+.boardgame_detail_description{
+  background: #eee;
+  margin-bottom: 0;
+}
+.boardgame_detail_tags{
+  background: #eee;
+}
+
+.boardgame_detail_info_image {
+  width: 300px;
+  height: 300px;
+}
+
+.boardgame_detail_info_misc {
+  height: 300px;
+  padding-left: 20px;
+  margin-left: 0px;
+}
+
+.boardgame_detail_info_misc_header {
+  height: 100px;
+}
+
+
+.rating {
+  height: 100px;
+  width: 100px;
+  background-color: white;
+}
+#octagon {
+  width: 100px;
+  height: 100px;
+  background: #1cb7bf;
+  position: relative;
+}
+
+#octagon:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-bottom: 29px solid #1cb7bf;
+  border-left: 29px solid #eee;
+  border-right: 29px solid #eee;
+  width: 100px;
+  height: 0;
+}
+
+#octagon:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-top: 29px solid #1cb7bf;
+  border-left: 29px solid #eee;
+  border-right: 29px solid #eee;
+  width: 100px;
+  height: 0;
+}
+
+#bgg_bayesrating {
+  left: 23px;
+  top: 32px;
+  font-size: 200%;
+  color: white;
+  position: relative;
+}
+
+.boardgame_detail_info_misc_table {
+  margin-top: 10px;
+}
+
+.boardgame_detail_info_misc_other {
+}
+
+p {
+  margin-bottom: 0;
+}
+
+#id_q {
+  width: 250px;
+}
+
+.boardgames_body {
+  background-color: #f8f5f0;
+}
+
+.boardgame_title_star {
+  height: 22px;
+  text-align: right;
+  padding-right: 0px;
+  top: 0.4em;
+}
+
+.boardgame_detail_info_buttons {
+  padding-top: 15px;
+  position: relative;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  margin: auto;
+}
+
+.favorite_button .glyphicon-heart {
+  color: grey;
+}
+
+.favorited_button .glyphicon-heart {
+  color: red;
+}
+
+.favorite_button {
+  margin: auto;
+  position: relative;
+    top:0;
+    bottom: 0;
+    left: 50px;
+    right: 0;
+  color: black;
+  font-weight: bold;
+  background-color: white;
+}
+
+.favorite_button:hover {
+  color: #1cb7bf;
+}
+
+.favorited_button {
+  margin: auto;
+  position: relative;
+    top:0;
+    bottom: 0;
+    left: 50px;
+    right: 0;
+  color: black;
+  font-weight: bold;
+}
+
+.main_navbar {
+  background-color: #27AE60 ;
+  border-color: #27AE60 ;
+}
+
+.search_button {
+  background-color: #27AE60 ;
 }
