@@ -76,16 +76,35 @@ def add_attendee(request, event_id, username_to_add):
     event = get_object_or_404(Event, id=event_id)
     try:
         to_add = User.objects.get(username=username_to_add, deleted=False)
-        try: to_add_profile = UserProfile.objects.get(user=to_add)
-            if to_add_profile.attending_events.get(id=event_id):
+        try: 
+            to_add_profile = UserProfile.objects.get(user=to_add)
+            try:
+                ok = to_add_profile.attending_events.get(id=event_id)
                 message="User already attending"
-            else:
+            except ObjectDoesNotExist:
                 to_add_profile.attending_events.add(event)
                 message="User successfully added"
         except ObjectDoesNotExist:
             message="User needs to set up their profile!"
     except ObjectDoesNotExist:
         message="User does not exist"
+
+def remove_attendee(request, event_id, user_to_remove):
+    event = get_object_or_404(Event, id=event_id)
+    try:
+        to_remove = User.objects.get(user_to_remove, deleted=False)
+        try:
+            to_remove_profile = UserProfile.objects.get(user=to_remove)
+            try:
+                ok = to_remove_profile.attending_events.get(id=event_id)
+                to_remove_profile.attending_events.remove(id=event_id)
+                message="User has been successfully removed."
+            except ObjectDoesNotExist:
+                message="User is not attending this event."
+        except ObjectDoesNotExist:
+            message="User's profile does not exist"
+    except ObjectDoesNotExist:
+        message="User does not exist!"
 
 def create_event(request):
     if request.user.is_authenticated():
