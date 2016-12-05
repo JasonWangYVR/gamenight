@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-{% include "events/head.html" %}
-</head>
-<body>
+
   <!-- <h1> Gamenight </h1> --><!-- 
   <a href="{% url 'authentication:signup' %}">Sign up</a>
   <a href="{% url 'authentication:login' %}">Log In</a>
@@ -51,8 +46,19 @@
 						</div>
 					{% endif %}
 				{% endfor %}
+				<div class="col-xs-12 col-md-offset-1">
+			        {% if events.has_previous %}
+			            <a href="?page={{ events.previous_page_number }}" class="boardgames_prev_page btn btn-primary col-md-2">previous</a>
+			        {% else %}
+			        	<span class="col-md-2"></span>
+			        {% endif %}
+			        <span class="current btn btn-primary col-md-3">
+			            Page {{ events.number }} of {{ events.paginator.num_pages }}.
+			        </span>
+			        {% if events.has_next %}
+			            <a href="?page={{ events.next_page_number }}" class="boardgames_next_page btn btn-primary col-md-2">next</a>
+			        {% endif %}
+				</div>
 			</div>
 		</div>
 	</div>
-</body>
-</html>
