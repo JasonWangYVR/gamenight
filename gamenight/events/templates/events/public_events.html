@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include "events/head.html" %}
+</head>
+<body>
+ {% include "boardgames/navbar.html" %}
+  <!-- <h1> Gamenight </h1> -->
+  {% include "home/sidebar.html" %}<!-- 
+  <a href="{% url 'authentication:signup' %}">Sign up</a>
+  <a href="{% url 'authentication:login' %}">Log In</a>
+  <p>
+  <a href="{% url 'boardgames:index' %}">Board Games</a>
+</p>
+<p>
+  <a href="{% url 'events:index' %}">Event Index</a>
+</p> -->
+	<div class="public_events col-xs-12 col-md-5">
+		<div class="panel panel-primary">
+			<div class="public_events_heading panel-heading col-md-12">
+				<h2>Public Events</h2>
+			</div>
+			<div class="public_events_body panel panel-default panel-body col-md-12">
+				{% for event in events %}
+					{% if forloop.counter|divisibleby:2 %}
+						<div class="public_events_even">
+						<a class="public_events_a" href="{% url 'events:detail' event.id %}">
+							<b>{{event.title}}</b>
+							<br>
+							{{event.event_date}},
+							{{event.location}}
+							<br>
+							<br>
+							</a>
+						</div>
+					{% else %}
+						<div class="public_events_odd">
+						<a class="public_events_a" href="{% url 'events:detail' event.id %}">
+							<b>{{event.title}}</b>
+							<br>
+							{{event.event_date}},
+							{{event.location}}
+							<br>
+							<br>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	{% include "home/rightsidebar.html" %}
+</body>
+</html>

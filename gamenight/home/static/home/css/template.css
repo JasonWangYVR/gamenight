@@ -6954,7 +6954,7 @@ input:focus,
 }
 
 .upcoming_events_even {
-	right: 15px;
+
 	border-radius: 10px;
 	background-color: #325d88;
 }
@@ -6965,6 +6965,8 @@ input:focus,
 }
 
 .upcoming_events_a {
-	right: 15px;
+	position: relative;
+    left: 2.4em;
+	top: 0.5em;
 	color: black;
 }

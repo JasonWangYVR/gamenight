@@ -198,20 +198,23 @@ def vote(request, choice_id):
 def public_events(request):
     title = 'Public Events'
     #TODO: filter for public
-    event_list = Event.objects.filter()
+    #event_list = Event.objects.filter(private_event=False)
+    event_list = Event.objects.all()
     page = request.GET.get('page')
     paginator = Paginator(event_list, 10)
     try:
-        event = paginator.page(page)
+        events = paginator.page(page)
     except PageNotAnInteger:
     # If page is not an integer, deliver first page.
-        event = paginator.page(1)
+        events = paginator.page(1)
     except EmptyPage:
     # If page is out of range (e.g. 9999), deliver last page of results.
-        event = paginator.page(paginator.num_pages)
+        events = paginator.page(paginator.num_pages)
     #Pagination End
     context = {
-        'event': event,
-        'title': title
+        'events': events,
+        'title': title,
+		'search': SearchForm(),
+		'user': request.user,
         }
     return render(request, 'events/public_events.html', context)
