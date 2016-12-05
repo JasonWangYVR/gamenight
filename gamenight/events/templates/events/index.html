@@ -4,20 +4,41 @@
     {% include "events/head.html" %}
   </head>
 <body>
-{% include "boardgames/navbar.html" %}
-{% include "home/sidebar.html" %}
-{% if events %}
-<div class="col-md-7 col-sm-9 col-xs-12">
-<h1 class="mainheading">Recent Events List</h1>
-    <ul>
-    {% for e in events %}
-        <li class="listitem"><a href="{% url 'events:detail' e.id %}">{{ e }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No events are available.</p>
-{% endif %}
-<a href="{% url 'events:create' %}">Create Event</a>
-</div>
-{% include "events/footer.html" %}
+
+  {% include "boardgames/navbar.html" %}
+  {% include "home/sidebar.html" %}
+	<div class="public_events col-xs-12 col-md-5">
+		<div class="panel panel-primary">
+			<div class="public_events_heading panel-heading col-md-12">
+				<h2>Recent Events List</h2>
+
+			</div>
+			<div class="public_events_body panel panel-default panel-body col-md-12">
+				    {% if events %}
+						{% for event in events %}
+							<div class="public_events_even">
+							<a class="public_events_a" href="{% url 'events:detail' event.id %}">
+								<b>{{event.title}}</b>
+								<br>
+								{{event.event_date}},
+								{{event.location}}
+								<br>
+								<br>
+								</a>
+							</div>
+						{% endfor %}
+					{% else %}
+						<div class="public_events_odd">
+							<b>No Events Are Available</b>
+							
+						</div>
+					{% endif %}
+			</div>
+		</div>
+	</div>
+	{% include "home/rightsidebar.html" %}
+	{% include "events/footer.html" %}
+
 </body>
+</html>
+	

@@ -4,8 +4,10 @@ from boardgames.forms import SearchForm
 from django.contrib.auth.models import User
 from authentication.models import UserProfile
 from events.models import Event
+from events.forms import SearchEventsForm
 
 def index(request):
+
 	if request.user.is_authenticated():
 		user = UserProfile.objects.get(user=request.user)
 		attending = user.attending_events.all()
