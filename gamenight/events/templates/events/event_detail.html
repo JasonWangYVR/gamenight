@@ -96,6 +96,7 @@
 <p><a href="{% url 'events:index' %}">Back to Event List</a></p>
 
  <p><a href="{% url 'events:delete_event' event.id %}"> Delete Event</a></li></p>
+ {% include "events/attendee_manager.html" %}
  {% include "events/footer.html" %}
  </body>
  

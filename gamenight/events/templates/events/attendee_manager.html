@@ -1,0 +1,24 @@
+<ul class='attending-users'>
+{% if is_organizer == True %}
+  {% for attendee in attendees %}
+    <li>{{attendee.user.username}}
+      {% if attendee.user != request.user %}
+        <form class="remove-attendee" action="{% url 'events:remove_attendee' event.id attendee.user.username%}" method="POST" id="remove-attendee">
+          <button class="btn" value="Remove"></button>
+          {% csrf_token %}
+        </form>
+      {% endif %}
+    </li>
+  {% endfor %}
+  <form class="add-attendee" action="{% url 'events:add_attendee' event.id %}" method="POST" name="form" id="add-attendee">
+  {{add_form}}
+  <button value="Submit">Submit</button>
+  {% csrf_token %}
+  </form>
+{% else %}
+  {% for attendee in attendees %}
+    <li>{{attendee.user.username}}</li>
+  {% endfor %}
+{% endif %}
+</ul>
+
