@@ -28,9 +28,23 @@ def index(request):
         user = UserProfile.objects.get(user=request.user)
         attending = user.attending_events.all()
 
+        event = attending.order_by('event_date')[:5] # right sidebar
+
+        page = request.GET.get('page')
+        paginator = Paginator(attending, 10)
+        try:
+            events = paginator.page(page)
+        except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+            events = paginator.page(1)
+        except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+            events = paginator.page(paginator.num_pages)
+
         context = {
-            'events': attending,
+            'events': events,
     		'search': SearchForm(),
+            'events_u':event,
                 }
         return render(request, 'events/index.html', context)
 
@@ -428,8 +442,8 @@ def vote(request, choice_id):
 def public_events(request):
     title = 'Public Events'
     #TODO: filter for public
-    #event_list = Event.objects.filter(private_event=False)
-    event_list = Event.objects.all()
+    event_list = Event.objects.filter(private_event=False)
+    # event_list = Event.objects.all()
     page = request.GET.get('page')
     paginator = Paginator(event_list, 10)
     try:

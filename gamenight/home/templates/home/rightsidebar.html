@@ -9,7 +9,7 @@
                             <h7>Upcoming Events</h7>
                         </div>
                         <div class="upcoming_events_body panel panel-default panel-body col-md-12">
-							{% for event in events %}
+							{% for event in events_u %}
 								{% if forloop.counter|divisibleby:2 %}
 									<div class="upcoming_events_even">
 									<a class="upcoming_events_a" href="{% url 'events:detail' event.id %}">

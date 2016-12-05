@@ -166,8 +166,13 @@ def edit_personal(request):
 def favourite_list(request):
     if request.user.is_authenticated():
         user_profile = UserProfile.objects.get(user=request.user, deleted=False)
+
+        # right sidebar
+        attending = user_profile.attending_events.all()
+        event = attending.order_by('event_date')[:5]
+
         favourite_bg = user_profile.favorite_games.all()
-        context = {'search': SearchForm(), 'favourites': favourite_bg}
+        context = {'search': SearchForm(), 'favourites': favourite_bg, 'events_u': event}
         return render(request, 'authentication/favourite_list.html', context)
     else:
         return HttpResponseRedirect(reverse('authentication:login'))
