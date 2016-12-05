@@ -4,7 +4,7 @@
     <li>{{attendee.user.username}}
       {% if attendee.user != request.user %}
         <form class="remove-attendee" action="{% url 'events:remove_attendee' event.id attendee.user.username%}" method="POST" id="remove-attendee">
-          <button class="btn" value="Remove"></button>
+          <button class="btn btn-primary btn-sm" >Remove</button>
           {% csrf_token %}
         </form>
       {% endif %}
