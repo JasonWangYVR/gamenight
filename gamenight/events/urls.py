@@ -36,6 +36,8 @@ urlpatterns = [
     url(r'^(?P<choice_id>[0-9]+)/vote/$', views.vote, name='vote'),
 
     url(r'^public-events/$', views.public_events, name='public_events',),
+	
+	url(r'^searchevent/$', views.search_event, name='search_event')
 
     #creates choice
     #url(r'^addq/(?P<pk>\d+)/$', views.CreateChoiceView.as_view(), name='addchoice',),

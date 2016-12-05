@@ -15,7 +15,7 @@ from django.utils import timezone
 #included models
 from .models import Event, Question, Choice, Message, User
 #include forms
-from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm
+from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm, SearchEventsForm
 from boardgames.forms import SearchForm
 
 def index(request):
@@ -218,3 +218,24 @@ def public_events(request):
 		'user': request.user,
         }
     return render(request, 'events/public_events.html', context)
+
+def search_event(request):
+	title = 'Search Results'
+	# Pagination Start
+	if request.method == 'GET':
+			search_form = SearchEventsForm(request.GET)
+			if search_form.is_valid():
+				query = search_form.cleaned_data['q']
+				#filter for public events
+				#pub_events = Event.objects.filter(private_event=False)
+				qobj = Q()
+				qobj.add(Q(title__icontains=query), Q.OR)
+				query2 = Event.objects.filter(qobj)
+	               
+				context = {'events': query2, 'title': title, 'query': query, 'search': SearchForm(), 'user': request.user, 'search_p': SearchEventsForm()}
+				return render(request, 'events/search_event.html', context)
+
+	context = {
+		'search': SearchForm(),
+	}
+	return render(request, 'boardgames/search.html', context)
