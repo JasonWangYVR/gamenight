@@ -11,6 +11,7 @@ class Event(models.Model):
     created_on = models.DateTimeField(default=timezone.now)
     last_edited_date = models.DateTimeField(default=timezone.now)
     location = models.CharField(max_length=100)
+    private_event = models.BooleanField(default = False)
 
     def publish(self):
 	    self.last_edited_date= timezone.now()

@@ -14,6 +14,7 @@ from django.db.models import Q
 from django.utils import timezone
 #included models
 from .models import Event, Question, Choice, Message, User
+from authentication.models import UserProfile
 #include forms
 from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm, SearchEventsForm
 from boardgames.forms import SearchForm
@@ -31,37 +32,65 @@ def index(request):
 	
 def detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
-    question = Question.objects.filter(on_event=event.pk)
-    choice = Choice.objects.filter(question_id__in=question)
-    message = Message.objects.filter(on_event=event.pk)
+    if event.private_event == False:
+        question = Question.objects.filter(on_event=event.pk)
+        choice = Choice.objects.filter(question_id__in=question)
+        message = Message.objects.filter(on_event=event.pk)
 
-    context = {
-        'event': event,
-        'question' : question,
-        'choice' : choice,
-		'message' : message,
-		'search': SearchForm(),
-            }
-    return render(request, 'events/event_detail.html', context)
+        context = {
+            'event': event,
+            'question' : question,
+            'choice' : choice,
+    		'message' : message,
+    		'search': SearchForm(),
+                }
+        return render(request, 'events/event_detail.html', context)
+    else:
+        if request.user.is_authenticated():
+            user = UserProfile.objects.get(user=request.user, deleted=False)
+            try:
+                is_attending = user.attending_events.get(id=event_id)
+            except ObjectDoesNotExist:
+                return redirect('home:index') #Not going to this event
+            question = Question.objects.filter(on_event=event.pk)
+            choice = Choice.objects.filter(question_id__in=question)
+            message = Message.objects.filter(on_event=event.pk)
+
+            context = {
+                'event': event,
+                'question' : question,
+                'choice' : choice,
+                'message' : message,
+                'search': SearchForm(),
+                    }
+            return render(request, 'events/event_detail.html', context)
+        else:
+            return redirect('authentication:login')
+
 
 def create_event(request):
-    if request.method == "POST":
-        form = EventForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.organizer = request.user
-            #post.created_on = timezone.now()
-            post.save()
-            return redirect('events:index')
+    if request.user.is_authenticated():
+        if request.method == "POST":
+            form = EventForm(request.POST)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.organizer = request.user
+                #post.created_on = timezone.now()
+                post.save()
+
+                profile = UserProfile.objects.get(user=request.user, deleted=False)
+                profile.attending_events.add(post)
+                return redirect('events:index')
+        else:
+            form = EventForm()
+            return render(request, 'events/create_event.html', {'form': form})
     else:
-        form = EventForm()
-    return render(request, 'events/create_event.html', {'form': form})
-	
+        return redirect('authentication:login')
+
 def edit_event(request, event_id):
 	if request.user.is_authenticated():
 		post = get_object_or_404(Event, pk=event_id)
-		if post.organizer == request.user:
-	
+		if post.organizer == request.user:	
 			if request.method == "POST":
 				form = EventForm(request.POST, instance=post)
 				if form.is_valid():
@@ -73,126 +102,248 @@ def edit_event(request, event_id):
 				form = EventForm(instance=post)
 				return render(request, 'events/edit_event.html', {'form': form})
 		else:
-			return redirect('home:index')
+			return redirect('home:index') #must be owner of event, new page?
 	else:
 		return redirect('authentication:login')
 
 def create_message(request, event_id):
-    if request.method == "POST":
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.posted_by = request.user
-            post.on_event = get_object_or_404(Event, pk=event_id)
-            post.save()
-            return redirect('events:detail',event_id)
+    if request.user.is_authenticated():
+        event = get_object_or_404(Event, pk=event_id)
+        if event.private_event == False:
+            if request.method == "POST":
+                form = MessageForm(request.POST)
+                if form.is_valid():
+                    post = form.save(commit=False)
+                    post.posted_by = request.user
+                    post.on_event = event
+                    post.save()
+                    return redirect('events:detail',event_id)
+            else:
+                form = MessageForm()
+            return render(request, 'events/create_message.html', {'form': form})
+        else:
+            try:
+                is_attending = user.attending_events.get(id=event_id)
+                user = UserProfile.objects.get(user=request.user, deleted=False)
+                if request.method == "POST":
+                    form = MessageForm(request.POST)
+                    if form.is_valid():
+                        post = form.save(commit=False)
+                        post.posted_by = request.user
+                        post.on_event = event
+                        post.save()
+                        return redirect('events:detail',event_id)
+                else:
+                    form = MessageForm()
+                return render(request, 'events/create_message.html', {'form': form})
+            except ObjectDoesNotExist:
+                return rediect('home:index') #Not going to this event
     else:
-        form = MessageForm()
-    return render(request, 'events/create_message.html', {'form': form})
+        return redirect('authentication:login')
 
 def create_question(request, event_id):
-    if request.method == "POST":
-        form = QuestionForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.on_event = get_object_or_404(Event, pk=event_id)
-            #post.created_on = timezone.now()
-            post.save()
-            return redirect('events:detail',event_id)
+    if request.user.is_authenticated():
+        event = get_object_or_404(Event, pk=event_id)
+        if event.private_event == False:
+            if event.organizer == request.user:
+                if request.method == "POST":
+                    form = QuestionForm(request.POST)
+                    if form.is_valid():
+                        post = form.save(commit=False)
+                        post.on_event = event
+                        #post.created_on = timezone.now()
+                        post.save()
+                        return redirect('events:detail',event_id)
+                else:
+                    form = QuestionForm()
+                return render(request, 'events/create_question.html', {'form': form})
+            else:
+                return redirect('home:index') #maybe a new page saying that he can't edit it unless he is organizer
+        else:
+            try:
+                is_attending = user.attending_events.get(id=event_id)
+                user = UserProfile.objects.get(user=request.user, deleted=False)
+                if event.organizer == user:
+                    if request.method == "POST":
+                        form = QuestionForm(request.POST)
+                        if form.is_valid():
+                            post = form.save(commit=False)
+                            post.on_event = event
+                            #post.created_on = timezone.now()
+                            post.save()
+                            return redirect('events:detail',event_id)
+                    else:
+                        form = QuestionForm()
+                    return render(request, 'events/create_question.html', {'form': form})
+                else:
+                    return redirect('home:index')
+            except ObjectDoesNotExist:
+                return rediect('home:index') #Not going to this event
     else:
-        form = QuestionForm()
-    return render(request, 'events/create_question.html', {'form': form})
+        return redirect('authentication:login')
+            
 
 def create_choice(request, question_id):
-    if request.method == "POST":
-        form = ChoiceForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.question = get_object_or_404(Question, pk=question_id)
-            post.save()
-            return redirect('events:index')
+    if request.user.is_authenticated():
+        question = get_object_or_404(Question, pk=question_id)
+        if request.method == "POST":
+            form = ChoiceForm(request.POST)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.question = question
+                post.save()
+                return redirect('events:index')
+        else:
+            form = ChoiceForm()
+        return render(request, 'events/create_choice.html', {'form': form})
     else:
-        form = ChoiceForm()
-    return render(request, 'events/create_choice.html', {'form': form})
+        return redirect('authentication:login')
 
 def edit_question(request, question_id):
-    post = get_object_or_404(Question, pk=question_id)
-    if request.method == "POST":
-        form = QuestionForm(request.POST, instance=post)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.organizer = request.user
-            post.save()
-            return redirect('events:index')
+    if request.user.is_authenticated():
+        post = get_object_or_404(Question, pk=question_id)
+        if post.on_event.organizer == request.user:
+            if request.method == "POST":
+                form = QuestionForm(request.POST, instance=post)
+                if form.is_valid():
+                    post = form.save(commit=False)
+                    post.organizer = request.user
+                    post.save()
+                    return redirect('events:index')
+            else:
+                form = QuestionForm(instance=post)
+            return render(request, 'events/create_question.html', {'form': form})
+        else:
+            return redirect('home:index') #not his question to edit
     else:
-        form = QuestionForm(instance=post)
-    return render(request, 'events/edit_question.html', {'form': form})
+        return redirect('authentication:login')
 	
 def edit_choice(request, choice_id):
-    post = get_object_or_404(Choice, pk=choice_id)
-    if request.method == "POST":
-        form = ChoiceForm(request.POST, instance=post)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.organizer = request.user
-            post.save()
-            return redirect('events:index')
+    if request.user.is_authenticated():
+        post = get_object_or_404(Choice, pk=choice_id)
+        if post.question.on_event.organizer == request.user:
+            if request.method == "POST":
+                form = ChoiceForm(request.POST, instance=post)
+                if form.is_valid():
+                    post = form.save(commit=False)
+                    post.organizer = request.user
+                    post.save()
+                    return redirect('events:index')
+            else:
+                form = ChoiceForm(instance=post)
+            return render(request, 'events/create_choice.html', {'form': form})
+        else:
+            return redirect('home:index') #Not his choice to alter?
     else:
-        form = ChoiceForm(instance=post)
-    return render(request, 'events/edit_choice.html', {'form': form})
+        return redirect('authentication:login')
 
 def edit_message(request, message_id):
-    post = get_object_or_404(Message, pk=message_id)
-    if request.method == "POST":
-        form = MessageForm(request.POST, instance=post)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.organizer = request.user
-            post.save()
-            return redirect('events:index')
+    if request.user.is_authenticated():
+        post = get_object_or_404(Message, pk=message_id)
+        if post.posted_by == request.user:
+            if request.method == "POST":
+                form = MessageForm(request.POST, instance=post)
+                if form.is_valid():
+                    post = form.save(commit=False)
+                    post.organizer = request.user
+                    post.save()
+                    return redirect('events:index')
+            else:
+                form = MessageForm(instance=post)
+            return render(request, 'events/create_message.html', {'form': form})	
+        else:
+            return redirect('home:index') #Not his message to alter
     else:
-        form = MessageForm(instance=post)
-    return render(request, 'events/edit_message.html', {'form': form})	
+        return redirect('authentication:login')
 
 
 def delete_question(request, question_id):
-    instance = get_object_or_404(Question, pk=question_id)
-    instance.delete()
-    return redirect('events:index')
+    if request.user.is_authenticated():
+        instance = get_object_or_404(Question, pk=question_id)
+        if instance.on_event.organizer == request.user:
+            instance.delete()
+            return redirect('events:index')
+        else:
+            return redirect('home:index') #not his to touch
+    else:
+        return redirect('authentication:login')
 
 def delete_message(request, message_id):
-    instance = get_object_or_404(Message, pk=message_id)
-    instance.delete()
-    return redirect('events:index')
+    if request.user.is_authenticated():
+        instance = get_object_or_404(Message, pk=message_id)
+        if instance.posted_by == request.user:
+            instance.delete()
+            return redirect('events:index')
+        else:
+            return redirect('home:index') #not his to touch
+    else:
+        return redirect('authentication:login')
 
 def delete_choice(request, choice_id):
-    instance = get_object_or_404(Choice, pk=choice_id)
-    instance.delete()
-    return redirect('events:index')
+    if request.user.is_authenticated():
+        instance = get_object_or_404(Choice, pk=choice_id)
+        if instance.question.on_event.organizer == request.user:
+            instance.delete()
+            return redirect('events:index')
+        else:
+            return redirect('home:index') #Not his to touch
+    else:
+        return redirect('authentication:login')
 
 def delete_event(request, event_id):
-    instance = get_object_or_404(Event, pk=event_id)
-    instance.delete()
-    return redirect('events:index')
+    if request.user.is_authenticated():
+        instance = get_object_or_404(Event, pk=event_id)
+        if instance.organizer == request.user:
+            instance.delete()
+            return redirect('events:index')
+        else:
+            return redirect('home:index') #not his to touch
+    else:
+        return redirect('authentication:login')
 
 
 def vote(request, choice_id):
-    choice = get_object_or_404(Choice, pk=choice_id)
-    try:
-        selected_choice = choice
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form.
-        return render(request, 'events/index.html', {
-            'choice': choice,
-            'error_message': "You didn't select a choice.",
-        })
+    if request.user.is_authenticated():
+        choice = get_object_or_404(Choice, pk=choice_id)
+        if choice.question.on_event.private_event == False:
+            try:
+                selected_choice = choice
+            except (KeyError, Choice.DoesNotExist):
+                # Redisplay the question voting form.
+                return render(request, 'events/index.html', {
+                    'choice': choice,
+                    'error_message': "You didn't select a choice.",
+                })
+            else:
+                selected_choice.votes += 1
+                selected_choice.save()
+                # Always return an HttpResponseRedirect after successfully dealing
+                # with POST data. This prevents data from being posted twice if a
+                # user hits the Back button.
+                return HttpResponseRedirect(reverse('events:index'))
+        else:
+            try:
+                is_attending = user.attending_events.get(id=event_id)
+                try:
+                    selected_choice = choice
+                except (KeyError, Choice.DoesNotExist):
+                    # Redisplay the question voting form.
+                    return render(request, 'events/index.html', {
+                        'choice': choice,
+                        'error_message': "You didn't select a choice.",
+                    })
+                else:
+                    selected_choice.votes += 1
+                    selected_choice.save()
+                    # Always return an HttpResponseRedirect after successfully dealing
+                    # with POST data. This prevents data from being posted twice if a
+                    # user hits the Back button.
+                    return HttpResponseRedirect(reverse('events:index'))
+
+            except ObjectDoesNotExist:
+                return redirect('home:index')
     else:
-        selected_choice.votes += 1
-        selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('events:index'))
+        return redirect('authentication:login')
 
 
 def public_events(request):
