@@ -22,12 +22,15 @@ from boardgames.forms import SearchForm
 def index(request):
     #title = 'GameNight Event List'
     #TODO: filter for user created and invited
-    event = Event.objects.order_by('title')
-    context = {
-        'event': event,
-		'search': SearchForm(),
-            }
-    return render(request, 'events/index.html', context)
+    if request.user.is_authenticated():
+        user = UserProfile.objects.get(user=request.user)
+        attending = user.attending_events.all()
+
+        context = {
+            'events': attending,
+    		'search': SearchForm(),
+                }
+        return render(request, 'events/index.html', context)
 
 	
 def detail(request, event_id):

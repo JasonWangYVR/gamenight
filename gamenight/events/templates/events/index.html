@@ -7,10 +7,10 @@
 
 {% include "boardgames/navbar.html" %}
 
-{% if event %}
+{% if events %}
 <h1>Recent Events List</h1>
     <ul>
-    {% for e in event %}
+    {% for e in events %}
         <li><a href="{% url 'events:detail' e.id %}">{{ e }}</a></li>
     {% endfor %}
     </ul>
