@@ -7,7 +7,7 @@ from authentication.models import UserProfile
 class Event(models.Model):
     title = models.CharField(max_length=140)
     organizer = models.ForeignKey('auth.User')
-    attending_users = models.ManyToManyField('authentication.UserProfile')
+    # attending_users = models.ManyToManyField('authentication.UserProfile')
     event_date = models.DateTimeField('Event Date')
     created_on = models.DateTimeField(default=timezone.now)
     last_edited_date = models.DateTimeField(default=timezone.now)

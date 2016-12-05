@@ -5,23 +5,36 @@
 </head>
 <body>
  {% include "boardgames/navbar.html" %}
-  <h1> Gamenight </h1>
-  {% include "home/sidebar.html" %}<!-- 
-  <a href="{% url 'authentication:signup' %}">Sign up</a>
-  <a href="{% url 'authentication:login' %}">Log In</a>
-  <p>
-  <a href="{% url 'boardgames:index' %}">Board Games</a>
-</p>
-<p>
-  <a href="{% url 'events:index' %}">Event Index</a>
-</p> -->
-	<div class="public_events col-xs-12 col-md-8">
+  <!-- <h1> Gamenight </h1> -->
+  {% include "home/sidebar.html" %}
+	<div class="favourite_list col-xs-12 col-md-5">
 		<div class="panel panel-primary">
-			<div class="public_events_heading panel-heading col-md-12">
+			<div class="favourite_list_heading panel-heading col-md-12">
 				<h2>Favourite Boardgames</h2>
 			</div>
 			<div class="favourite_list_body panel panel-default panel-body col-md-12">
-				<div class="favourite_list_body_info col-md-3">
+				<div class="favourite_list_info col-md-12">
+					{% for favourite in favourites %}
+						<div class="favourite_list_info_title col-md-12 col-md-offset-4">
+							<h4>{{favourite.name}}</h4>
+						</div>
+						<div class="favourite_list_info_img col-md-12 col-md-offset-3">
+							{% if favourite.img_link %}
+								<a href="{% url 'boardgames:detail' favourite.id favourite.name|slugify %}" class="boardgame_detail_link"><img src="{{favourite.img_link}}" alt="{{favourite.name}}" height="300" width="300"></a>
+							{% else %}
+							{% load static %}
+								<span><img src="{% static 'boardgames/images/placeholder.png' %}" alt="placeholder" height="300" width="300"></span>
+							{% endif %}
+						</div>
+						<span class="favourite_list_buttons col-md-12 col-md-offset-4">
+							<form class="favourite_list_form" action="{% url 'authentication:remove_favourite' favourite.id %}" method="POST" id="favorited_form">
+								{% csrf_token %}
+							</form>
+							<a href="{% url 'boardgames:detail' favourite.id favourite.name|slugify %}" class="details_favourite btn btn-primary btn-xs">Details</a>
+							<button class="favorite_list_remove_button btn btn-primary btn-xs" type="submit" form="favorited_form" value="Submit">Remove Favourite</button>
+						</span>
+						<span class="line_break col-md-12"><hr></span>
+					{% endfor %}
 				</div>
 			</div>
 		</div>

@@ -14,16 +14,16 @@
       <ul class="nav navbar-nav">
         <li><a href="{% url 'home:index' %}">Home<span class="sr-only">(current)</span></a></li>
         <!--Add when user is available-->
-        <!-- {% if user %} fill in -->
+        {% if user.is_authenticated %}
         <li><a href="{% url 'authentication:profile' %}">Profile</a></li>
         <li><a href="{% url 'boardgames:index' %}">Boardgames</a></li>
         <li><a href="{% url 'events:index' %}">Events</a></li>
         <li><a href="{% url 'authentication:logout' %}">Logout</a></li>
-        <!-- {% else %} -->
-        <!-- <li><a href="{% url 'boardgames:index' %}">Boardgames</a></li> -->
-        <!-- <li><a href="{% url 'authentication:signup' %}">Create Account</a></li> -->
-        <!-- <li><a href="{% url 'authentication:login' %}">Login</a></li> -->
-        <!-- {% endif %} -->
+        {% else %}
+        <li><a href="{% url 'boardgames:index' %}">Boardgames</a></li>
+        <li><a href="{% url 'authentication:signup' %}">Create Account</a></li>
+        <li><a href="{% url 'authentication:login' %}">Login</a></li>
+        {% endif %}
 
 <!--    Dropdown If Needed     
         <li class="dropdown">

@@ -19,8 +19,6 @@
 					    {{ form.as_p }}
 					    <button type="submit">Submit </button>
 					  </form>
-            {% else %}
-            <p><a href="{%url 'authentication:create_profile' %}">Continue to set up profile</a></p>
 					  {% endif %}
 					{% endblock %}
 				</div>
