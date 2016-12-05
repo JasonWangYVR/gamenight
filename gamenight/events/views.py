@@ -64,7 +64,7 @@ def edit_event(request, event_id):
             return redirect('events:index')
     else:
         form = EventForm(instance=post)
-    return render(request, 'events/create_event.html', {'form': form})
+    return render(request, 'events/edit_event.html', {'form': form})
 
 def create_message(request, event_id):
     if request.method == "POST":
