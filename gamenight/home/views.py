@@ -6,24 +6,19 @@ from authentication.models import UserProfile
 from events.models import Event
 
 def index(request):
-	user = UserProfile.objects.get(user=request.user)
-	attending = user.attending_events.all()
-	event=attending.order_by('event_date')[:5]
-        #return render(request, 'home/index.html', {'search': SearchForm(), 'user':request.user}) #HEAD
-
- #   if request.user.is_authenticated():
- #       try:
-  #          context = {
- #               'user':request.user,
- #           }
- #           return render(request, 'home/index.html', context)
- #       except ObjectDoesNotExist:
- #           return redirect('authentication:sign_up')
- #   else:
- #       return render(request, 'home/index.html', {'search': SearchForm()})
-	context = {
-		'user':request.user,
-		'events':event,
-		'search':SearchForm(),
-	}
-	return render(request, 'home/index.html', context)
+	if request.user.is_authenticated():
+		user = UserProfile.objects.get(user=request.user)
+		attending = user.attending_events.all()
+		event = attending.order_by('event_date')[:5]
+		context = {
+			'user':request.user,
+			'events':event,
+			'search':SearchForm(),
+		}
+		return render(request, 'home/index.html', context)
+	else:
+		context = {
+			'user':request.user,
+			'search':SearchForm(),
+		}
+		return render(request, 'home/index.html', context)
