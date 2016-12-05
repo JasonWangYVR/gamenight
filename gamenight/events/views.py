@@ -56,17 +56,36 @@ def detail(request, event_id):
             choice = Choice.objects.filter(question_id__in=question)
             message = Message.objects.filter(on_event=event.pk)
 
+            is_organizer = False
+            if request.user == event.organizer:
+                is_organizer = True
+
             context = {
                 'event': event,
                 'question' : question,
                 'choice' : choice,
                 'message' : message,
                 'search': SearchForm(),
+                'is_organizer': is_organizer,
                     }
             return render(request, 'events/event_detail.html', context)
         else:
             return redirect('authentication:login')
 
+def add_attendee(request, event_id, username_to_add):
+    event = get_object_or_404(Event, id=event_id)
+    try:
+        to_add = User.objects.get(username=username_to_add, deleted=False)
+        try: to_add_profile = UserProfile.objects.get(user=to_add)
+            if to_add_profile.attending_events.get(id=event_id):
+                message="User already attending"
+            else:
+                to_add_profile.attending_events.add(event)
+                message="User successfully added"
+        except ObjectDoesNotExist:
+            message="User needs to set up their profile!"
+    except ObjectDoesNotExist:
+        message="User does not exist"
 
 def create_event(request):
     if request.user.is_authenticated():
