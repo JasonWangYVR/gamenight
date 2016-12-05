@@ -16,6 +16,7 @@ from django.utils import timezone
 from .models import Event, Question, Choice, Message, User
 #include forms
 from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm
+from boardgames.forms import SearchForm
 
 def index(request):
     #title = 'GameNight Event List'
@@ -23,9 +24,11 @@ def index(request):
     event = Event.objects.order_by('title')
     context = {
         'event': event,
+		'search': SearchForm(),
             }
     return render(request, 'events/index.html', context)
 
+	
 def detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     question = Question.objects.filter(on_event=event.pk)
@@ -37,6 +40,7 @@ def detail(request, event_id):
         'question' : question,
         'choice' : choice,
 		'message' : message,
+		'search': SearchForm(),
             }
     return render(request, 'events/event_detail.html', context)
 
@@ -54,17 +58,24 @@ def create_event(request):
     return render(request, 'events/create_event.html', {'form': form})
 	
 def edit_event(request, event_id):
-    post = get_object_or_404(Event, pk=event_id)
-    if request.method == "POST":
-        form = EventForm(request.POST, instance=post)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.organizer = request.user
-            post.save()
-            return redirect('events:index')
-    else:
-        form = EventForm(instance=post)
-    return render(request, 'events/edit_event.html', {'form': form})
+	if request.user.is_authenticated():
+		post = get_object_or_404(Event, pk=event_id)
+		if post.organizer == request.user:
+	
+			if request.method == "POST":
+				form = EventForm(request.POST, instance=post)
+				if form.is_valid():
+					post = form.save(commit=False)
+					post.organizer = request.user
+					post.save()
+					return redirect('events:index')
+			else:
+				form = EventForm(instance=post)
+				return render(request, 'events/edit_event.html', {'form': form})
+		else:
+			return redirect('home:index')
+	else:
+		return redirect('authentication:login')
 
 def create_message(request, event_id):
     if request.method == "POST":
