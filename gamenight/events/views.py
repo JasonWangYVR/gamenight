@@ -56,7 +56,8 @@ def detail(request, event_id):
         question = Question.objects.filter(on_event=event.pk)
         choice = Choice.objects.filter(question_id__in=question)
         message = Message.objects.filter(on_event=event.pk)
-
+        
+        dudes = UserProfile.objects.all()
         attendees = []
 
         for guy in dudes:
@@ -72,7 +73,6 @@ def detail(request, event_id):
             'search': SearchForm(),
             'is_organizer': is_organizer,   
             'attendees': attendees,
-            'add_form': add_attendee_form,
                 }
 
         return render(request, 'events/event_detail.html', context)
