@@ -1,4 +1,5 @@
-<div class='attending-users col-md-12'>
+<div class='attending-users col-xs-16 col-md-16'>
+	<div class="public_events_body panel panel-default panel-body col-md-14">
 {% if is_organizer == True %}
 <!--   <div class="add-attendee-form col-md-2 col-md-offset-4"> -->
     <form class="add-attendee" action="{% url 'events:add_attendee' event.id %}" method="POST" name="form" id="add-attendee">
@@ -8,7 +9,7 @@
     <br>
 <!--   </div> -->
 <!--   <div class="attendees col-md-3"> -->
-  <h4>Attending Users</h4>
+  <h3>Attending Users</h3>
   {% for attendee in attendees %}
       {% if attendee.user != request.user %}
         <form class="remove-attendee" action="{% url 'events:remove_attendee' event.id attendee.user.username%}" method="POST" id="remove-attendee">
@@ -22,10 +23,11 @@
   {% endfor %}
 <!--   </div> -->
 {% else %}
-  <h4>Attending Users</h4>
+  <h3>Attending Users</h3>
   {% for attendee in attendees %}
     <li>{{attendee.user.username}}</li>
   {% endfor %}
 {% endif %}
+</div>
 </div>
 

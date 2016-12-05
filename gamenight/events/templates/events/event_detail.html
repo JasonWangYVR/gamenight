@@ -42,51 +42,53 @@
 			</div>
 		</div>
 	</div>
-        <div class="col-xs-9 col-sm-6 col-md-4 sidebar-offcanvas" id="sidebar">
+		<div class="container col-sm-3 col-md-2 sidebar">
+
+      <br>
+      {% include "events/attendee_manager.html" %}
+      </div>
+      <hr>
+	<div class="public_events col-xs-12 col-md-7 col-md-offset-1">
+	   <div class="public_events_body panel panel-default panel-body col-md-12">
           {% if question %}
-		    <h2 class="subheading">Questions: <a href="{% url  "events:createquestion" event_id=event.id %}" class="btn btn-primary" role="button">Add Question</a></h2>
+		  <h2 class="subheading">Questions: <a href="{% url  "events:createquestion" event_id=event.id %}" class="btn btn-primary" role="button">Add Question</a></h2>
           {% for q in question %}
           <div class="col-xs-6 col-lg-4">
             <p class="listitem questions">{{ q.question_text }}
-            {% if request.user == event.organizer %}
-              <a href="{% url 'events:editquestion' q.id %}"> Edit</a>
-              <a href="{% url 'events:deletequestion' q.id %}"> Delete</a><p/>
-            {% endif %}
+            <a href="{% url 'events:editquestion' q.id %}"> Edit</a>
+            <a href="{% url 'events:deletequestion' q.id %}"> Delete</a><p/>
             {% if choice %}
-              {% for c in choice %}
-                {% if q.id == c.question_id %}
-                  <p class="listitem choices">{{ c.choice_text }} | Votes: {{ c.votes }}
-                  <form action="{% url 'events:vote' c.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
-                    <label for="choice{{ forloop.counter }}">{{ c.choice_text }}</label><br />
-                    <input class="btn btn-default btn-xs" type="submit" value="Vote" />
-                  </form>
-                  {% if request.user == event.organizer %}
-                    <a href="{% url 'events:editchoice' c.id %}"> Edit</a>
-                    <a href="{% url 'events:deletechoice' c.id %}"> Delete</a></p>
-                  {% endif %}
-                {% endif %}
-              {% endfor %}
+            {% for c in choice %}
+            {% if q.id == c.question_id %}
+            <p class="listitem choices">{{ c.choice_text }} | Votes: {{ c.votes }}
+            <form action="{% url 'events:vote' c.id %}" method="post">
+            {% csrf_token %}
+            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+            <label for="choice{{ forloop.counter }}">{{ c.choice_text }}</label><br />
+            <input type="submit" value="Vote" />
+            </form>
+            <a href="{% url 'events:editchoice' c.id %}"> Edit</a>
+            <a href="{% url 'events:deletechoice' c.id %}"> Delete</a></p>
             {% endif %}
-            {% if request.user == event.organizer %}
-              <p><a href="{% url "events:createchoice" question_id=q.id %}">Add Choice</a></p>
+            {% endfor %}
             {% endif %}
+            <p><a href="{% url "events:createchoice" question_id=q.id %}">Add Choice</a></p>
           </div><!--/.col-xs-6.col-lg-4-->
           {% endfor %}
+
           {% else %}
-            <p>No questions.</p>
+          <p>No questions.</p>
           {% endif %}
 
           {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
         </div><!--/row-->
       </div><!--/col-xs-12 col-sm-6-->
-
-      <div class="col-xs-9 col-sm-6 col-md-4 sidebar-offcanvas" id="sidebar">
+	</div>
+	    <div class="public_events col-xs-12 col-md-7 col-md-offset-1">
+	   <div class="public_events_body panel panel-default panel-body col-md-12">
         {% if message %}
           <h2 class="subheading">Messages: <a href="{% url  "events:createmessage" event_id=event.id %}" class="btn btn-primary" role="button">Add Message</a></h2>
-	
         {% for m in message %}
           <p class="listitem messages"><b>{{ m.text }}</b>
           <p>Date: {{ m.pub_date }} User: {{m.posted_by}}</p>
@@ -99,12 +101,9 @@
         {% else %}
           <p>No messages.</p>
         {% endif %}
-      </div><!--/.sidebar-offcanvas-->
-      <div class="col-xs-9 col-sm-6 col-md-3 sidebar-offcanvas">
-      <br>
-      {% include "events/attendee_manager.html" %}
-      </div>
-      <hr>
+		</div>
+	</div>
+
 
 
     
