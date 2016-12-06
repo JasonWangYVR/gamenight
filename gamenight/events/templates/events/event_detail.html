@@ -78,15 +78,13 @@
 
           {% else %}
           <p>No questions.</p>
+		  <a href="{% url  "events:createquestion" event_id=event.id %}" class="btn btn-primary" role="button">Add Question</a>
           {% endif %}
 
           {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
         </div><!--/row-->
-        <div class="attending">
-        <br>
-        {% include "events/attendee_manager.html" %}
-        </div>
+
       </div><!--/col-xs-12 col-sm-6-->
 	</div>
 	    <div class="public_events col-xs-12 col-md-7 col-md-offset-1">
@@ -104,6 +102,7 @@
         {% endfor %}
         {% else %}
           <p>No messages.</p>
+		  <a href="{% url  "events:createmessage" event_id=event.id %}" class="btn btn-primary" role="button">Add Message</a>
         {% endif %}
 		</div>
 	</div>
