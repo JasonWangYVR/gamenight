@@ -7065,7 +7065,8 @@ p {
 
 .search_button {
   background-color: #27AE60 ;
-  width: 100%;
+  width: 72px;
+  height: 46px;
 }
 
 #add-attendee {

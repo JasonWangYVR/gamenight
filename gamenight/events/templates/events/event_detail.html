@@ -32,17 +32,15 @@
             <p>Event Error - Unable to Display</p>
             {% endif %}
 			<br>
-			{% if request.user == event.organizer %}
-		  
+			 {% if request.user == event.organizer %}
             <a href="{% url 'events:editevent' event.id %}" class="btn btn-primary" role="button">Edit Event</a>
-			<a href="{% url 'events:delete_event' event.id %}" class="btn btn-primary" role="button">Delete Event</a>
-			<a href="{% url 'events:index' %}" class="btn btn-primary" role="button">Back to Event List</a>
-
-            {% endif %}
+			       <a href="{% url 'events:delete_event' event.id %}" class="btn btn-primary" role="button">Delete Event</a>
+        {% endif %}
+        <a href="{% url 'events:index' %}" class="btn btn-primary" role="button">Back to Event List</a>
 			</div>
 		</div>
 	</div>
-		<div class="container col-sm-3 col-md-2 sidebar">
+		<div class="container col-sm-3 col-md-3 sidebar">
 
       <br>
       {% include "events/attendee_manager.html" %}
@@ -51,12 +49,14 @@
 	<div class="public_events col-xs-12 col-md-7 col-md-offset-1">
 	   <div class="public_events_body panel panel-default panel-body col-md-12">
           {% if question %}
-		  <h2 class="subheading">Questions: <a href="{% url  "events:createquestion" event_id=event.id %}" class="btn btn-primary" role="button">Add Question</a></h2>
+		  <h2 class="subheading">Questions: <a href="{% url  "events:createquestion" event_id=event.id %}" class="btn btn-primary btn-sm" role="button">Add Question</a></h2>
           {% for q in question %}
           <div class="col-xs-6 col-lg-4">
             <p class="listitem questions">{{ q.question_text }}
-            <a href="{% url 'events:editquestion' q.id %}"> Edit</a>
-            <a href="{% url 'events:deletequestion' q.id %}"> Delete</a><p/>
+            {% if request.user == event.organizer %}
+              <a href="{% url 'events:editquestion' q.id %}"> Edit</a>
+              <a href="{% url 'events:deletequestion' q.id %}"> Delete</a><p/>
+            {% endif %}
             {% if choice %}
             {% for c in choice %}
             {% if q.id == c.question_id %}
@@ -67,8 +67,10 @@
             <label for="choice{{ forloop.counter }}">{{ c.choice_text }}</label><br />
             <input type="submit" value="Vote" />
             </form>
-            <a href="{% url 'events:editchoice' c.id %}"> Edit</a>
-            <a href="{% url 'events:deletechoice' c.id %}"> Delete</a></p>
+            {% if request.user == event.organizer %}
+              <a href="{% url 'events:editchoice' c.id %}"> Edit</a>
+              <a href="{% url 'events:deletechoice' c.id %}"> Delete</a></p>
+            {% endif %}
             {% endif %}
             {% endfor %}
             {% endif %}
@@ -83,16 +85,13 @@
           {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
         </div><!--/row-->
-        <div class="attending">
         <br>
-        {% include "events/attendee_manager.html" %}
-        </div>
       </div><!--/col-xs-12 col-sm-6-->
 	</div>
 	    <div class="public_events col-xs-12 col-md-7 col-md-offset-1">
 	   <div class="public_events_body panel panel-default panel-body col-md-12">
         {% if message %}
-          <h2 class="subheading">Messages: <a href="{% url  "events:createmessage" event_id=event.id %}" class="btn btn-primary" role="button">Add Message</a></h2>
+          <h2 class="subheading">Messages: <a href="{% url  "events:createmessage" event_id=event.id %}" class="btn btn-primary btn-sm" role="button">Add Message</a></h2>
         {% for m in message %}
           <p class="listitem messages"><b>{{ m.text }}</b>
           <p>Date: {{ m.pub_date }} User: {{m.posted_by}}</p>
