@@ -48,10 +48,10 @@ class EventForm(forms.ModelForm):                                               
         fields = ('title', 'location', 'event_date', 'private_event')
 
 class QuestionForm(forms.ModelForm):
-
-	class Meta:
-		model = Question
-		fields = ('question_text','pub_date')
+		question_text = forms.CharField(widget=forms.Textarea(attrs={'cols': 50, 'rows': 1}))
+		class Meta:
+			model = Question
+			fields = ('question_text','pub_date')
 
 class ChoiceForm(forms.ModelForm):
 
@@ -60,10 +60,10 @@ class ChoiceForm(forms.ModelForm):
 		fields = ('choice_text', 'votes')
 
 class MessageForm(forms.ModelForm):
-
+	text = forms.CharField(widget=forms.Textarea(attrs={'cols': 50, 'rows': 4}))
 	class Meta:
 		model = Message
-		fields = ('text','pub_date')
+		fields = ('pub_date','text')
 		
 class SearchEventsForm(forms.Form):
     qq = forms.CharField(

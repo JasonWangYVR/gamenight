@@ -49,7 +49,7 @@
 	<div class="public_events col-xs-12 col-md-7 col-md-offset-1">
 	   <div class="public_events_body panel panel-default panel-body col-md-12">
           {% if question %}
-		  <h2 class="subheading">Questions: <a href="{% url  "events:createquestion" event_id=event.id %}" class="btn btn-primary btn-sm" role="button">Add Question</a></h2>
+		  <h2 class="subheading">Questions: <a href="{% url  "events:createquestion" event_id=event.id %}" class="btn btn-primary btn-xs" role="button">Add Question</a></h2>
           {% for q in question %}
           <div class="col-xs-6 col-lg-4">
             <p class="listitem questions">{{ q.question_text }}
@@ -80,18 +80,20 @@
 
           {% else %}
           <p>No questions.</p>
+		  <a href="{% url  "events:createquestion" event_id=event.id %}" class="btn btn-primary btn-xs" role="button">Add Question</a>
           {% endif %}
 
           {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
         </div><!--/row-->
-        <br>
+
       </div><!--/col-xs-12 col-sm-6-->
 	</div>
 	    <div class="public_events col-xs-12 col-md-7 col-md-offset-1">
 	   <div class="public_events_body panel panel-default panel-body col-md-12">
         {% if message %}
-          <h2 class="subheading">Messages: <a href="{% url  "events:createmessage" event_id=event.id %}" class="btn btn-primary btn-sm" role="button">Add Message</a></h2>
+
+          <h2 class="subheading">Messages: <a href="{% url  "events:createmessage" event_id=event.id %}" class="btn btn-primary btn-xs" role="button">Add Message</a></h2>
         {% for m in message %}
           <p class="listitem messages"><b>{{ m.text }}</b>
           <p>Date: {{ m.pub_date }} User: {{m.posted_by}}</p>
@@ -103,7 +105,9 @@
         {% endfor %}
         {% else %}
           <p>No messages.</p>
-        {% endif %}
+		  <a href="{% url  "events:createmessage" event_id=event.id %}" class="btn btn-primary btn-xs" role="button">Add Message</a>
+
+		{% endif %}
 		</div>
 	</div>
 

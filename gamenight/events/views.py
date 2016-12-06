@@ -183,7 +183,7 @@ def create_event(request):
                 return redirect('events:index')
         else:
             form = EventForm()
-            return render(request, 'events/create_event.html', {'form': form, 'events_u': event,})
+            return render(request, 'events/create_event.html', {'form': form, 'search': SearchForm(),})
     else:
         return redirect('authentication:login')
 
@@ -200,7 +200,7 @@ def edit_event(request, event_id):
 					return redirect('events:detail',event_id)
 			else:
 				form = EventForm(instance=post)
-				return render(request, 'events/edit_event.html', {'form': form})
+				return render(request, 'events/edit_event.html', {'form': form, 'search': SearchForm(),})
 		else:
 			return redirect('home:index') #must be owner of event, new page?
 	else:
@@ -220,7 +220,7 @@ def create_message(request, event_id):
                     return redirect('events:detail',event_id)
             else:
                 form = MessageForm()
-            return render(request, 'events/create_message.html', {'form': form})
+            return render(request, 'events/create_message.html', {'form': form, 'search': SearchForm(),})
         else:
             try:
                 user = UserProfile.objects.get(user=request.user, deleted=False)
@@ -235,7 +235,7 @@ def create_message(request, event_id):
                         return redirect('events:detail',event_id)
                 else:
                     form = MessageForm()
-                return render(request, 'events/create_message.html', {'form': form})
+                return render(request, 'events/create_message.html', {'form': form, 'search': SearchForm(),})
             except ObjectDoesNotExist:
                 return rediect('home:index') #Not going to this event
     else:
@@ -258,7 +258,7 @@ def create_question(request, event_id):
                         return redirect('events:detail',event_id)
                 else:
                     form = QuestionForm()
-                return render(request, 'events/create_question.html', {'form': form})
+                return render(request, 'events/create_question.html', {'form': form, 'search': SearchForm(),})
             else:
                 return redirect('home:index') #maybe a new page saying that he can't edit it unless he is organizer
         else:
@@ -278,7 +278,7 @@ def create_question(request, event_id):
                             return redirect('events:detail',event_id)
                     else:
                         form = QuestionForm()
-                    return render(request, 'events/create_question.html', {'form': form})
+                    return render(request, 'events/create_question.html', {'form': form, 'search': SearchForm(),})
                 else:
                     return redirect('home:index')
             except ObjectDoesNotExist:
@@ -300,7 +300,7 @@ def create_choice(request, question_id):
                 return redirect('events:detail', event.id)
         else:
             form = ChoiceForm()
-        return render(request, 'events/create_choice.html', {'form': form})
+        return render(request, 'events/create_choice.html', {'form': form, 'search': SearchForm(),})
     else:
         return redirect('authentication:login')
 
@@ -318,7 +318,7 @@ def edit_question(request, question_id):
                     return redirect('events:detail', event.id)
             else:
                 form = QuestionForm(instance=post)
-            return render(request, 'events/edit_question.html', {'form': form})
+            return render(request, 'events/edit_question.html', {'form': form, 'search': SearchForm(),})
         else:
             return redirect('home:index') #not his question to edit
     else:
@@ -339,7 +339,7 @@ def edit_choice(request, choice_id):
                     return redirect('events:detail', event.id)
             else:
                 form = ChoiceForm(instance=post)
-            return render(request, 'events/edit_choice.html', {'form': form})
+            return render(request, 'events/edit_choice.html', {'form': form, 'search': SearchForm(),})
         else:
             return redirect('home:index') #Not his choice to alter?
     else:
@@ -359,7 +359,7 @@ def edit_message(request, message_id):
                     return redirect('events:detail', event.id)
             else:
                 form = MessageForm(instance=post)
-            return render(request, 'events/edit_message.html', {'form': form})	
+            return render(request, 'events/edit_message.html', {'form': form, 'search': SearchForm(),})	
         else:
             return redirect('home:index') #Not his message to alter
     else:
