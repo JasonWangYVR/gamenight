@@ -84,7 +84,9 @@
 
           {% else %}
           <p>No questions.</p>
+		  {% if request.user == event.organizer %}
 		  <a href="{% url  "events:createquestion" event_id=event.id %}" class="btn btn-primary btn-xs" role="button">Add Question</a>
+		  {% endif %}
           {% endif %}
 
           {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
