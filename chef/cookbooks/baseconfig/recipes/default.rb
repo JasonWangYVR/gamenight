@@ -60,7 +60,11 @@ end
 execute 'captcha_install' do
     command 'pip install django-simple-captcha'
 end
-
+execute 'make_migrations' do
+    user 'ubuntu'
+    cwd '/home/ubuntu/project/gamenight'
+    command 'python manage.py makemigrations'
+end
 execute 'db_migration' do
 	user 'ubuntu'
 	cwd '/home/ubuntu/project/gamenight/'
