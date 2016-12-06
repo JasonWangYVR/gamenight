@@ -23,7 +23,7 @@ server {
     location / {
 			proxy_pass http://localhost:8000;
       #uwsgi_pass  django;
-      #include     /home/ubuntu/project/gamenight/uwsgi_params; # the uwsgi_params file you installed
+      #include     /etc/nginx/uwsgi_params; # the uwsgi_params file you installed
     }
 
 }
