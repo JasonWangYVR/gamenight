@@ -167,6 +167,9 @@ def remove_attendee(request, event_id, username_to_remove):
 
 def create_event(request):
     if request.user.is_authenticated():
+        user = UserProfile.objects.get(user=request.user)
+        attending = user.attending_events.all()
+        event = attending.order_by('event_date')[:5]
         if request.method == "POST":
             form = EventForm(request.POST)
             if form.is_valid():
@@ -180,7 +183,7 @@ def create_event(request):
                 return redirect('events:index')
         else:
             form = EventForm()
-            return render(request, 'events/create_event.html', {'form': form})
+            return render(request, 'events/create_event.html', {'form': form, 'events_u': event,})
     else:
         return redirect('authentication:login')
 
@@ -315,7 +318,7 @@ def edit_question(request, question_id):
                     return redirect('events:detail', event.id)
             else:
                 form = QuestionForm(instance=post)
-            return render(request, 'events/create_question.html', {'form': form})
+            return render(request, 'events/edit_question.html', {'form': form})
         else:
             return redirect('home:index') #not his question to edit
     else:
@@ -336,7 +339,7 @@ def edit_choice(request, choice_id):
                     return redirect('events:detail', event.id)
             else:
                 form = ChoiceForm(instance=post)
-            return render(request, 'events/create_choice.html', {'form': form})
+            return render(request, 'events/edit_choice.html', {'form': form})
         else:
             return redirect('home:index') #Not his choice to alter?
     else:
@@ -356,7 +359,7 @@ def edit_message(request, message_id):
                     return redirect('events:detail', event.id)
             else:
                 form = MessageForm(instance=post)
-            return render(request, 'events/create_message.html', {'form': form})
+            return render(request, 'events/edit_message.html', {'form': form})	
         else:
             return redirect('home:index') #Not his message to alter
     else:

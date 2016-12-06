@@ -3064,6 +3064,9 @@ fieldset[disabled] a.btn {
   color: #ffffff;
   background-color: #3e3f3a;
   border-color: transparent;
+  width: 100px;
+  height: 20px;
+  padding: 0px;
 }
 .btn-default:focus,
 .btn-default.focus {
@@ -7062,6 +7065,7 @@ p {
 
 .search_button {
   background-color: #27AE60 ;
+  width: 100%;
 }
 
 #add-attendee {

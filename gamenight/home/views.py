@@ -39,6 +39,7 @@ def index(request):
 			return render(request, 'home/index.html', context)
 		except ObjectDoesNotExist:
 			return redirect('authentication:create_profile')
+
 	else:
 		event_list = Event.objects.filter(private_event=False)
 		# event_list = Event.objects.all()
@@ -57,6 +58,7 @@ def index(request):
 			'user':request.user,
 			'events':events,
 			'search':SearchForm(),
-			'search_p': SearchEventsForm()
+			'search_p':SearchEventsForm(),
+
 		}
 		return render(request, 'home/index.html', context)
