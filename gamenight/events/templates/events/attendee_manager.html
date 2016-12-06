@@ -1,10 +1,10 @@
-<div class='attending-users col-xs-17 col-md-17'>
-	<div class="public_events_body panel panel-default panel-body col-md-16">
+<div class='attending-users col-xs-16 col-md-16'>
+	<div class="public_events_body panel panel-default panel-body col-md-14">
 {% if is_organizer == True %}
 <!--   <div class="add-attendee-form col-md-2 col-md-offset-4"> -->
     {% if add_form %}
       <form class="add-attendee" action="{% url 'events:add_attendee' event.id %}" method="POST" name="form" id="add-attendee">      
-        {{add_form}}<button class="add-attendee-button btn btn-primary btn-md">Submit</button>
+        {{add_form}}<button class="add-attendee-button btn btn-primary btn-md">Add</button>
         {% csrf_token %}
       </form>
       <br>
