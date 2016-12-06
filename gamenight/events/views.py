@@ -56,7 +56,7 @@ def detail(request, event_id):
         question = Question.objects.filter(on_event=event.pk)
         choice = Choice.objects.filter(question_id__in=question)
         message = Message.objects.filter(on_event=event.pk)
-        
+
         dudes = UserProfile.objects.all()
         attendees = []
 
@@ -359,7 +359,7 @@ def edit_message(request, message_id):
                     return redirect('events:detail', event.id)
             else:
                 form = MessageForm(instance=post)
-            return render(request, 'events/edit_message.html', {'form': form, 'search': SearchForm(),})	
+            return render(request, 'events/edit_message.html', {'form': form, 'search': SearchForm(),})
         else:
             return redirect('home:index') #Not his message to alter
     else:
@@ -419,6 +419,8 @@ def delete_event(request, event_id):
 def vote(request, choice_id):
     if request.user.is_authenticated():
         choice = get_object_or_404(Choice, pk=choice_id)
+        question = get_object_or_404(Question, pk=choice.question_id)
+        event = get_object_or_404(Event, pk=question.on_event_id)
         if choice.question.on_event.private_event == False:
             try:
                 selected_choice = choice
@@ -434,7 +436,8 @@ def vote(request, choice_id):
                 # Always return an HttpResponseRedirect after successfully dealing
                 # with POST data. This prevents data from being posted twice if a
                 # user hits the Back button.
-                return HttpResponseRedirect(reverse('events:index'))
+                #return HttpResponseRedirect(reverse('events:index'))
+                return redirect('events:detail', event.id)
         else:
             try:
                 user = UserProfile.objects.get(user=request.user, deleted=False)
@@ -449,12 +452,14 @@ def vote(request, choice_id):
                         'error_message': "You didn't select a choice.",
                     })
                 else:
+
                     selected_choice.votes += 1
                     selected_choice.save()
                     # Always return an HttpResponseRedirect after successfully dealing
                     # with POST data. This prevents data from being posted twice if a
                     # user hits the Back button.
-                    return HttpResponseRedirect(reverse('events:index'))
+                    #return HttpResponseRedirect(reverse('events:index'))
+                    return redirect('events:detail', event.id)
 
             except ObjectDoesNotExist:
                 return redirect('home:index')
