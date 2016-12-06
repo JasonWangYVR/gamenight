@@ -25,8 +25,9 @@ SECRET_KEY = '4kxs6lkoc&@6^hmf7hzc1%ei!d^wh)x@)k)0bf1ik%l6p5txq4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+#ALLOWED_HOSTS = ['localhost','127.0.0.1']
+ALLOWED_HOSTS =[]
+#USE_X_FORWARDED_HOST = True
 
 # Application definition
 
@@ -84,8 +85,9 @@ WSGI_APPLICATION = 'gamenight.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'mydb',
+        'USER': 'ubuntu',
     }
 }
 
@@ -125,10 +127,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
+STATIC_ROOT = '/home/ubuntu/static'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    os.path.join(BASE_DIR, "static/boardgames"),
-	os.path.join(BASE_DIR, "static/events"),
+    #os.path.join(BASE_DIR, "boardgames/static"),
+	#os.path.join(BASE_DIR, "events/static"),
 ]
