@@ -49,7 +49,11 @@
 	<div class="public_events col-xs-12 col-md-7 col-md-offset-1">
 	   <div class="public_events_body panel panel-default panel-body col-md-12">
           {% if question %}
-		  <h2 class="subheading">Questions: <a href="{% url  "events:createquestion" event_id=event.id %}" class="btn btn-primary btn-xs" role="button">Add Question</a></h2>
+		  <h2 class="subheading">Questions: 
+      {% if request.user == event.organizer %}
+      <a href="{% url  "events:createquestion" event_id=event.id %}" class="btn btn-primary btn-xs" role="button">Add Question</a>
+      {% endif %}
+      </h2>
           {% for q in question %}
           <div class="col-xs-6 col-lg-4">
             <p class="listitem questions">{{ q.question_text }}
