@@ -13,7 +13,7 @@ from django.db.models import Q
 #utilities
 from django.utils import timezone
 #included models
-from .models import Event, Question, Choice, Message, User#, Vote
+from .models import Event, Question, Choice, Message, User
 from authentication.models import UserProfile
 #include forms
 from .forms import EventForm, QuestionForm, ChoiceForm, MessageForm, AddAttendeeForm, SearchEventsForm
@@ -452,21 +452,14 @@ def vote(request, choice_id):
                         'error_message': "You didn't select a choice.",
                     })
                 else:
-                    #vote, created = Vote.objects.get_or_create(
-                    #    userprofile=user,
-                    #    question=question.id,
-                    #    event=event.id,
-                    #)
-                    #if not created:
-                    #    return HttpResponse('You already voted for this, cheater')
-                    #else:
-                        selected_choice.votes += 1
-                        selected_choice.save()
-                        # Always return an HttpResponseRedirect after successfully dealing
-                        # with POST data. This prevents data from being posted twice if a
-                        # user hits the Back button.
-                        #return HttpResponseRedirect(reverse('events:index'))
-                        return redirect('events:detail', event.id)
+
+                    selected_choice.votes += 1
+                    selected_choice.save()
+                    # Always return an HttpResponseRedirect after successfully dealing
+                    # with POST data. This prevents data from being posted twice if a
+                    # user hits the Back button.
+                    #return HttpResponseRedirect(reverse('events:index'))
+                    return redirect('events:detail', event.id)
 
             except ObjectDoesNotExist:
                 return redirect('home:index')
