@@ -22,7 +22,6 @@ from boardgames.forms import SearchForm
 from events.forms import SearchEventsForm
 
 def index(request):
-    #title = 'GameNight Event List'
     #TODO: filter for user created and invited
     if request.user.is_authenticated():
         user = UserProfile.objects.get(user=request.user)
