@@ -14,6 +14,10 @@ cookbook_file "ntp.conf" do
   path "/etc/ntp.conf"
 end
 
+cookbook_file "rc.local" do
+  path "/etc/rc.local"
+end
+
 execute 'ntp_restart' do
   command 'service ntp restart'
 end
@@ -73,10 +77,6 @@ execute 'static_files' do
   user 'ubuntu'
   cwd 'home/ubuntu/project/gamenight'
   command 'python manage.py collectstatic --noinput'
-end
-
-cookbook_file "rc.local" do
-  path "etc/rc.local"
 end
 
 execute 'startup' do
