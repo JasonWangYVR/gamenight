@@ -3,8 +3,8 @@
         <div class="">
             <nav class="nav-sidebar">
                 <ul class="nav left-sidebar">
-                <!--{% if user.is_authenticated %}-->
-                    <!--<!=<li class="welcome-user">Welcome {{user.first_name}}</li>-->
+                {% if user.is_authenticated %}
+                    <li class="welcome-user">Welcome {{user.first_name}}</li>
                     <li class="sidebar-nav-divider"></li>
                     <li class="profile"><a href="{% url 'authentication:profile'%}">Profile</a></li>
                     <li class="event-index"><a href="{% url 'events:index'%}">Event Index</a></li>
@@ -15,14 +15,14 @@
                     <!-- <li class="faq"><a href="#">FAQ</a></li> -->
                     <li class="nav-divider"></li>
                     <li class="logout"><a href="{% url 'authentication:logout'%}">Logout</a></li>
-                <!--{% else %}-->
+                {% else %}
                     <li class="welcome-guest">Welcome Guest!</li>
                     <li class="sidebar-nav-divider"></li>
                     <li class="signup"><a href="{% url 'authentication:signup'%}">Sign Up</a></li>
                     <li class="boardgames"><a href="{% url 'boardgames:index'%}">Boardgames</a></li><!--In case we want to make a enter address to get close by public events-->
                     <li class="sidebar-nav-divider"></li>
                     <li class="login"><a href="{% url 'authentication:login'%}">Sign in</a></li>
-                <!--{% endif %}-->
+                {% endif %}
                 </ul>
             </nav>
         </div>

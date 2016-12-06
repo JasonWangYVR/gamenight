@@ -65,7 +65,7 @@ def log_in(request):
         #     'wrong': wrong,
         # })
         #return HttpResponse(template.render(context))
-        return render(request, 'authentication/login.html', {'form':log_form, 'wrong':wrong,})
+        return render(request, 'authentication/login.html', {'form':log_form, 'wrong':wrong, 'search':SearchForm()})
     else:
         try:
             profile = UserProfile.objects.filter(user=request.user, deleted=False)
