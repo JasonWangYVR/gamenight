@@ -48,7 +48,7 @@ class EventForm(forms.ModelForm):                                               
         fields = ('title', 'location', 'event_date', 'private_event')
 
 class QuestionForm(forms.ModelForm):
-		question_text = forms.CharField(widget=forms.Textarea(attrs={'cols': 80, 'rows': 1}))
+		question_text = forms.CharField(widget=forms.Textarea(attrs={'cols': 50, 'rows': 1}))
 		class Meta:
 			model = Question
 			fields = ('question_text','pub_date')
